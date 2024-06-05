@@ -1,0 +1,309 @@
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* 
+#social {
+  display: flex;
+  justify-content: flex-end;
+  margin: 35px 10px 2px 0px;
+  gap: 3px;
+}
+
+#social > [role="button"] {
+  min-width: unset;
+  min-height: unset;
+  padding: 0.2em 0.5em;
+  text-decoration: none;
+  color: #000;
+  display: flex;
+  align-items: center;
+}
+
+#social img {
+  height: 18px;
+  margin-right: 3px;
+}
+ */
+
+header {
+  position: fixed; /* ヘッダーを固定する */
+  top: 0; /* 上部から配置の基準位置を決める */
+  left: 0; /* 左から配置の基準位置を決める */
+  width: 100%; /* ヘッダーの横幅を指定する */
+  height: 45px; /* ヘッダーの高さを指定する */
+  padding: 10px; /* ヘッダーの余白を指定する(上下左右) */
+  background-color: #ebebeb; /* ヘッダーの背景色を指定する */
+  color: #000000; /* フォントの色を指定する */
+  display: flex;
+  justify-content: space-between;
+  z-index: 99;
+}
+.c1 {
+  text-align: right !important;
+  padding: 0px 20px 0 0; /* 余白を指定する(上下左右) */
+}
+.social {
+  display: flex;
+  /* display: block; */
+  justify-content: flex-end;
+  margin: 0px 10px 2px 0px;
+  gap: 3px;
+}
+.social > [role="button"] {
+  min-width: unset;
+  min-height: unset;
+  padding: 0.2em 0.5em;
+  text-decoration: none;
+  color: #000;
+  display: flex;
+  align-items: center;
+}
+.social img {
+  height: 18px;
+  margin-right: 3px;
+}
+
+main {
+  margin: 65px 30px 60px 260px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+aside {
+  width: 240px;
+  position: fixed;
+  top: 65px;
+  bottom: 30px;
+  padding: 3px;
+  z-index: 99;
+  display: flex;
+  align-items: stretch;
+  box-sizing: border-box;
+}
+
+aside .tree-view {
+  width: 100%;
+  /* TODO: Move scrollbar into the recessed region? */
+  overflow-y: scroll;
+}
+
+h1 {
+  margin: 12px 0;
+}
+
+hr {
+  margin: 0;
+  border: 1px solid #ccc;
+  /* max-width: 400px; */
+  box-shadow: 0 1px #fff;
+}
+
+h2 {
+  margin-bottom: 6px;
+}
+
+h3 {
+  font-size: 1.6rem;
+}
+
+h3,
+h4 {
+  /* Swap the margin for a top-padding so linking to this section
+     results in a better scroll position */
+  padding-top: 10px;
+  /* margin-top: 0; */
+  margin: 2px 2px;
+  display: block;
+  flex: 0 0 200px;
+}
+
+p {
+  max-width: 50rem;
+  line-height: 1.5;
+}
+
+p code,
+ul code {
+  background: #e0e0e0;
+  padding: 2px 3px;
+}
+
+.component {
+  display: flex;
+  margin-top: 24px;
+}
+
+.component li:not([role]) {
+  margin-bottom: 8px;
+}
+
+blockquote {
+  margin: 0 0 20px;
+  padding: 20px;
+  background: #dfdfdf;
+}
+
+blockquote footer {
+  margin: 12px 0 0 12px;
+}
+
+.example {
+  margin: 16px 0;
+  padding: 12px 24px;
+  border-left: 1px solid #808080;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.code {
+  margin-top: 12px;
+}
+
+.code summary {
+  text-decoration: underline;
+}
+
+.code > .copy {
+  display: block;
+  margin-left: auto;
+}
+
+.code[open] summary {
+  margin-bottom: 8px;
+}
+
+.background {
+  padding: 1.5em;
+  margin: 1.5em 0;
+  background-image: url("./flower-aaronburden-unsplash.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+[role="dialog"] {
+  width: 450px;
+}
+
+[role="tooltip"]:not([id]) {
+  margin: 2em 0;
+}
+
+@media (max-width: 480px) {
+  aside {
+    display: none;
+  }
+
+  main {
+    width: 100%;
+    margin: 100px 1px 1px 1px;
+    padding: 16px;
+  }
+
+  hr,
+  p {
+    width: 100%;
+  }
+
+  h3,
+  h4 {
+    flex: 0;
+  }
+
+  .component {
+    display: block;
+    margin-top: 24px;
+  }
+
+  pre {
+    overflow-x: scroll;
+  }
+
+  [role="dialog"] {
+    width: 90%;
+  }
+}
+
+/*             */
+/* フッター定義 */
+footer.foot {
+  /*   position: absolute !important; */
+  margin: 0 0 10px 260px !important;
+  text-align: center !important;
+  /*   bottom: 15px !important; */
+}
+
+/*             */
+/* テーブル定義 */
+
+/* tab0 無地枠線無し*/
+.tab0 {
+  border-collapse: collapse;
+  width: auto;
+}
+.tab0 th,
+.tab0 td {
+  border: 1px solid #fff;
+  background-color: #e6f1f6;
+  padding: 5px;
+}
+.tab0 th {
+  font-weight: bold;
+  text-align: center;
+}
+
+.common_label {
+  width: 100px;
+  text-align: end;
+  margin-right: 10px;
+}
+
+.large_label {
+  width: 120px;
+  text-align: end;
+  margin-right: 10px;
+  margin-left: -20px;
+}
+
+.sale_label {
+  margin-left: 27px;
+}
+
+input[type="text"],
+input[type="checkbox"],
+select {
+  /* width: 50%; */
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input.readonlyText {
+  background-color: #e6e6e6;
+}
+
+/* tab1 水色*/
+.tab1 {
+  border-collapse: collapse;
+  table-layout: auto;
+}
+.tab1 th,
+.tab1 td {
+  border: 1px solid #fff;
+  background-color: #e6f1f6;
+  padding: 5px;
+}
+.tab1 th {
+  background-color: #4d9bc1;
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+}
+.tab1 tr:hover td {
+  background-color: #c9dce5; /* Change to the desired color */
+}

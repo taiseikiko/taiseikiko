@@ -1,0 +1,18 @@
+$hanko-size: 100px;
+.hanko {
+  font-size: 16px * ($hanko-size / 100px);
+  border:3px * ($hanko-size / 100px) double #f00;
+  border-radius: 50%;
+  color: #f00;
+  width: $hanko-size;
+  height: $hanko-size;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  hr {
+    width: 100%;
+    margin: 0;
+    border-color: #f00;
+  }
+}
