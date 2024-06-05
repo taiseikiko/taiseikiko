@@ -12,7 +12,7 @@
 
 <main>
   <div class="pagetitle">
-    <h3>【　営業依頼書：依頼入力　</h3>
+    <h3>【　営業依頼書：依頼入力　】</h3>
     <?php include("common_sales_input2.php"); ?>
   </div>
 </main><!-- End #main -->
