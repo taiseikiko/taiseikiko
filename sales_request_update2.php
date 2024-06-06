@@ -21,14 +21,6 @@
     $drawing_div = isset($_POST['drawing_div']) ? $_POST['drawing_div'] : '';
     $document_div = isset($_POST['document_div']) ? $_POST['document_div'] : '';
 
-    //確認画面の時だけ確認者をセットする
-    $confirmer = NULL;
-    $confirm_date = NULL;
-    if ($title == 'check') {
-      $confirmer = $_POST['user_code'];
-      $confirm_date = $today;
-    }
-
     $datas = [
       'sq_no' => $sq_no, //営業依頼書№
       'estimate_div1' => $estimate_div1, //見積区分：材料
@@ -67,8 +59,7 @@
       'normal_water_puressure' => $_POST['normal_water_puressure'], //常圧
       'reducing_pressure_div' => isset($_POST['reducing_pressure_div']) ? $_POST['reducing_pressure_div'] : '', //施工時減圧区分
       'special_note' => $_POST['special_note'], //特記事項
-      'confirmer' => $confirmer,  //確認者
-      'confirm_date' => $confirm_date //確認日
+      'entrant_comments' => $_POST['entrant_comments'],  //入力者コメント
     ];
 
     //見積区分１（estimate_div1）または、見積区分２（estimate_div2）が、"1" の場合で、
@@ -82,6 +73,19 @@
       $datas['record_div'] = '2';
     } else {
       $datas['record_div'] = NULL;
+    }
+
+    //確認画面の時だけ確認者をセットする
+    if ($title == 'check') {
+      $datas['confirmer_comments'] = $_POST['confirmer_comments'];  //確認者コメント
+      $datas['confirmer'] = $_POST['user_code'];                    //確認者
+      $datas['confirm_date'] = $today;                              //確認日
+    } 
+    //承認画面の時だけ確認者をセットする
+    else if ($title == 'approve') {
+      $datas['approver_comments'] = $_POST['approver_comments'];  //承認者コメント
+      $datas['approver'] = $_POST['user_code'];                    //承認者
+      $datas['approve_date'] = $today;                              //承認日
     }
 
     //新規作成の場合
@@ -125,29 +129,46 @@
     }
 
     //エラーがなかったらメール送信する
-    if ($success) {
-      //Send Mail
-      include('sq_mail_send1.php?title='.$title);
-    }
+    // if ($success) {
+    //   //Send Mail
+    //   include('sq_mail_send1.php');
+    // }
   }
 
   function insertData($datas) {
     global $pdo;
     $success = true;
+    global $title;
     try {
       $pdo->beginTransaction();
-
+      
       $sql = "INSERT INTO sq_detail_tr (sq_no,sq_line_no,estimate_div1,estimate_div2,deadline_estimate_date,specification_div,check_type,drawing_div,document_div,deadline_drawing_date,
               cad_data_div,class_code,zkm_code,c_div,const_div1,const_div2,const_div3,const_div4,size,
               joint,pipe,inner_coating,inner_film,outer_coating,outer_film,fluid,valve,o_c_direction,special_tube_od1,special_tube_od2,
-              quantity,right_quantity,left_quantity,design_water_pressure,water_outage,normal_water_puressure,reducing_pressure_div,special_note,
-              confirmer, confirm_date,record_div,add_date)
+              quantity,right_quantity,left_quantity,design_water_pressure,water_outage,normal_water_puressure,reducing_pressure_div,special_note,entrant_comments,";
+      //確認画面の時だけ確認者をセットする
+      if ($title == 'check') {
+        $sql.= 'confirmer_comments,confirmer,confirm_date,';
+      } 
+      //承認画面の時だけ確認者をセットする
+      else if ($title == 'approve') {
+        $sql.= 'approver_comments,approver,approve_date,';
+      }
+      $sql.= "record_div,add_date)
               VALUES(
               :sq_no,:sq_line_no,:estimate_div1,:estimate_div2,:deadline_estimate_date,:specification_div,:check_type,:drawing_div,:document_div,:deadline_drawing_date,
               :cad_data_div,:class_code,:zkm_code,:c_div,:const_div1,:const_div2,:const_div3,:const_div4,:size,
               :joint,:pipe,:inner_coating,:inner_film,:outer_coating,:outer_film,:fluid,:valve,:o_c_direction,:special_tube_od1,:special_tube_od2,
-              :quantity,:right_quantity,:left_quantity,:design_water_pressure,:water_outage,:normal_water_puressure,:reducing_pressure_div,:special_note,
-              :confirmer, :confirm_date,:record_div,:add_date)";
+              :quantity,:right_quantity,:left_quantity,:design_water_pressure,:water_outage,:normal_water_puressure,:reducing_pressure_div,:special_note,:entrant_comments,";
+      //確認画面の時だけ確認者をセットする
+      if ($title == 'check') {
+        $sql.= ':confirmer_comments,:confirmer,:confirm_date,';
+      } 
+      //承認画面の時だけ確認者をセットする
+      else if ($title == 'approve') {
+        $sql.= ':approver_comments,:approver,:approve_date,';
+      }
+      $sql.= ":record_div,:add_date)";
 
       $stmt = $pdo->prepare($sql);
       $stmt->execute($datas);
@@ -167,6 +188,7 @@
 
   function updateData($datas) {
     global $pdo;
+    global $title;
     $success = true;
     try {
       $pdo->beginTransaction();
@@ -177,8 +199,16 @@
               const_div4=:const_div4,size=:size,joint=:joint,pipe=:pipe,inner_coating=:inner_coating,inner_film=:inner_film,outer_coating=:outer_coating,
               outer_film=:outer_film,fluid=:fluid,valve=:valve,o_c_direction=:o_c_direction,special_tube_od1=:special_tube_od1,special_tube_od2=:special_tube_od2,quantity=:quantity,right_quantity=:right_quantity,
               left_quantity=:left_quantity,design_water_pressure=:design_water_pressure,water_outage=:water_outage,normal_water_puressure=:normal_water_puressure,
-              reducing_pressure_div=:reducing_pressure_div,special_note=:special_note,confirmer=:confirmer, confirm_date=:confirm_date,record_div=:record_div,upd_date=:upd_date
-              WHERE sq_no=:sq_no AND sq_line_no=:sq_line_no";
+              reducing_pressure_div=:reducing_pressure_div,special_note=:special_note,entrant_comments=:entrant_comments,";
+      //確認画面の時だけ確認者をセットする
+      if ($title == 'check') {
+        $sql.= 'confirmer_comments=:confirmer_comments,confirmer=:confirmer,confirm_date=:confirm_date,';
+      }
+      //承認画面の時だけ確認者をセットする
+      else if ($title == 'approve') {
+        $sql.= 'approver_comments=:approver_comments,approver=:approver,approve_date=:approve_date,';
+      }
+      $sql.= "record_div=:record_div,upd_date=:upd_date WHERE sq_no=:sq_no AND sq_line_no=:sq_line_no";
 
       $stmt = $pdo->prepare($sql);
       $stmt->execute($datas);

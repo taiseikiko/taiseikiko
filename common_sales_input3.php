@@ -1,3 +1,6 @@
+<?php 
+  $e_title = substr($title, 3);
+?>
 <div class="container">
   <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="input3">
     <input type="hidden" name="process2" id="process2" value="<?= $process2 ?>">
@@ -386,12 +389,49 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="special_note">特記仕様</label>
-            <textarea type="text" id="special_note" name="special_note" rows="3" cols="100"><?= $special_note ?></textarea>
+            <textarea type="text" id="special_note" name="special_note" rows="3" cols="120"><?= $special_note ?></textarea>
           </div>
         </td>
       </tr>
+
+      <tr>
+        <td>
+          <div class="field-row">
+            <label class="common_label" for="entrant_comments">作成者コメント</label>
+            <textarea id="entrant_comment" name="entrant_comments" rows="3" cols="120" class="textarea-res"><?= $entrant_comments ?></textarea>
+          </div>
+        </td>
+      </tr>
+
+      <!-- 確認画面の場合だけに表示させる -->
+      <?php
+        if ($title == 'check' || $e_title == 'confirm') { 
+      ?>
+      <tr>
+        <td>
+          <div class="field-row">
+            <label class="common_label" for="confirmer_comments">確認者コメント</label>
+            <textarea id="confirmer_comment" name="confirmer_comments" rows="3" cols="120" class="textarea-res"><?= $confirmer_comments ?></textarea>
+          </div>
+        </td>
+      </tr>
+      <?php } ?>
+
+      <!-- 承認画面の場合だけに表示させる -->
       <?php 
-      $e_title = substr($title, 3, 7);
+        if ($title == 'approve' || $e_title == 'approve') { 
+      ?>
+      <tr>
+        <td>
+          <div class="field-row">
+            <label class="common_label" for="approver_comments">承認者コメント</label>
+            <textarea id="approver_comment" name="approver_comments" rows="3" cols="120" class="textarea-res"><?= $approver_comments ?></textarea>
+          </div>
+        </td>
+      </tr>
+      <?php } ?>
+
+      <?php
       if ($e_title == 'receipt' || $title == 'input' || $title == 'check' || $title == 'approve') { ?>
       <tr>
         <td>
@@ -399,6 +439,7 @@
             <div>
               <button id="returnBtn" class="returnBtn">前の画面に戻る </button>
             </div>
+              <!-- 入力画面の場合だけに表示させる -->
               <?php if($e_title == 'receipt') { ?>
                 <div>
                   <button id="updBtn" class="setEmp" style="background:#80dfff;" name="submit" onclick="person_in_charge(event)">担当者設定</button>
@@ -422,6 +463,7 @@
         </td>
       </tr>
       <?php } 
+      // ルート設定画面の場合だけに表示させる
       if ($title == 'set_route') {
       ?>
       <tr>

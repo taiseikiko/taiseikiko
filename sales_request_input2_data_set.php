@@ -44,6 +44,9 @@
   $special_tube_od2 = '';       //特殊管外径２
   $sq_no = '';
   $route_pattern = '';          //ルートパタン
+  $entrant_comments = '';           //入力者コメント
+  $confirmer_comments = '';          //確認者コメント
+  $approver_comments = '';           //承認者コメント
 
   $sizeDisabled = '';
   $jointDisabled = '';
@@ -113,6 +116,9 @@
         $special_tube_od1 = $sq_detail_datas['special_tube_od1'];               //特殊管外径１
         $special_tube_od2 = $sq_detail_datas['special_tube_od2'];               //特殊管外径２
         $route_pattern = $sq_detail_datas['route_pattern'];                     //ルートパタン
+        $entrant_comments = $sq_detail_datas['entrant_comments'];             //入力者コメント
+        $approver_comments = $sq_detail_datas['approver_comments'];          //承認者コメント
+        $confirmer_comments = $sq_detail_datas['confirmer_comments'];        //確認者コメント
       }
     }
   }

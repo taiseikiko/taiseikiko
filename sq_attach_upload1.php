@@ -118,7 +118,6 @@ switch ($from) {
     break;
   case 'cm2':
     include("sq_detail_tr_const_management_update.php");
-    echo 'here';
     $uploadDir = "document/const_management/";  //登録ファイル名
     $tmp_file_name = $_FILES["uploaded_file2"]["tmp_name"];
     $file_name = $_FILES["uploaded_file2"]["name"];

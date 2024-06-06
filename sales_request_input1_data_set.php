@@ -23,9 +23,6 @@
   $note = '';                       //備考
   $prior_notice_div = '';           //技術への事前連絡区分
   $prior_notice_date = '';          //技術への事前連絡日
-  $entrant_comments = '';           //入力者コメント
-  $confirmer_comments = '';          //確認者コメント
-  $approver_comments = '';           //承認者コメント
   $sq_header_datas = [];
   $item_name = '';                  //件名
   $daily_report_url = '';           //営業日報URL
@@ -60,9 +57,6 @@
         $note = $sq_header_datas['note'];                          //備考
         $prior_notice_div = $sq_header_datas['prior_notice_div'];  //技術への事前連絡区分
         $prior_notice_date = $sq_header_datas['prior_notice_date'];//技術への事前連絡日
-        $entrant_comments = $sq_header_datas['entrant_comments'];  //入力者コメント
-        $approver_comments = $sq_header_datas['approver_comments'];          //承認者コメント
-        $confirmer_comments = $sq_header_datas['confirmer_comments'];        //確認者コメント
         $degree_of_order = $sq_header_datas['degree_of_order'];     //発注確度
         $order_accuracy = $sq_header_datas['order_accuracy'];       //受注確度
         $item_name = $sq_header_datas['item_name'];                 //件名

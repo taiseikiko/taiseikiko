@@ -33,21 +33,29 @@
                 $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
                 $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
                 
-                //入力画面の場合
-                if ($title == 'input') {
-                    $to_email = $item['confirmer_email'];
-                    $to_name = $item['confirmer_name'];
+                switch ($title) {
+                    //入力画面の場合
+                    case 'input':
+                        $to_email = $item['confirmer_email'];
+                        $to_name = $item['confirmer_name'];
+                        break;
+
+                    //確認画面の場合
+                    case 'check':
+                        $to_email = $item['approver_email'];
+                        $to_name = $item['approver_name'];
+                        break;
+                    
+                    default:
+                        # code...
+                        break;
                 }
-                //確認画面の場合
-                else if ($title == 'check') {
-                    $to_email = $item['confirmer_email'];
-                    $to_name = $item['confirmer_name'];
-                }
+
                 $email_datas[] = [
-                    'to_email' => $item['confirmer_email'],         //送信先email
-                    'to_name' => $item['confirmer_name'],           //送信先name
-                    'from_email' => $from_email,                    //送信者email
-                    'from_name' => $from_name,                    //送信者name
+                    'to_email' => $to_email,         //送信先email
+                    'to_name' => $to_name,           //送信先name
+                    'from_email' => $from_email,     //送信者email
+                    'from_name' => $from_name,       //送信者name
                     'subject' => $subject,    
                     'body' => $body,
                     'sq_no' => $sq_no
@@ -99,9 +107,24 @@
 
     function getSqMailSentence() {
         global $pdo;
+        global $title;        
 
-        $sq_mail_id = '01';
-        $seq_no = '1';
+        switch ($title) {
+            //営業依頼書入力画面の場合
+            case 'input':
+                $sq_mail_id = '01';
+                $seq_no = '1';
+                break;
+            //営業依頼書確認画面の場合
+            case 'check':
+                $sq_mail_id = '01';
+                $seq_no = '2';
+                break;
+            default:
+                # code...
+                break;
+        }
+
         $sql = "SELECT sq_mail_title, sq_mail_sentence FROM sq_mail_sentence WHERE sq_mail_id = '$sq_mail_id' AND seq_no = '$seq_no'";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
