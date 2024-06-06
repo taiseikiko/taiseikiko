@@ -160,7 +160,7 @@
   //Disabled textarea 
   var textareas = document.getElementsByTagName('textarea');
   for (var j = 0; j < textareas.length; j++) {
-    if (textareas[j].id !== 'entrant_comments' && textareas[j].id !== 'confirmor_comments' && textareas[j].id !== 'approver_comments') {
+    if (textareas[j].id !== 'entrant_comments' && textareas[j].id !== 'confirmer_comments' && textareas[j].id !== 'approver_comments') {
       textareas[j].disabled = true;
       textareas[j].style.backgroundColor = '#e6e6e6';
     }

@@ -9,8 +9,8 @@ $sq_no = $_POST['sq_no'];
 //e3 = 【　営業依頼書：技術部　入力　】【技術員入力画面・図面・資料処理】納入仕様書のアップロードボタン 
 //e4 = 【　営業依頼書：技術部　入力　】【技術員入力画面・図面・資料処理】参考図面のアップロードボタン 
 //e5 = 【　営業依頼書：技術部　入力　】【技術員入力画面・図面・資料処理】資料のアップロードボタン 
-//m1 = 【　営業依頼書：営業管理部　入力　】【営業管理部入力画面・見積処理】見積原価のアップロードボタン 
-//m2 = 【　営業依頼書：営業管理部　入力　】【営業管理部入力画面・見積処理】見積定価のアップロードボタン 
+//sm1 = 【　営業依頼書：営業管理部　入力　】【営業管理部入力画面・見積処理】見積原価のアップロードボタン 
+//sm2 = 【　営業依頼書：営業管理部　入力　】【営業管理部入力画面・見積処理】見積定価のアップロードボタン 
 $engineering_dir1 = '<meta http-equiv="refresh" content=" 1; url=./sq_detail_tr_engineering_input1.php?title=' . urlencode($title) . '">';
 $engineering_dir2 = '<meta http-equiv="refresh" content=" 2; url=./sq_detail_tr_engineering_input1.php?title=' . urlencode($title) . '">';
 $engineering_dir3 = 'header("Location:sq_detail_tr_engineering_input1.php?title=".urlencode($title))';
@@ -18,6 +18,10 @@ $engineering_dir3 = 'header("Location:sq_detail_tr_engineering_input1.php?title=
 $sales_manag_dir1 = '<meta http-equiv="refresh" content=" 1; url=./sq_detail_tr_sales_management_input1.php?title=' . urlencode($title) . '">';
 $sales_manag_dir2 = '<meta http-equiv="refresh" content=" 2; url=./sq_detail_tr_sales_management_input1.php?title=' . urlencode($title) . '">';
 $sales_manag_dir3 = 'header("Location:sq_detail_tr_sales_management_input1.php?title=".urlencode($title))';
+
+$const_manag_dir1 = '<meta http-equiv="refresh" content=" 1; url=./sq_detail_tr_const_management_input1.php?title=' . urlencode($title) . '">';
+$const_manag_dir2 = '<meta http-equiv="refresh" content=" 2; url=./sq_detail_tr_const_management_input1.php?title=' . urlencode($title) . '">';
+$const_manag_dir3 = 'header("Location:sq_detail_tr_const_management_input1.php?title=".urlencode($title))';
 
 // 更新PGM
 switch ($from) {
@@ -81,7 +85,7 @@ switch ($from) {
     $redirect2 = $engineering_dir2;
     $redirect3 = $engineering_dir3;
     break;
-  case 'm1':
+  case 'sm1':
     include("sq_detail_tr_sales_management_update.php");
     $uploadDir = "document/sales_management/";  //登録ファイル名
     $tmp_file_name = $_FILES["uploaded_file1"]["tmp_name"];
@@ -91,7 +95,7 @@ switch ($from) {
     $redirect2 = $sales_manag_dir2;
     $redirect3 = $sales_manag_dir3;
     break;
-  case 'm2':
+  case 'sm2':
     include("sq_detail_tr_sales_management_update.php");
     echo 'here';
     $uploadDir = "document/sales_management/";  //登録ファイル名
@@ -101,6 +105,27 @@ switch ($from) {
     $redirect1 = $sales_manag_dir1;
     $redirect2 = $sales_manag_dir2;
     $redirect3 = $sales_manag_dir3;
+    break;
+  case 'cm1':
+    include("sq_detail_tr_const_management_update.php");
+    $uploadDir = "document/const_management/";  //登録ファイル名
+    $tmp_file_name = $_FILES["uploaded_file1"]["tmp_name"];
+    $file_name = $_FILES["uploaded_file1"]["name"];
+    $save_file_name = $sq_no."_見積原価_";
+    $redirect1 = $const_manag_dir1;
+    $redirect2 = $const_manag_dir2;
+    $redirect3 = $const_manag_dir3;
+    break;
+  case 'cm2':
+    include("sq_detail_tr_const_management_update.php");
+    echo 'here';
+    $uploadDir = "document/const_management/";  //登録ファイル名
+    $tmp_file_name = $_FILES["uploaded_file2"]["tmp_name"];
+    $file_name = $_FILES["uploaded_file2"]["name"];
+    $save_file_name = $sq_no."_見積定価_";
+    $redirect1 = $const_manag_dir1;
+    $redirect2 = $const_manag_dir2;
+    $redirect3 = $const_manag_dir3;
     break;
 }
 

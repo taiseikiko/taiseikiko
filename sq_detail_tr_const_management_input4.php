@@ -18,10 +18,10 @@
         <label for="mail_to3">東京工事センター </label>
 
         <input type="checkbox" class="mail" id="mail_to4" name="mail_to4" value="1" <?php if ($mail_to4 == '1') {echo 'checked';} ?>>
-        <label for="mail_to4">工事営業管理部</label>
+        <label for="mail_to4">工事工事管理部</label>
 
         <input type="checkbox" class="mail" id="mail_to5" name="mail_to5" value="1" <?php if ($mail_to5 == '1') {echo 'checked';} ?>>
-        <label for="mail_to5">営業管理部</label>
+        <label for="mail_to5">工事管理部</label>
       </div>
     </td>
   </tr>
@@ -29,7 +29,10 @@
   <tr>
     <td>
       <div class="field-row" style="margin-top: 10px;">
-        <label class="common_label" style="text-align:center;" for="mitsumori">見積図面（技術） </label>
+        <label class="common_label" style="text-align:center;white-space: pre-wrap" for="mitsumori">
+        見積図面
+        （技術） 
+        </label>
         <table class="tab1" style="margin-top:10px;">
           <tr>
             <th> 添付された資料 </th>
@@ -54,7 +57,10 @@
   <tr>
     <td>
       <div class="field-row" style="margin-top: 10px;">
-        <label class="common_label" style="text-align:center;" for="mitsumori">資料（技術） </label>
+        <label class="common_label" style="text-align:center;white-space: pre-wrap" for="mitsumori">
+        資料
+        （技術） 
+      </label>
         <table class="tab1" style="margin-top:10px;">
           <tr>
             <th> 添付された資料 </th>
@@ -64,7 +70,7 @@
             foreach ($files as $key => $value) {
               $cut = str_replace('document/engineering/quotation/', '', $value);
               $chk = substr($cut,0,strlen($sq_no)); //get sq_no from file name
-              $type = mb_substr($cut,(strlen($sq_no)+1),2);
+              $type = mb_substr($cut,(strlen($sq_no)+1),4);
               if($sq_no == $chk && $type == '資料'){
                 echo "<tr><td><a href=".$value." target='_blank'>".$value."</a></td></tr>";
               }
@@ -74,7 +80,63 @@
         </table>
       </div>
     </td>
-  </tr>  
+  </tr>
+
+  <tr>
+    <td>
+      <div class="field-row" style="margin-top: 10px;">
+        <label class="common_label" style="text-align:center;white-space: pre-wrap" for="mitsumori">
+        見積原価
+      （営業管理） 
+        </label>
+        <table class="tab1" style="margin-top:10px;">
+          <tr>
+            <th> 添付された資料 </th>
+          </tr>
+          <?php
+            $files = glob('document/sales_management/*.*');
+            foreach ($files as $key => $value) {
+              $cut = str_replace('document/sales_management/', '', $value);
+              $chk = substr($cut,0,strlen($sq_no)); //get sq_no from file name
+              $type = mb_substr($cut,(strlen($sq_no)+1),4);
+              if($sq_no == $chk && $type == '見積原価'){
+                echo "<tr><td><a href=".$value." target='_blank'>".$value."</a></td></tr>";
+              }
+            }
+          ?>
+          <tr style="height:10px;"></tr>
+        </table>
+      </div>
+    </td>
+  </tr> 
+
+  <tr>
+    <td>
+      <div class="field-row" style="margin-top: 10px;">
+        <label class="common_label" style="text-align:center;white-space: pre-wrap" for="mitsumori">
+        見積定価
+      （営業管理）
+        </label>
+        <table class="tab1" style="margin-top:10px;">
+          <tr>
+            <th> 添付された資料 </th>
+          </tr>
+          <?php
+            $files = glob('document/sales_management/*.*');
+            foreach ($files as $key => $value) {
+              $cut = str_replace('document/sales_management/', '', $value);
+              $chk = substr($cut,0,strlen($sq_no)); //get sq_no from file name
+              $type = mb_substr($cut,(strlen($sq_no)+1),4);
+              if($sq_no == $chk && $type == '見積定価'){
+                echo "<tr><td><a href=".$value." target='_blank'>".$value."</a></td></tr>";
+              }
+            }
+          ?>
+          <tr style="height:10px;"></tr>
+        </table>
+      </div>
+    </td>
+  </tr> 
 
   <tr>
     <td>
@@ -91,9 +153,9 @@
       <th> 添付された資料 </th>
     </tr>
     <?php
-      $files = glob('document/sales_management/*.*');
+      $files = glob('document/const_management/*.*');
       foreach ($files as $key => $value) {
-        $cut = str_replace('document/sales_management/', '', $value);
+        $cut = str_replace('document/const_management/', '', $value);
         $chk = substr($cut,0,strlen($sq_no)); //get sq_no from file name
         $type = mb_substr($cut,(strlen($sq_no)+1),4);
         if($sq_no == $chk && $type == '見積原価'){
@@ -119,11 +181,11 @@
       <th> 添付された資料 </th>
     </tr>
     <?php
-      $files = glob('document/sales_management/*.*');
+      $files = glob('document/const_management/*.*');
       foreach ($files as $key => $value) {
-        $cut = str_replace('document/sales_management/', '', $value);
-        $chk = substr($cut,0,strlen($sq_no)); //get sq_no from file name
-        $type = mb_substr($cut,(strlen($sq_no)+1),4);
+        $cut = str_replace('document/const_management/', '', $value);
+        $chk = substr($cut,0,8);
+        $type = mb_substr($cut,9,4);
         if($sq_no == $chk && $type == '見積定価'){
           echo "<tr><td><a href=".$value." target='_blank'>".$value."</a></td></tr>";
         }
@@ -137,19 +199,19 @@
       <div class="field-row" style="margin-top: 10px;">
         <label class="common_label" for="entrant_comments">作成者コメント</label>
         <textarea id="entrant_comments" name="entrant_comments" rows="3" cols="120" class="textarea-res"
-        <?php if ($title !== 'sm_entrant') { echo 'disabled style="background-color: #e6e6e6;"'; } ?>><?= $entrant_comments ?></textarea>
+        <?php if ($title !== 'cm_entrant') { echo 'disabled style="background-color: #e6e6e6;"'; } ?>><?= $entrant_comments ?></textarea>
       </div>
     </td>
   </tr>
 
   <?php
-  if ($title !== 'sm_entrant') { ?>
+  if ($title !== 'cm_entrant') { ?>
   <tr>
     <td>
       <div class="field-row" style="margin-top: 10px;">
         <label class="common_label" for="confirmer_comments">確認者コメント</label>
         <textarea id="confirmer_comments" name="confirmer_comments" rows="3" cols="120" class="textarea-res"
-        <?php if ($title !== 'sm_confirm') { echo 'disabled style="background-color: #e6e6e6;"'; } ?>><?= $confirmer_comments ?></textarea>
+        <?php if ($title !== 'cm_confirm') { echo 'disabled style="background-color: #e6e6e6;"'; } ?>><?= $confirmer_comments ?></textarea>
       </div>
     </td>
   </tr>
@@ -158,7 +220,7 @@
   ?>
 
   <?php
-  if ($title == 'sm_approve') { ?>
+  if ($title == 'cm_approve') { ?>
   <tr>
     <td>
       <div class="field-row" style="margin-top: 10px;">
@@ -180,7 +242,7 @@
         <button id="updBtn" style="background:#80dfff;" class="update" name="submit_entrant" value="update">更新 </button>
       </div>
       <?php
-      if ($title == 'sm_confirm') { ?>
+      if ($title == 'cm_confirm') { ?>
       <div style="margin-top:13px; margin-left:435px">            
         <label class="common_label" for="other">その他処理 </label>
         <select class="dropdown-menu" id="otherProcess" name="otherProcess">
@@ -200,18 +262,18 @@
 <script type="text/javascript">
   $(document).ready(function(){
     $("#updBtn").click(function() {
-      $("#input3").attr("action", "sq_detail_tr_sales_management_update.php");
+      $("#input3").attr("action", "sq_detail_tr_const_management_update.php");
     })
 
     //見積原価のアップロードボタンを押下する場合
     $("#submit_upload1").click(function(){
       //sq_attach_upload1.phpへ移動する
-      $("#input3").attr("action", "sq_attach_upload1.php?from=sm1");
+      $("#input3").attr("action", "sq_attach_upload1.php?from=cm1");
     })
     //見積定価のアップロードボタンを押下する場合
     $("#submit_upload2").click(function(){
       //sq_attach_upload1.phpへ移動する
-      $("#input3").attr("action", "sq_attach_upload1.php?from=sm2");
+      $("#input3").attr("action", "sq_attach_upload1.php?from=cm2");
     })
 
   });

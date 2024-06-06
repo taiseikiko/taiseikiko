@@ -57,7 +57,7 @@
   if (isset($_POST['submit_entrant'])) {
     $success = true;
     $entrant_comments = isset($_POST['entrant_comments']) ? $_POST['entrant_comments'] : '';
-    $confirmor_comments = isset($_POST['confirmor_comments']) ? $_POST['confirmor_comments'] : '';
+    $confirmer_comments = isset($_POST['confirmer_comments']) ? $_POST['confirmer_comments'] : '';
     $approver_comments = isset($_POST['approver_comments']) ? $_POST['approver_comments'] : '';
     $mail_to1 = isset($_POST['mail_to1']) ? $_POST['mail_to1'] : '';
     $mail_to2 = isset($_POST['mail_to2']) ? $_POST['mail_to2'] : '';
@@ -68,7 +68,7 @@
     try {
       $pdo->beginTransaction();
       //テーブルID : sq_detail_tr_sales_management / テーブル名称：営業依頼書・明細T/R_営業管理
-      entrant_cu_sq_detail_tr_sales_management($entrant_comments, $confirmor_comments, $approver_comments, $mail_to1, $mail_to2, $mail_to3, $mail_to4, $mail_to5, $title);
+      entrant_cu_sq_detail_tr_sales_management($entrant_comments, $confirmer_comments, $approver_comments, $mail_to1, $mail_to2, $mail_to3, $mail_to4, $mail_to5, $title);
 
       //テーブルID : sq_detail_tr / テーブル名称：営業依頼書・明細T/R
       entrant_cu_sq_detail_tr($title);
@@ -190,7 +190,7 @@
     global $sq_no;
     global $sq_line_no;
     $entrant_dr = '';
-    $confirmor_dr = '';
+    $confirmer_dr = '';
     $approver_dr = '';
     $datas = [
       'route_id' => $route_pattern,
@@ -206,7 +206,7 @@
 
     if (!empty($sq_default_role_datas) && isset($sq_default_role_datas)) {
       $entrant_dr = $sq_default_role_datas['entrant'];
-      $confirmor_dr = $sq_default_role_datas['confirmor'];
+      $confirmer_dr = $sq_default_role_datas['confirmer'];
       $approver_dr = $sq_default_role_datas['approver'];
     }
 
@@ -220,7 +220,7 @@
           $datas['route'.$i.'_receipt_date'] = $today;
           $datas['route'.$i.'_receipt_person'] = $user_code;
           $datas['route'.$i.'_entrant'] = $entrant_dr;
-          $datas['route'.$i.'_confirmor'] = $confirmor_dr;
+          $datas['route'.$i.'_confirmer'] = $confirmer_dr;
           $datas['route'.$i.'_approver'] = $approver_dr;
         }
       }
@@ -253,7 +253,7 @@
     global $sq_no;
     global $sq_line_no;
     $entrant_dr = '';
-    $confirmor_dr = '';
+    $confirmer_dr = '';
     $approver_dr = '';
     $datas = [
       'route_id' => $route_pattern,
@@ -269,7 +269,7 @@
 
     if (!empty($sq_default_role_datas) && isset($sq_default_role_datas)) {
       $entrant_dr = $sq_default_role_datas['entrant'];
-      $confirmor_dr = $sq_default_role_datas['confirmor'];
+      $confirmer_dr = $sq_default_role_datas['confirmer'];
       $approver_dr = $sq_default_role_datas['approver'];
     }
 
@@ -284,8 +284,8 @@
           $datas['route'.$i.'_receipt_ad'] = getEmail($user_code);
           $datas['route'.$i.'_entrant_person'] = $entrant_dr;
           $datas['route'.$i.'_entrant_ad'] = getEmail($entrant_dr);
-          $datas['route'.$i.'_confirmor_person'] = $confirmor_dr;
-          $datas['route'.$i.'_confirmor_ad'] = getEmail($confirmor_dr);
+          $datas['route'.$i.'_confirmer_person'] = $confirmer_dr;
+          $datas['route'.$i.'_confirmer_ad'] = getEmail($confirmer_dr);
           $datas['route'.$i.'_approver_person'] = $approver_dr;
           $datas['route'.$i.'_approver_ad'] = getEmail($approver_dr);
         }
@@ -313,7 +313,7 @@
 
   /*----------------------------------------------------------------入力画面の関数開始------------------------------------------------------------------------------------- */
   //テーブルID : sq_detail_tr_sales_management / テーブル名称：営業依頼書・明細T/R_営業管理
-  function entrant_cu_sq_detail_tr_sales_management($entrant_comments, $confirmor_comments, $approver_comments, $mail_to1, $mail_to2, $mail_to3, $mail_to4, $mail_to5, $title) {
+  function entrant_cu_sq_detail_tr_sales_management($entrant_comments, $confirmer_comments, $approver_comments, $mail_to1, $mail_to2, $mail_to3, $mail_to4, $mail_to5, $title) {
     global $pdo;
     global $today;
     global $sq_no;
@@ -340,11 +340,11 @@
     }
 
     if ($title == 'sm_confirm') {
-      $data['confirmor'] = $_SESSION["login"];
-      $data['confirmor_comments'] = $confirmor_comments;
+      $data['confirmer'] = $_SESSION["login"];
+      $data['confirmer_comments'] = $confirmer_comments;
       $data['confirm_date'] = $today;
 
-      $sql1 = "UPDATE sq_detail_tr_sales_management SET confirmor=:confirmor, confirmor_comments=:confirmor_comments, confirm_date=:confirm_date, mail_to1=:mail_to1, 
+      $sql1 = "UPDATE sq_detail_tr_sales_management SET confirmer=:confirmer, confirmer_comments=:confirmer_comments, confirm_date=:confirm_date, mail_to1=:mail_to1, 
           mail_to2=:mail_to2, mail_to3=:mail_to3, mail_to4=:mail_to4, mail_to5=:mail_to5, upd_date=:upd_date 
           WHERE sq_no=:sq_no AND sq_line_no=:sq_line_no";
     }

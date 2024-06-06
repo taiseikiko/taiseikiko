@@ -5,11 +5,11 @@
 
     // DB接続
     $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
-    $group_id = $role = $confirmor_email = $approver_email = $name = '';
+    $group_id = $role = $confirmer_email = $approver_email = $name = '';
     $email_datas = [];
     $success = true;
 
-    //①営業部内で、入力完了後、sq_default_role にある、確認者（confirmor）へ送信
+    //①営業部内で、入力完了後、sq_default_role にある、確認者（confirmer）へ送信
     if (isset($_POST['submit'])) {
         //Employeeデータを取得する
         $userdatas = get_sq_route_in_dept($dept_id, $_POST['user_code']);
@@ -35,17 +35,17 @@
                 
                 //入力画面の場合
                 if ($title == 'input') {
-                    $to_email = $item['confirmor_email'];
-                    $to_name = $item['confirmor_name'];
+                    $to_email = $item['confirmer_email'];
+                    $to_name = $item['confirmer_name'];
                 }
                 //確認画面の場合
                 else if ($title == 'check') {
-                    $to_email = $item['confirmor_email'];
-                    $to_name = $item['confirmor_name'];
+                    $to_email = $item['confirmer_email'];
+                    $to_name = $item['confirmer_name'];
                 }
                 $email_datas[] = [
-                    'to_email' => $item['confirmor_email'],         //送信先email
-                    'to_name' => $item['confirmor_name'],           //送信先name
+                    'to_email' => $item['confirmer_email'],         //送信先email
+                    'to_name' => $item['confirmer_name'],           //送信先name
                     'from_email' => $from_email,                    //送信者email
                     'from_name' => $from_name,                    //送信者name
                     'subject' => $subject,    
@@ -82,9 +82,9 @@
     function getDefaultRoleUser($dept_id, $group_id) {
         global $pdo;
         $datas = [];
-        $sql = "SELECT d.confirmor, d.approver, e1.email AS confirmor_email, e1.employee_name AS confirmor_name, e2.email AS approver_email, e2.employee_name AS approver_name
+        $sql = "SELECT d.confirmer, d.approver, e1.email AS confirmer_email, e1.employee_name AS confirmer_name, e2.email AS approver_email, e2.employee_name AS approver_name
                 FROM sq_default_role d
-                LEFT JOIN employee e1 ON e1.employee_code = d.confirmor
+                LEFT JOIN employee e1 ON e1.employee_code = d.confirmer
                 LEFT JOIN employee e2 ON e2.employee_code = d.approver
                 WHERE dept_id = '$dept_id' AND group_id = '$group_id' ";
                 

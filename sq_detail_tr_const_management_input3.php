@@ -5,11 +5,9 @@
   require_once('function.php');
   $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
   include("header1.php");
-  include("sales_request_input2_data_set.php");
-  include("sales_route_input3_data_set.php");
 
-  $route_pattern_list = [];
-  $route_pattern_list = get_route_pattern_list();  
+  include("sales_request_input2_data_set.php");
+  include("sq_detail_tr_const_management_input4_data_set.php");
 
   $title = isset($_GET['title']) ? $_GET['title'] : '';
 ?>
@@ -53,11 +51,7 @@
     })
 
     $("#returnBtn").click(function() {
-      $("#input3").attr("action", "sales_route_input2.php?sq_no="+<?= $sq_no ?>+"&process=detail&title=<?= $title ?>");
-    })
-
-    $("#updBtn").click(function() {
-      $("#input3").attr("action", "sq_route_setting.php");
+      $("#input3").attr("action", "sq_detail_tr_const_management_input2.php?sq_no="+<?= $sq_no ?>+"&process=detail&title=<?= $title ?>");
     })
   });
 
@@ -139,19 +133,21 @@
     var record_div = document.getElementById('record_div').value;
     var route_pattern = document.getElementById('route_pattern').value;
     var dept_id = document.getElementById('dept_id').value;
+    var title = document.getElementById('title').value;
 
     event.preventDefault();
     var url = "sq_person_in_charge_input.php" + "?sq_no=" + sq_no + 
     "&sq_line_no=" + sq_line_no + 
     "&record_div=" + record_div +
     "&route_pattern=" + route_pattern +
-    "&dept_id=" + dept_id;
+    "&dept_id=" + dept_id +
+    "&title=" + title;
     window.open(url,"popupWindow","width=500,height=200,left=100,top=50");
   }
 
   //Disabled Input 
   var inputs = document.getElementsByTagName('input');
-  const excludeInputs = ['hidden', 'submit', 'file']
+  const excludeInputs = ['hidden', 'submit', 'file'];
   for (var i = 0; i < inputs.length; i++) {
     if (!excludeInputs.includes(inputs[i].type.toLowerCase()) && inputs[i].className !== 'mail') {
       inputs[i].disabled = true;
@@ -163,9 +159,9 @@
 
   //Disabled textarea 
   var textareas = document.getElementsByTagName('textarea');
-  const excludeTextareas = ['entrant_comments', 'confirmer_comments', 'approver_comments'];
+  const excludeTextarea = ['entrant_comments', 'confirmer_comments', 'approver_comments'];
   for (var j = 0; j < textareas.length; j++) {
-    if (!excludeTextareas.includes(textareas[j].id)) {
+    if (!excludeTextarea.includes(textareas[j].id)) {
       textareas[j].disabled = true;
       textareas[j].style.backgroundColor = '#e6e6e6';
     }
@@ -173,16 +169,15 @@
 
   //Disabled select 
   var selects = document.getElementsByTagName('select');
-  const excludeSelects = ['otherProcess', 'route_pattern'];
   for (var k = 0; k < selects.length; k++) {
-    if (!excludeSelects.includes(selects[k].id)) {
+    if (selects[k].id !== 'otherProcess') {
       selects[k].disabled = true;
     }
   }
 
   //Disabled button 
   var buttons = document.getElementsByTagName('button');
-  const excludeButtons = ['returnBtn', 'setEmp', 'update', 'setRoute'];
+  const excludeButtons = ['returnBtn', 'setEmp', 'update'];
   for (var k = 0; k < buttons.length; k++) {
     if (!excludeButtons.includes(buttons[k].className)) {
       buttons[k].disabled = true;

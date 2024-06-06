@@ -470,11 +470,14 @@
     <!-- /*..................................................................................................*/ -->
     <?php 
     $s_title = substr($title, 0, 2);
+    //営業管理部の場合
     if ($s_title == 'sm') {
       if ($title !== 'sm_receipt') {
         include('sq_detail_tr_sales_management_input4.php');
       }
-    } else if ($s_title == 'td') {
+    } 
+    //技術部の場合
+    else if ($s_title == 'td') {
       if ($title !== 'td_receipt') {
         if ($record_div == '1') {
           include('sq_detail_tr_engineering_input4.php');
@@ -483,7 +486,12 @@
         }
       }
     }
-    
+    //工事管理部の場合
+    else if ($s_title == 'cm') {
+      if ($title !== 'cm_receipt') {
+        include('sq_detail_tr_const_management_input4.php');
+      }
+    } 
     ?>
   </form><!-- Vertical Form -->
 </div>

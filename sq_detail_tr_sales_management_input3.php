@@ -159,7 +159,7 @@
 
   //Disabled textarea 
   var textareas = document.getElementsByTagName('textarea');
-  const excludeTextarea = ['entrant_comments', 'confirmor_comments', 'approver_comments'];
+  const excludeTextarea = ['entrant_comments', 'confirmer_comments', 'approver_comments'];
   for (var j = 0; j < textareas.length; j++) {
     if (!excludeTextarea.includes(textareas[j].id)) {
       textareas[j].disabled = true;

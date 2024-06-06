@@ -215,7 +215,51 @@
       (CASE route4_dept WHEN '$dept_id' THEN e.employee_code = route4_entrant END) OR
       (CASE route5_dept WHEN '$dept_id' THEN e.employee_code = route5_entrant END))
       WHERE d.sq_no='$sq_no'";
-    }else {
+    } 
+    //営業依頼書：工事管理部の場合
+    else if ($process == 'detail' && $s_title == 'cm') {
+      $sql = "SELECT d.sq_no, d.sq_line_no, z.zkm_name, d.size, d.joint, d.pipe, d.inner_coating, d.outer_coating, d.fluid, d.valve, e.employee_name,
+            CASE d.record_div 
+            WHEN '1' THEN '見積'
+            WHEN '2' THEN '図面'
+            ELSE ''
+            END AS record_div_nm
+            FROM sq_detail_tr d
+            LEFT JOIN sq_zaikoumei z ON d.zkm_code = z.zkm_code AND d.class_code = z.class_code
+            INNER JOIN sq_route_tr r ON r.sq_no = d.sq_no AND r.sq_line_no = d.sq_line_no AND (";
+      if ($title == 'cm_receipt') {
+        $sql.= "(route1_dept = '$dept_id' AND route1_receipt_date IS NULL)
+        OR (route2_dept = '$dept_id' AND route2_receipt_date IS NULL)
+        OR (route3_dept = '$dept_id' AND route3_receipt_date IS NULL)
+        OR (route4_dept = '$dept_id' AND route4_receipt_date IS NULL)
+        OR (route5_dept = '$dept_id' AND route5_receipt_date IS NULL))";
+      } else if ($title == 'cm_entrant') {
+        $sql.= "(route1_dept = '$dept_id' AND route1_entrant_date IS NULL AND route1_receipt_date IS NOT NULL)
+        OR (route2_dept = '$dept_id' AND route2_entrant_date IS NULL AND route2_receipt_date IS NOT NULL)
+        OR (route3_dept = '$dept_id' AND route3_entrant_date IS NULL AND route3_receipt_date IS NOT NULL)
+        OR (route4_dept = '$dept_id' AND route4_entrant_date IS NULL AND route4_receipt_date IS NOT NULL)
+        OR (route5_dept = '$dept_id' AND route5_entrant_date IS NULL AND route5_receipt_date IS NOT NULL))";
+      } else if ($title == 'cm_confirm') {
+        $sql.= "(route1_dept = '$dept_id' AND route1_confirm_date IS NULL AND route1_entrant_date IS NOT NULL)
+        OR (route2_dept = '$dept_id' AND route2_confirm_date IS NULL AND route2_entrant_date IS NOT NULL)
+        OR (route3_dept = '$dept_id' AND route3_confirm_date IS NULL AND route3_entrant_date IS NOT NULL)
+        OR (route4_dept = '$dept_id' AND route4_confirm_date IS NULL AND route4_entrant_date IS NOT NULL)
+        OR (route5_dept = '$dept_id' AND route5_confirm_date IS NULL AND route5_entrant_date IS NOT NULL))";
+      } else if ($title == 'cm_approve') {
+        $sql.= "(route1_dept = '$dept_id' AND route1_approval_date IS NULL AND route1_confirm_date IS NOT NULL)
+        OR (route2_dept = '$dept_id' AND route2_approval_date IS NULL AND route2_confirm_date IS NOT NULL)
+        OR (route3_dept = '$dept_id' AND route3_approval_date IS NULL AND route3_confirm_date IS NOT NULL)
+        OR (route4_dept = '$dept_id' AND route4_approval_date IS NULL AND route4_confirm_date IS NOT NULL)
+        OR (route5_dept = '$dept_id' AND route5_approval_date IS NULL AND route5_confirm_date IS NOT NULL))";
+      }
+      $sql.=  " LEFT JOIN employee e ON 
+      ((CASE route1_dept WHEN '$dept_id' THEN e.employee_code = route1_entrant END) OR
+      (CASE route2_dept WHEN '$dept_id' THEN e.employee_code = route2_entrant END) OR
+      (CASE route3_dept WHEN '$dept_id' THEN e.employee_code = route3_entrant END) OR
+      (CASE route4_dept WHEN '$dept_id' THEN e.employee_code = route4_entrant END) OR
+      (CASE route5_dept WHEN '$dept_id' THEN e.employee_code = route5_entrant END))
+      WHERE d.sq_no='$sq_no'";
+    } else {
       //営業依頼書依頼入力の場合
       $sql = "SELECT d.sq_no, d.sq_line_no, z.zkm_name, d.size, d.joint, d.pipe, d.inner_coating, d.outer_coating, d.fluid, d.valve,
             CASE d.record_div 

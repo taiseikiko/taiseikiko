@@ -99,7 +99,10 @@
       else if (title == 'sm_receipt') {
         $('#setEmployee').attr('action', 'sq_detail_tr_sales_management_update.php');
       }
-      
+      //工事管理部の場合
+      else if (title == 'cm_receipt') {
+        $('#setEmployee').attr('action', 'sq_detail_tr_const_management_update.php');
+      }
     })
   });
 

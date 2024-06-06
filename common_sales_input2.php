@@ -217,7 +217,7 @@
           $files = glob('document/sales_management/*.*');
           foreach ($files as $key => $value) {
           $cut = str_replace('document/sales_management/', '', $value);
-          $chk = substr($cut,0,8);
+          $chk = substr($cut,0,strlen($sq_no));
           if($sq_no == $chk){
             echo "<tr><td><a href=".$value." target='_blank'>".$value."</a></td></tr>";
           }
@@ -263,7 +263,7 @@
           $i = 1;
           if (isset($sq_detail_list) && !empty($sq_detail_list)) {
             foreach ($sq_detail_list as $item) {
-              if ($process == 'detail' && $title !=='set_route') { $employee_name = $item['employee_name']; } else { $employee_name = 'ss'; }
+              if ($process == 'detail' && $title !=='set_route') { $employee_name = $item['employee_name']; } else { $employee_name = ''; }
         ?>
         <tr>
           <td><?= $i ?></td>

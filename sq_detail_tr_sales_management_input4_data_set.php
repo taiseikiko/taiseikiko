@@ -1,5 +1,5 @@
 <?php
-  $mail_to1 = $mail_to2 = $mail_to3 = $mail_to4 = $mail_to5 = $entrant_comments = $confirmor_comments = $approver_comments = '';
+  $mail_to1 = $mail_to2 = $mail_to3 = $mail_to4 = $mail_to5 = $entrant_comments = $confirmer_comments = $approver_comments = '';
   if(isset($_POST['process2'])) {
     $process2 = $_POST['process2'];
     $sq_no = $_POST['sq_no'];
@@ -16,7 +16,7 @@
       $mail_to4 = $sq_detail_sm_datas['mail_to4'];
       $mail_to5 = $sq_detail_sm_datas['mail_to5'];
       $entrant_comments = $sq_detail_sm_datas['entrant_comments'];
-      $confirmor_comments = $sq_detail_sm_datas['confirmor_comments'];
+      $confirmer_comments = $sq_detail_sm_datas['confirmer_comments'];
       $approver_comments = $sq_detail_sm_datas['approver_comments'];
     }
 
