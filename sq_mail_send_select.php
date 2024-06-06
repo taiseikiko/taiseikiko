@@ -61,9 +61,6 @@ function sendMail($email_datas) {
             }
             $sq_no = $item['sq_no'];
         }
-        // if ($success) {
-        //     header('location:sales_request_input1.php?sq_no='.$sq_no.'&process=update');
-        // }
 
     } catch (Exception $e) {
         $success = false;

@@ -405,7 +405,7 @@
 
       <!-- 確認画面の場合だけに表示させる -->
       <?php
-        if ($title == 'check' || $e_title == 'confirm') { 
+        if ($title == 'check' || $e_title == 'confirm' || $title == 'approve' || $e_title == 'approve') { 
       ?>
       <tr>
         <td>

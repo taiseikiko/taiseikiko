@@ -216,7 +216,7 @@
           <th>バルブ仕様</th>
           <th>区分</th>
           <?php if ($process == 'detail') { echo '<th>担当者</th>'; } ?>
-          <th <?php if ($process !== 'detail' && $title !== 'check' && $title !== 'confirm') { echo 'width="160px"'; } ?>>処理</th>
+          <th <?php if ($process !== 'detail' && $title !== 'check' && $title !== 'approve') { echo 'width="160px"'; } ?>>処理</th>
         </tr>
         <tr>
           <?php 
@@ -224,7 +224,7 @@
               $regBtnDisabled = 'disabled';
             }
           ?>
-          <?php if ($process !== 'detail' && $title !== 'input' && $title !== 'check' && $title !== 'approve') { ?>
+          <?php if ($process !== 'detail' && $title !== 'check' && $title !== 'approve') { ?>
             <td colspan="11" style="text-align:left"><button class="createBtn" name="process2" value="new" <?= $regBtnDisabled ?>>新規作成</button></td>
           <?php } ?>
         </tr>
@@ -249,7 +249,7 @@
           <td>
             <?php if ($process == 'update') { ?>
               <button class="updateBtn" name="process2" value="update" data-sq_line_no="<?= $item['sq_line_no'] ?>">更新</button>
-              <?php if ($title !== 'check' && $title !== 'confirm') { ?>
+              <?php if ($title !== 'check' && $title !== 'approve') { ?>
               <button class="copyBtn" name="process2" value="copy" data-sq_line_no="<?= $item['sq_line_no'] ?>">コピー</button>
               <?php } ?>
             <?php } else { ?>
