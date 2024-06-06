@@ -38,11 +38,10 @@
         error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
       }
     }
+    //登録処理にエラーが無ければメール送信する
     if ($success) {
-      echo "<script>
-        window.close();
-        window.location.href='sales_route_input1.php';
-      </script>";
+      //メール送信する
+      include('sq_mail_send2.php');
     }
   }
 

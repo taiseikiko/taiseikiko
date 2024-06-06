@@ -44,7 +44,6 @@ function sendMail($email_datas) {
 
         // 送受信先設定（第二引数は省略可）
         foreach ($email_datas as $item) {
-            
             $mail->setFrom($item['from_email'], $item['from_name']); // 送信者
             $mail->addAddress($item['to_email'], $item['to_name']);
             $mail->addReplyTo('peacefullife4497@gmail.com', 'HTET HTET'); // 返信先

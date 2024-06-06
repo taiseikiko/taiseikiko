@@ -4,9 +4,10 @@
   header('Content-type: text/html; charset=utf-8');
   require_once('function.php');
   $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
-  include("sales_request_input01_data_set.php");
   include("header1.php");
+
   $dept_code = $_SESSION['department_code'];
+  include("sales_request_input01_data_set.php");
   $title = isset($_GET['title']) ? $_GET['title'] : '';
   $sq_datas = get_sq_datas($title);
  

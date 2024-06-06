@@ -132,23 +132,6 @@
     });
   });
 
-  //担当者設定子画面呼び出し
-  function person_in_charge(event) {
-    var sq_no = document.getElementById('sq_no').value;
-    var sq_line_no = document.getElementById('sq_line_no').value;
-    var record_div = document.getElementById('record_div').value;
-    var route_pattern = document.getElementById('route_pattern').value;
-    var dept_id = document.getElementById('dept_id').value;
-
-    event.preventDefault();
-    var url = "sq_person_in_charge_input.php" + "?sq_no=" + sq_no + 
-    "&sq_line_no=" + sq_line_no + 
-    "&record_div=" + record_div +
-    "&route_pattern=" + route_pattern +
-    "&dept_id=" + dept_id;
-    window.open(url,"popupWindow","width=500,height=200,left=100,top=50");
-  }
-
   //Disabled Input 
   var inputs = document.getElementsByTagName('input');
   const excludeInputs = ['hidden', 'submit', 'file']
