@@ -129,10 +129,10 @@
     }
 
     //エラーがなかったらメール送信する
-    // if ($success) {
-    //   //Send Mail
-    //   include('sq_mail_send1.php');
-    // }
+    if ($success) {
+      //Send Mail
+      include('sq_mail_send1.php');
+    }
   }
 
   function insertData($datas) {
