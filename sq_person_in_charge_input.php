@@ -27,7 +27,7 @@
         <input type="hidden" name="title" id="title" value="<?=$title?>">
         <div class="field-row">
           <label class="common_label" for="other">グループ </label>          
-          <select class="dropdown-menu" id="group" name="group" <?php if ($title == 'sm_receipt') { echo 'disabled'; } ?>>
+          <select class="dropdown-menu" id="group" name="group" <?php if ($title == 'sm_receipt' || $title == 'pc_receipt') { echo 'disabled'; } ?>>
             <option value="" class="">選択して下さい。</option>
             <?php 
               if (isset($group_datas) && !empty($group_datas)) {
@@ -41,7 +41,7 @@
             ?>
           </select>
         </div>
-        <?php if ($title == 'sm_receipt') { 
+        <?php if ($title == 'sm_receipt' || $title == 'pc_receipt') { 
           echo '<font style="color: red"><label class="common_label" style="margin-left:50px;" for="other">※グループの選択は不要です。 </label></font>'; }
         ?>
         <div class="field-row">
@@ -102,6 +102,10 @@
       //工事管理部の場合
       else if (title == 'cm_receipt') {
         $('#setEmployee').attr('action', 'sq_detail_tr_const_management_update.php');
+      }
+      //資材部の場合
+      else if (title == 'pc_receipt') {
+        $('#setEmployee').attr('action', 'sq_detail_tr_procurement_update.php');
       }
     })
   });

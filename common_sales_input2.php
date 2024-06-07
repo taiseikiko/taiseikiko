@@ -3,6 +3,7 @@
     <input type="hidden" name="process" value="<?= $process ?>">
     <input type="hidden" name="dept_id" value="<?= $dept_id ?>">
     <input type="hidden" name="client" value="<?= $client ?>">
+    <input type="hidden" name="title" value="<?= $title ?>">
     <table style="width:auto;">
       <input type="hidden" name="sq_no" value="<?= $sq_no ?>">
       <tr style="height:10px; margin-top:20px"></tr>
@@ -182,13 +183,15 @@
         <tr>
           <th> 添付された資料 </th>
         </tr>
-        <?php
+        <?php        
+        if (!empty($sq_no)) {
           $files = glob('document/sales_management/*.*');
           foreach ($files as $key => $value) {
-          $cut = str_replace('document/sales_management/', '', $value);
-          $chk = substr($cut,0,strlen($sq_no));
-          if($sq_no == $chk){
-            echo "<tr><td><a href=".$value." target='_blank'>".$value."</a></td></tr>";
+            $cut = str_replace('document/sales_management/', '', $value);
+            $chk = substr($cut,0,strlen($sq_no));
+            if($sq_no == $chk){
+              echo "<tr><td><a href=".$value." target='_blank'>".$value."</a></td></tr>";
+            }
           }
         }
       ?>

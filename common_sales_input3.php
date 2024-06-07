@@ -534,6 +534,12 @@
         include('sq_detail_tr_const_management_input4.php');
       }
     } 
+    //資材部の場合
+    else if ($s_title == 'pc') {
+      if ($title !== 'pc_receipt') {
+        include('sq_detail_tr_procurement_input4.php');
+      }
+    } 
     ?>
   </form><!-- Vertical Form -->
 </div>

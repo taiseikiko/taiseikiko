@@ -19,8 +19,8 @@
   //グループプルダウンのデータを取得する
   $group_datas = getGroupDatas();
 
-  //営業依頼書：営業管理部　受付の場合、グループはないので全部の担当者を取得する
-  if ($title == 'sm_receipt') {
+  //営業依頼書：営業管理部と資材部の　受付の場合、グループはないので全部の担当者を取得する
+  if ($title == 'sm_receipt' || $title == 'pc_receipt') {
     $employee_datas = getEmployeeDatas();
   }
 
