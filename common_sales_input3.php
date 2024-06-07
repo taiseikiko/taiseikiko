@@ -125,7 +125,7 @@
             <select class="dropdown-menu" id="zaikoumeiList" name="zaikoumei">
               <option value="" class="">選択して下さい。</option>
             </select>
-            <input type="hidden" name="zkm_cd" id="zkm_cd" value="<?= $zkm_cd ?>">
+            <input type="hidden" name="zkm_code" id="zkm_code" value="<?= $zkm_code ?>">
 
             <label class="common_label" for="c_div">区分 </label>
             <input type="text" id="c_div" name="c_div" value="<?= $c_div ?>" class="readonlyText" readonly style="width:100px;">

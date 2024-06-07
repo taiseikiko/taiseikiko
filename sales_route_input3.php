@@ -39,7 +39,7 @@
 
     $("#classList").change(function() {
       let class_code = $(this).val();
-      $('#zkm_cd').val('');
+      $('#zkm_code').val('');
       fetchData(class_code, function(response) {
         console.log(response);
       }, function(error) {
@@ -72,7 +72,7 @@
       },
       success: function(response){
         var zaikoumeiList = JSON.parse(response);
-        var selected = $('#zkm_cd').val();
+        var selected = $('#zkm_code').val();
         let i = 1;
         $.each(zaikoumeiList, function(index, item) {
           $('#zaikoumeiList').append($('<option>', {

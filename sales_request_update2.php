@@ -8,18 +8,18 @@
   $success = true;
   $datas = [];
   $record_div_type = '';
-  $title = isset($_GET['title']) ? $_GET['title'] : '';
+  $title = $_GET['title'] ?? '';
 
   if (isset($_POST['submit'])) {
     $process = $_POST['process2'];  //更新 || 登録
     $sq_no = $_POST['sq_no'];       //営業依頼書№
-    $dept_id = isset($_POST['dept_id']) ? $_POST['dept_id'] : '';
+    $dept_id = $_POST['dept_id'] ?? '';
 
-    $estimate_div1 = isset($_POST['estimate_div1']) ? $_POST['estimate_div1'] : '';
-    $estimate_div2 = isset($_POST['estimate_div2']) ? $_POST['estimate_div2'] : '';
-    $specification_div = isset($_POST['specification_div']) ? $_POST['specification_div'] : '';
-    $drawing_div = isset($_POST['drawing_div']) ? $_POST['drawing_div'] : '';
-    $document_div = isset($_POST['document_div']) ? $_POST['document_div'] : '';
+    $estimate_div1 = $_POST['estimate_div1'] ?? '';
+    $estimate_div2 = $_POST['estimate_div2'] ?? '';
+    $specification_div = $_POST['specification_div'] ?? '';
+    $drawing_div = $_POST['drawing_div'] ?? '';
+    $document_div = $_POST['document_div'] ?? '';
 
     $datas = [
       'sq_no' => $sq_no, //営業依頼書№
@@ -27,18 +27,18 @@
       'estimate_div2' => $estimate_div2, //見積区分：工事
       'deadline_estimate_date' => $_POST['deadline_estimate_date'], //見積提出期限
       'specification_div' => $specification_div, //仕様書必須区分
-      'check_type' => isset($_POST['check_type']) ? $_POST['check_type'] : '', //検査書区分
+      'check_type' => $_POST['check_type'] ?? '', //検査書区分
       'drawing_div' => $drawing_div, //参考図面区分
       'document_div' => $document_div, //資料区分
       'deadline_drawing_date' => $_POST['deadline_drawing_date'], //図面提出期限
-      'cad_data_div' => isset($_POST['cad_data_div']) ? $_POST['cad_data_div'] : '', //CADデータ区分
+      'cad_data_div' => $_POST['cad_data_div'] ?? '', //CADデータ区分
       'class_code' => $_POST['class'], //分類コード
       'zkm_code' => $_POST['zaikoumei'], //材工名コード
       'c_div' => $_POST['c_div_code'], //一般工事区分
-      'const_div1' => isset($_POST['const_div1']) ? $_POST['const_div1'] : '', //工事区分1
-      'const_div2' => isset($_POST['const_div2']) ? $_POST['const_div2'] : '', //工事区分2
-      'const_div3' => isset($_POST['const_div3']) ? $_POST['const_div3'] : '', //工事区分3
-      'const_div4' => isset($_POST['const_div4']) ? $_POST['const_div4'] : '', //工事区分4
+      'const_div1' => $_POST['const_div1'] ?? '', //工事区分1
+      'const_div2' => $_POST['const_div2'] ?? '', //工事区分2
+      'const_div3' => $_POST['const_div3'] ?? '', //工事区分3
+      'const_div4' => $_POST['const_div4'] ?? '', //工事区分4
       'size' => $_POST['size'], //サイズ
       'joint' => $_POST['joint'], //接合形状
       'pipe' => $_POST['pipe'], //管種
@@ -49,15 +49,15 @@
       'fluid' => $_POST['fluid'], //管内流体
       'valve' => $_POST['valve'], //バルブ仕様
       'o_c_direction' => $_POST['o_c_direction'], //開閉方向
-      'special_tube_od1' => isset($_POST['special_tube_od1']) ? $_POST['special_tube_od1'] : 0, //特殊管外径1
-      'special_tube_od2' => isset($_POST['special_tube_od2']) ? $_POST['special_tube_od2'] : 0, //特殊管外径2
-      'quantity' => isset($_POST['quantity']) ? $_POST['quantity'] : 0, //数量
-      'right_quantity' => isset($_POST['right_quantity']) ? $_POST['right_quantity'] : 0, //右用数量
-      'left_quantity' => isset($_POST['left_quantity']) ? $_POST['left_quantity'] : 0, //左用数量
+      'special_tube_od1' => $_POST['special_tube_od1'] ?? 0, //特殊管外径1
+      'special_tube_od2' => $_POST['special_tube_od2'] ?? 0, //特殊管外径2
+      'quantity' => $_POST['quantity'] ?? 0, //数量
+      'right_quantity' => $_POST['right_quantity'] ?? 0, //右用数量
+      'left_quantity' => $_POST['left_quantity'] ?? 0, //左用数量
       'design_water_pressure' => $_POST['design_water_pressure'], //設計水圧
-      'water_outage' => isset($_POST['water_outage']) ? $_POST['water_outage'] : '', //断水区分
+      'water_outage' => $_POST['water_outage'] ?? '', //断水区分
       'normal_water_puressure' => $_POST['normal_water_puressure'], //常圧
-      'reducing_pressure_div' => isset($_POST['reducing_pressure_div']) ? $_POST['reducing_pressure_div'] : '', //施工時減圧区分
+      'reducing_pressure_div' => $_POST['reducing_pressure_div'] ?? '', //施工時減圧区分
       'special_note' => $_POST['special_note'], //特記事項
       'entrant_comments' => $_POST['entrant_comments'],  //入力者コメント
     ];

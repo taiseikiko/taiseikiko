@@ -5,11 +5,11 @@
   $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
   $today = date('Y/m/d');
   $success = true;
-  $title = isset($_GET['title']) ? $_GET['title'] : '';
+  $title = $_GET['title'] ?? '';
 
   if (isset($_POST['submit'])) {
     $process = $_POST['process'];
-    $dept_id = isset($_POST['dept_id']) ? $_POST['dept_id'] : '';
+    $dept_id = $_POST['dept_id'] ?? '';
     
 
     //営業依頼書№ 自動採番
@@ -60,25 +60,24 @@
     }
 
     $datas = [          
-      'client' => $_POST['user_code'],        //依頼者
-      'cust_no' => $_POST['cust_code'],       //得意先コード
-      'cust_dept' => $_POST['cust_dept'],     //得意先担当部署
-      'cust_pic' => $_POST['cust_pic'],       //得意先担当者
-      'p_office_no' => $_POST['pf_code'],     //事業体コード
-      'p_office_dept' => $_POST['pf_dept'],   //事業体担当部署
-      'p_office_pic' => $_POST['pf_pic'],     //事業体担当者
-      'planned_order_date' => $_POST['planned_order_date'],              //発注予定日
-      'planned_construction_date' => $_POST['planned_construction_date'],//施工予定日
-      'degree_of_order' => $_POST['degree_of_order'],     //発注確度
-      'order_accuracy' => $_POST['order_accuracy'],       //受注確度
-      'case_div' => isset($_POST['case_div']) ? $_POST['case_div'] : '',                   //案件区分
+      'client' => $_POST['user_code'] ?? '',        //依頼者
+      'cust_no' => $_POST['cust_code'] ?? '',       //得意先コード
+      'cust_dept' => $_POST['cust_dept'] ?? '',     //得意先担当部署
+      'cust_pic' => $_POST['cust_pic'] ?? '',       //得意先担当者
+      'p_office_no' => $_POST['pf_code'] ?? '',     //事業体コード
+      'p_office_dept' => $_POST['pf_dept'] ?? '',   //事業体担当部署
+      'p_office_pic' => $_POST['pf_pic'] ?? '',     //事業体担当者
+      'planned_order_date' => $_POST['planned_order_date'] ?? '',              //発注予定日
+      'planned_construction_date' => $_POST['planned_construction_date'] ?? '',//施工予定日
+      'degree_of_order' => $_POST['degree_of_order'] ?? '',     //発注確度
+      'order_accuracy' => $_POST['order_accuracy'] ?? '',       //受注確度
+      'case_div' => $_POST['case_div'] ?? '',                   //案件区分
       'related_sq_no' => "",//関連依頼書№
-      'daily_report_url' => $_POST['daily_report_url'],  //営業日報URL
-      'note' => $note = $_POST['note'],                           //備考
-      'prior_notice_div' => isset($_POST['prior_notice_div']) ? $_POST['prior_notice_div'] : '',   //技術への事前連絡区分
-      'prior_notice_date' => $_POST['prior_notice_date'], //技術への事前連絡日
-      'item_name' => $_POST['item_name'],                //件名
-      'status' => 'TEST'
+      'daily_report_url' => $_POST['daily_report_url'] ?? '',  //営業日報URL
+      'note' => $_POST['note'] ?? '',                           //備考
+      'prior_notice_div' => $_POST['prior_notice_div'] ?? '',   //技術への事前連絡区分
+      'prior_notice_date' => $_POST['prior_notice_date'] ?? '', //技術への事前連絡日
+      'item_name' => $_POST['item_name'] ?? '',                //件名
     ];
 
     try {
@@ -89,9 +88,9 @@
         $datas['sq_no'] = $sq_no;
 
         $sql = 'INSERT INTO sq_header_tr(sq_no,client,cust_no,cust_dept,cust_pic,p_office_no,p_office_dept,p_office_pic,planned_order_date,planned_construction_date,
-              degree_of_order,order_accuracy,case_div,related_sq_no,daily_report_url,note,prior_notice_div,prior_notice_date,add_date, item_name, status) 
+              degree_of_order,order_accuracy,case_div,related_sq_no,daily_report_url,note,prior_notice_div,prior_notice_date,add_date, item_name) 
               VALUES (:sq_no,:client,:cust_no,:cust_dept,:cust_pic,:p_office_no,:p_office_dept,:p_office_pic,:planned_order_date,:planned_construction_date,
-              :degree_of_order,:order_accuracy,:case_div,:related_sq_no,:daily_report_url,:note,:prior_notice_div,:prior_notice_date,:add_date,:item_name, :status)';
+              :degree_of_order,:order_accuracy,:case_div,:related_sq_no,:daily_report_url,:note,:prior_notice_div,:prior_notice_date,:add_date,:item_name)';
       } 
       //更新の場合
       else {
@@ -101,7 +100,7 @@
         $sql = 'UPDATE sq_header_tr SET client=:client,cust_no=:cust_no,cust_dept=:cust_dept,cust_pic=:cust_pic,p_office_no=:p_office_no,p_office_dept=:p_office_dept,
               p_office_pic=:p_office_pic,planned_order_date=:planned_order_date,planned_construction_date=:planned_construction_date,
               degree_of_order=:degree_of_order,order_accuracy=:order_accuracy,case_div=:case_div,related_sq_no=:related_sq_no,daily_report_url=:daily_report_url,note=:note,
-              prior_notice_div=:prior_notice_div,prior_notice_date=:prior_notice_date,item_name=:item_name,status=:status, upd_date=:upd_date WHERE sq_no=:sq_no';
+              prior_notice_div=:prior_notice_div,prior_notice_date=:prior_notice_date,item_name=:item_name, upd_date=:upd_date WHERE sq_no=:sq_no';
       }
       
       $stmt = $pdo->prepare($sql);

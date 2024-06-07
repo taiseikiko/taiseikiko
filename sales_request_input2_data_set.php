@@ -6,7 +6,7 @@
 
   // 初期設定 & データセット
   $class_code = '';             //分類
-  $zkm_cd = '';                 //材工名
+  $zkm_code = '';                 //材工名
   $size = '';                   //サイズ
   $joint = '';                  //接合形状
   $pipe = '';                   //管種
@@ -79,46 +79,15 @@
 
       $sq_detail_datas = get_sq_detail_datas($sq_no, $sq_line_no);
       if (isset($sq_detail_datas) && !empty($sq_detail_datas)) {
-        $estimate_div1 = $sq_detail_datas['estimate_div1'];                     //材料費
-        $estimate_div2 = $sq_detail_datas['estimate_div2'];                     //工事費
-        $specification_div = $sq_detail_datas['specification_div'];             //仕様書必要
-        $drawing_div = $sq_detail_datas['drawing_div'];                         //参考図面必要
-        $document_div = $sq_detail_datas['document_div'];                       //資料必要
-        $check_type = $sq_detail_datas['check_type'];                           //日水協 or 社内証
-        $deadline_estimate_date = $sq_detail_datas['deadline_estimate_date'];   //見積提出期限
-        $deadline_drawing_date = $sq_detail_datas['deadline_drawing_date'];     //図面等提出期限
-        $cad_data_div = $sq_detail_datas['cad_data_div'];                       //CADデータ
-        $const_div1 = $sq_detail_datas['const_div1'];                           //昼間
-        $const_div2 = $sq_detail_datas['const_div2'];                           //夜間
-        $const_div3 = $sq_detail_datas['const_div3'];                           //昼間・夜間
-        $const_div4 = $sq_detail_datas['const_div4'];                           //昼夜通し
-        $c_div = $sq_detail_datas['c_div'];                                     //区分
-        $design_water_pressure = $sq_detail_datas['design_water_pressure'];     //設計水圧
-        $reducing_pressure_div = $sq_detail_datas['reducing_pressure_div'];     //施工時減圧
-        $normal_water_puressure = $sq_detail_datas['normal_water_puressure'];   //常圧
-        $water_outage = $sq_detail_datas['water_outage'];                       //断水
-        $inner_film = $sq_detail_datas['inner_film'];                           //膜厚
-        $outer_film = $sq_detail_datas['outer_film'];                           //膜厚
-        $quantity = $sq_detail_datas['quantity'];                               //数量
-        $right_quantity = $sq_detail_datas['right_quantity'];                   //右用
-        $left_quantity = $sq_detail_datas['left_quantity'];                     //左用
-        $special_note = $sq_detail_datas['special_note'];                       //特記仕様
-        $size = $sq_detail_datas['size'];                                       //サイズ
-        $joint = $sq_detail_datas['joint'];                                     //接合形状
-        $pipe = $sq_detail_datas['pipe'];                                       //管種
-        $fluid = $sq_detail_datas['fluid'];                                     //管内流体
-        $inner_coating = $sq_detail_datas['inner_coating'];                     //内面塗装
-        $outer_coating = $sq_detail_datas['outer_coating'];                     //外面塗装
-        $valve = $sq_detail_datas['valve'];                                     //バルブ仕様
-        $record_div = $sq_detail_datas['record_div'];                           //レコード区分
-        $class_code = $sq_detail_datas['class_code'];                           //分類
-        $zkm_cd = $sq_detail_datas['zkm_code'];                                 //材工名
-        $special_tube_od1 = $sq_detail_datas['special_tube_od1'];               //特殊管外径１
-        $special_tube_od2 = $sq_detail_datas['special_tube_od2'];               //特殊管外径２
-        $route_pattern = $sq_detail_datas['route_pattern'];                     //ルートパタン
-        $entrant_comments = $sq_detail_datas['entrant_comments'];             //入力者コメント
-        $approver_comments = $sq_detail_datas['approver_comments'];          //承認者コメント
-        $confirmer_comments = $sq_detail_datas['confirmer_comments'];        //確認者コメント
+
+        $fields = ['estimate_div1', 'estimate_div2', 'specification_div', 'drawing_div', 'document_div', 'check_type', 'deadline_estimate_date', 'deadline_drawing_date', 'cad_data_div', 'const_div1',
+        'const_div2', 'const_div3', 'const_div4', 'c_div', 'design_water_pressure', 'reducing_pressure_div', 'normal_water_puressure', 'water_outage', 'inner_film', 'outer_film', 'quantity', 
+        'right_quantity', 'left_quantity', 'special_note', 'size', 'joint', 'pipe', 'fluid', 'inner_coating', 'outer_coating', 'valve', 'record_div', 'class_code', 'zkm_code', 'special_tube_od1',
+        'special_tube_od2', 'route_pattern', 'entrant_comments', 'approver_comments', 'confirmer_comments'];
+
+        foreach ($fields as $field) {
+          ${$field} = $sq_detail_datas[$field];
+        }
       }
     }
   }

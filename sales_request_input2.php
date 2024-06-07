@@ -7,7 +7,7 @@
   include("header1.php");
 
   include("sales_request_input2_data_set.php");
-  $title = isset($_GET['title']) ? $_GET['title'] : '';
+  $title = $_GET['title'] ?? '';
 ?>
 
 <main>
@@ -35,7 +35,7 @@
 
     $("#classList").change(function() {
       let class_code = $(this).val();
-      $('#zkm_cd').val('');
+      $('#zkm_code').val('');
       fetchData(class_code, function(response) {
         console.log(response);
       }, function(error) {
@@ -69,7 +69,7 @@
       },
       success: function(response){
         var zaikoumeiList = JSON.parse(response);
-        var selected = $('#zkm_cd').val();
+        var selected = $('#zkm_code').val();
         let i = 1;
         $.each(zaikoumeiList, function(index, item) {
           $('#zaikoumeiList').append($('<option>', {
