@@ -8,21 +8,21 @@
       $sq_line_no = $_GET['line'];
     }
 
-    $sq_detail_eng_datas = get_sq_detail_tr_engineering($sq_no, $sq_line_no);
-    if (isset($sq_detail_eng_datas) && !empty($sq_detail_eng_datas)) {
-      
+    $sq_detail_cm_datas = get_sq_detail_tr_const_management($sq_no, $sq_line_no);
+    if (isset($sq_detail_cm_datas) && !empty($sq_detail_cm_datas)) {
+
       $fields = ['mail_to1', 'mail_to2', 'mail_to3', 'mail_to4', 'mail_to5', 'entrant_comments', 'confirmer_comments', 'approver_comments'];
 
       foreach ($fields as $field) {
-        ${$field} = $sq_detail_eng_datas[$field] ?? '';
+        ${$field} = $sq_detail_cm_datas[$field] ?? '';
       }
     }
 
   }
 
-  function get_sq_detail_tr_engineering($sq_no, $sq_line_no) {
+  function get_sq_detail_tr_const_management($sq_no, $sq_line_no) {
     global $pdo;
-    $sql = "SELECT * FROM sq_detail_tr_engineering WHERE sq_no='$sq_no' AND sq_line_no='$sq_line_no'";
+    $sql = "SELECT * FROM sq_detail_tr_const_management WHERE sq_no='$sq_no' AND sq_line_no='$sq_line_no'";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $datas = $stmt->fetch(PDO::FETCH_ASSOC);

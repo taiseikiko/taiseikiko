@@ -17,23 +17,22 @@
     $success = true;
     $record_div = $_POST['record_div'];
     $entrant = $_POST['entrant'];
-    $group_id = $_POST['group'];
     
     $sq_default_role_datas = [];
 
     try {
       $pdo->beginTransaction();
-      //テーブルID : sq_detail_tr_engineering / テーブル名称：営業依頼書・明細T/R_技術へ登録
-      receipt_cu_sq_detail_tr_engineering($record_div, $entrant);
+      //テーブルID : sq_detail_tr_const_management / テーブル名称：営業依頼書・明細T/R_営業管理へ登録
+      receipt_cu_sq_detail_tr_const_management($entrant);
 
       //テーブルID : sq_detail_tr / テーブル名称：営業依頼書・明細T/R
       receipt_cu_sq_detail_tr();
 
       //テーブルID : sq_route_tr / テーブル名称：部署ルートトランザクション
-      receipt_cu_sq_route_tr($entrant, $group_id);
+      receipt_cu_sq_route_tr($entrant);
 
       //テーブルID : sq_route_mail_tr / テーブル名称：部署ルートメールトランザクション
-      receipt_cu_sq_route_mail_tr($entrant, $group_id);
+      receipt_cu_sq_route_mail_tr($entrant);
 
       $pdo->commit();
     } catch (PDOException $e) {
@@ -49,49 +48,13 @@
     if ($success) {
       echo "<script>
         window.close();
-        window.opener.location.href='sq_detail_tr_engineering_input1.php?title=td_receipt';
-      </script>";
-    }
-  }
-
-  //入力画面から見積更新ボタンを押下場合
-  if (isset($_POST['submit_entrant1'])) {
-    $success = true;
-    $entrant_comments = isset($_POST['entrant_comments']) ? $_POST['entrant_comments'] : '';
-    $confirmer_comments = isset($_POST['confirmer_comments']) ? $_POST['confirmer_comments'] : '';
-    $approver_comments = isset($_POST['approver_comments']) ? $_POST['approver_comments'] : '';
-
-    try {
-      $pdo->beginTransaction();
-      //テーブルID : sq_detail_tr_engineering / テーブル名称：営業依頼書・明細T/R_技術
-      entrant_cu_sq_detail_tr_engineering1($entrant_comments, $confirmer_comments, $approver_comments, $title);
-
-      //テーブルID : sq_detail_tr / テーブル名称：営業依頼書・明細T/R
-      entrant_cu_sq_detail_tr($title);
-
-      //テーブルID : sq_route_tr / テーブル名称：部署ルートトランザクション
-      entrant_cu_sq_route_tr($title);
-
-      $pdo->commit();
-    } catch (PDOException $e) {
-      $success = false;
-      if (strpos($e->getMessage(), 'SQLSTATE[42000]') !== false) {
-        error_log("SQL Syntax Error or Access Violation: " . $e->getMessage(),3,'error_log.txt');
-      } else {
-        $pdo->rollback();
-        throw($e);
-        error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
-      }
-    }
-    if ($success) {
-      echo "<script>
-        window.location.href='sq_detail_tr_engineering_input1.php?title=".$title."';
+        window.opener.location.href='sq_detail_tr_const_management_input1.php?title=cm_receipt';
       </script>";
     }
   }
 
   //入力画面から図面更新ボタンを押下場合
-  if (isset($_POST['submit_entrant2'])) {
+  if (isset($_POST['submit_entrant'])) {
     $success = true;
     $entrant_comments = isset($_POST['entrant_comments']) ? $_POST['entrant_comments'] : '';
     $confirmer_comments = isset($_POST['confirmer_comments']) ? $_POST['confirmer_comments'] : '';
@@ -104,8 +67,8 @@
 
     try {
       $pdo->beginTransaction();
-      //テーブルID : sq_detail_tr_engineering / テーブル名称：営業依頼書・明細T/R_技術
-      entrant_cu_sq_detail_tr_engineering2($entrant_comments, $confirmer_comments, $approver_comments, $mail_to1, $mail_to2, $mail_to3, $mail_to4, $mail_to5, $title);
+      //テーブルID : sq_detail_tr_const_management / テーブル名称：営業依頼書・明細T/R_営業管理
+      entrant_cu_sq_detail_tr_const_management($entrant_comments, $confirmer_comments, $approver_comments, $mail_to1, $mail_to2, $mail_to3, $mail_to4, $mail_to5, $title);
 
       //テーブルID : sq_detail_tr / テーブル名称：営業依頼書・明細T/R
       entrant_cu_sq_detail_tr($title);
@@ -124,9 +87,10 @@
         error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
       }
     }
+    echo $success;
     if ($success) {
       echo "<script>
-        window.location.href='sq_detail_tr_engineering_input1.php?title=".$title."';
+        window.location.href='sq_detail_tr_const_management_input1.php?title=".$title."';
       </script>";
     }
   }
@@ -147,12 +111,12 @@
   }
 
   //テーブルID : sq_default_role / テーブル名称：営業依頼書・部署初期ルートM/Fへ登録
-  function get_sq_default_role($entrant, $group_id) {
+  function get_sq_default_role($entrant) {
     global $pdo;
     global $dept_id;
 
     $datas = [];
-    $sql = "SELECT * FROM sq_default_role WHERE dept_id = '$dept_id' AND entrant = '$entrant' AND group_id = '$group_id'";
+    $sql = "SELECT * FROM sq_default_role WHERE dept_id = '$dept_id' AND entrant = '$entrant'";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -164,7 +128,7 @@
 
   /*----------------------------------------------------------------受付画面の関数開始------------------------------------------------------------------------------------- */
   //テーブルID : sq_detail_tr_engineering / テーブル名称：営業依頼書・明細T/R_技術へ登録
-  function receipt_cu_sq_detail_tr_engineering($record_div, $entrant) {
+  function receipt_cu_sq_detail_tr_const_management($entrant) {
     global $pdo;
     global $today;
     global $sq_no;
@@ -173,23 +137,22 @@
     $data = [
       'sq_no' => $sq_no,
       'sq_line_no' => $sq_line_no,
-      'record_div' => $record_div,
       'entrant' => $entrant,
       'reception' => $_SESSION["login"],
       'reception_date' => $today
     ];
 
-    $sql = "SELECT * FROM sq_detail_tr_engineering WHERE sq_no = '$sq_no' AND sq_line_no = '$sq_line_no'";
+    $sql = "SELECT * FROM sq_detail_tr_const_management WHERE sq_no = '$sq_no' AND sq_line_no = '$sq_line_no'";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     if (!$row) {
       $data['add_date'] = $today;
-      $sql1 = "INSERT INTO sq_detail_tr_engineering (sq_no, sq_line_no, record_div, entrant, reception, reception_date, add_date) 
-            VALUES(:sq_no, :sq_line_no, :record_div, :entrant, :reception, :reception_date, :add_date)";
+      $sql1 = "INSERT INTO sq_detail_tr_const_management (sq_no, sq_line_no, entrant, reception, reception_date, add_date) 
+            VALUES(:sq_no, :sq_line_no, :entrant, :reception, :reception_date, :add_date)";
     } else {
       $data['upd_date'] = $today;
-      $sql1 = "UPDATE sq_detail_tr_engineering SET record_div=:record_div, entrant=:entrant, reception=:reception, reception_date=:reception_date, upd_date=:upd_date 
+      $sql1 = "UPDATE sq_detail_tr_const_management SET entrant=:entrant, reception=:reception, reception_date=:reception_date, upd_date=:upd_date 
             WHERE sq_no=:sq_no AND sq_line_no=:sq_line_no";
     }
     $stmt1 = $pdo->prepare($sql1);
@@ -218,7 +181,7 @@
   }
 
   //テーブルID : sq_route_tr / テーブル名称：部署ルートトランザクション
-  function receipt_cu_sq_route_tr($entrant, $group_id) {
+  function receipt_cu_sq_route_tr($entrant) {
     global $pdo;
     global $today;
     global $dept_id;
@@ -239,7 +202,7 @@
     $cols = '';
 
     //テーブルID : sq_default_role / テーブル名称：営業依頼書・部署初期ルートM/Fからデータを取得
-    $sq_default_role_datas = get_sq_default_role($entrant, $group_id);
+    $sq_default_role_datas = get_sq_default_role($entrant);
 
     if (!empty($sq_default_role_datas) && isset($sq_default_role_datas)) {
       $entrant_dr = $sq_default_role_datas['entrant'];
@@ -281,7 +244,7 @@
   }
 
   //テーブルID : sq_route_mail_tr / テーブル名称：部署ルートメールトランザクション
-  function receipt_cu_sq_route_mail_tr($entrant, $group_id) {
+  function receipt_cu_sq_route_mail_tr($entrant) {
     global $pdo;
     global $today;
     global $dept_id;
@@ -302,7 +265,7 @@
     $cols = '';
 
     //テーブルID : sq_default_role / テーブル名称：営業依頼書・部署初期ルートM/Fからデータを取得
-    $sq_default_role_datas = get_sq_default_role($entrant, $group_id);
+    $sq_default_role_datas = get_sq_default_role($entrant);
 
     if (!empty($sq_default_role_datas) && isset($sq_default_role_datas)) {
       $entrant_dr = $sq_default_role_datas['entrant'];
@@ -349,50 +312,8 @@
   /*----------------------------------------------------------------受付画面の関数完了------------------------------------------------------------------------------------- */
 
   /*----------------------------------------------------------------入力画面の関数開始------------------------------------------------------------------------------------- */
-  //テーブルID : sq_detail_tr_engineering / テーブル名称：営業依頼書・明細T/R_技術
-  function entrant_cu_sq_detail_tr_engineering1($entrant_comments, $confirmer_comments, $approver_comments, $title) {
-    global $pdo;
-    global $today;
-    global $sq_no;
-    global $sq_line_no;
-
-    $data = [
-      'sq_no' => $sq_no,
-      'sq_line_no' => $sq_line_no,
-      'upd_date' => $today
-    ];
-
-    if ($title == 'td_entrant') {
-      $data['entrant_comments'] = $entrant_comments;
-      $data['entrant_date'] = $today;
-
-      $sql1 = "UPDATE sq_detail_tr_engineering SET entrant_comments=:entrant_comments, entrant_date=:entrant_date, upd_date=:upd_date 
-          WHERE sq_no=:sq_no AND sq_line_no=:sq_line_no";
-    }
-
-    if ($title == 'td_confirm') {
-      $data['confirmer'] = $_SESSION["login"];
-      $data['confirmer_comments'] = $confirmer_comments;
-      $data['confirm_date'] = $today;
-
-      $sql1 = "UPDATE sq_detail_tr_engineering SET confirmer=:confirmer, confirmer_comments=:confirmer_comments, confirm_date=:confirm_date, upd_date=:upd_date 
-          WHERE sq_no=:sq_no AND sq_line_no=:sq_line_no";
-    }
-
-    if ($title == 'td_approve') {
-      $data['approver'] = $_SESSION["login"];
-      $data['approver_comments'] = $approver_comments;
-      $data['approve_date'] = $today;
-
-      $sql1 = "UPDATE sq_detail_tr_engineering SET approver=:approver, approver_comments=:approver_comments, approve_date=:approve_date, upd_date=:upd_date 
-          WHERE sq_no=:sq_no AND sq_line_no=:sq_line_no";
-    }
-
-    $stmt1 = $pdo->prepare($sql1);
-    $stmt1->execute($data);
-  }
-
-  function entrant_cu_sq_detail_tr_engineering2($entrant_comments, $confirmer_comments, $approver_comments, $mail_to1, $mail_to2, $mail_to3, $mail_to4, $mail_to5, $title) {
+  //テーブルID : sq_detail_tr_const_management / テーブル名称：営業依頼書・明細T/R_営業管理
+  function entrant_cu_sq_detail_tr_const_management($entrant_comments, $confirmer_comments, $approver_comments, $mail_to1, $mail_to2, $mail_to3, $mail_to4, $mail_to5, $title) {
     global $pdo;
     global $today;
     global $sq_no;
@@ -409,31 +330,31 @@
       'upd_date' => $today
     ];
 
-    if ($title == 'td_entrant') {
+    if ($title == 'cm_entrant') {
       $data['entrant_comments'] = $entrant_comments;
       $data['entrant_date'] = $today;
 
-      $sql1 = "UPDATE sq_detail_tr_engineering SET entrant_comments=:entrant_comments, entrant_date=:entrant_date, mail_to1=:mail_to1, 
+      $sql1 = "UPDATE sq_detail_tr_const_management SET entrant_comments=:entrant_comments, entrant_date=:entrant_date, mail_to1=:mail_to1, 
           mail_to2=:mail_to2, mail_to3=:mail_to3, mail_to4=:mail_to4, mail_to5=:mail_to5, upd_date=:upd_date 
           WHERE sq_no=:sq_no AND sq_line_no=:sq_line_no";
     }
 
-    if ($title == 'td_confirm') {
+    if ($title == 'cm_confirm') {
       $data['confirmer'] = $_SESSION["login"];
       $data['confirmer_comments'] = $confirmer_comments;
       $data['confirm_date'] = $today;
 
-      $sql1 = "UPDATE sq_detail_tr_engineering SET confirmer=:confirmer, confirmer_comments=:confirmer_comments, confirm_date=:confirm_date, mail_to1=:mail_to1, 
+      $sql1 = "UPDATE sq_detail_tr_const_management SET confirmer=:confirmer, confirmer_comments=:confirmer_comments, confirm_date=:confirm_date, mail_to1=:mail_to1, 
           mail_to2=:mail_to2, mail_to3=:mail_to3, mail_to4=:mail_to4, mail_to5=:mail_to5, upd_date=:upd_date 
           WHERE sq_no=:sq_no AND sq_line_no=:sq_line_no";
     }
 
-    if ($title == 'td_approve') {
+    if ($title == 'cm_approve') {
       $data['approver'] = $_SESSION["login"];
       $data['approver_comments'] = $approver_comments;
       $data['approve_date'] = $today;
 
-      $sql1 = "UPDATE sq_detail_tr_engineering SET approver=:approver, approver_comments=:approver_comments, approve_date=:approve_date, mail_to1=:mail_to1, 
+      $sql1 = "UPDATE sq_detail_tr_const_management SET approver=:approver, approver_comments=:approver_comments, approve_date=:approve_date, mail_to1=:mail_to1, 
           mail_to2=:mail_to2, mail_to3=:mail_to3, mail_to4=:mail_to4, mail_to5=:mail_to5, upd_date=:upd_date 
           WHERE sq_no=:sq_no AND sq_line_no=:sq_line_no";
     }
@@ -451,15 +372,15 @@
     global $sq_line_no;
 
     switch ($title) {
-      case 'td_entrant':
+      case 'cm_entrant':
         $status = 2;
         break;
 
-      case 'td_confirm':
+      case 'cm_confirm':
         $status = 3;
         break;
 
-      case 'td_approve':
+      case 'cm_approve':
         $status = 4;
         break;
       
@@ -506,11 +427,11 @@
     if ($row) {
       for ($i = 1; $i <= 5; $i++) {
         if ($row['route'.$i.'_dept'] == $dept_id) {
-          if ($title == 'td_entrant') {
+          if ($title == 'cm_entrant') {
             $datas['route'.$i.'_entrant_date'] = $today;
-          } else if ($title == 'td_confirm') {
+          } else if ($title == 'cm_confirm') {
             $datas['route'.$i.'_confirm_date'] = $today;
-          } else if ($title == 'td_approve') {
+          } else if ($title == 'cm_approve') {
             $datas['route'.$i.'_approval_date'] = $today;
           }
         }

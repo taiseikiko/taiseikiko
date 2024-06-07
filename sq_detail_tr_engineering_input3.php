@@ -37,7 +37,7 @@
 
     $("#classList").change(function() {
       let class_code = $(this).val();
-      $('#zkm_cd').val('');
+      $('#zkm_code').val('');
       fetchData(class_code, function(response) {
         console.log(response);
       }, function(error) {
@@ -66,7 +66,7 @@
       },
       success: function(response){
         var zaikoumeiList = JSON.parse(response);
-        var selected = $('#zkm_cd').val();
+        var selected = $('#zkm_code').val();
         let i = 1;
         $.each(zaikoumeiList, function(index, item) {
           $('#zaikoumeiList').append($('<option>', {
@@ -160,7 +160,7 @@
   //Disabled textarea 
   var textareas = document.getElementsByTagName('textarea');
   for (var j = 0; j < textareas.length; j++) {
-    if (textareas[j].id !== 'entrant_comments' && textareas[j].id !== 'confirmor_comments' && textareas[j].id !== 'approver_comments') {
+    if (textareas[j].id !== 'entrant_comments' && textareas[j].id !== 'confirmer_comments' && textareas[j].id !== 'approver_comments') {
       textareas[j].disabled = true;
       textareas[j].style.backgroundColor = '#e6e6e6';
     }

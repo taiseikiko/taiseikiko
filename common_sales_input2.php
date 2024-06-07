@@ -3,6 +3,7 @@
     <input type="hidden" name="process" value="<?= $process ?>">
     <input type="hidden" name="dept_id" value="<?= $dept_id ?>">
     <input type="hidden" name="client" value="<?= $client ?>">
+    <input type="hidden" name="title" value="<?= $title ?>">
     <table style="width:auto;">
       <input type="hidden" name="sq_no" value="<?= $sq_no ?>">
       <tr style="height:10px; margin-top:20px"></tr>
@@ -152,37 +153,6 @@
           </div>
         </td>
       </tr>
-
-      <tr>
-        <td>
-          <div class="field-row">
-            <label class="common_label" for="entrant_comments">作成者コメント</label>
-            <textarea id="entrant_comments" style="margin-left: 1rem;" name="entrant_comments" rows="3" cols="120" class="textarea-res"><?= $entrant_comments ?></textarea>
-          </div>
-        </td>
-      </tr>
-
-      <?php if ($title == 'check' || $title == 'approve') {?>
-      <tr>
-        <td>
-          <div class="field-row">
-            <label class="common_label" for="confirmer_comments">確認者コメント</label>
-            <textarea id="confirmer_comments" style="margin-left: 1rem;" name="confirmer_comments" rows="3" cols="120" class="textarea-res"><?= $confirmer_comments ?></textarea>
-          </div>
-        </td>
-      </tr>
-      <?php }?>
-
-      <?php if ($title == 'approve') {?>
-      <tr>
-        <td>
-          <div class="field-row">
-            <label class="common_label" for="approver_comments">承認者コメント</label>
-            <textarea id="approver_comments" style="margin-left: 1rem;" name="approver_comments" rows="3" cols="120" class="textarea-res"><?= $approver_comments ?></textarea>
-          </div>
-        </td>
-      </tr>
-      <?php }?>
       <tr style="height:10px;"></tr>
     </table>
     
@@ -213,13 +183,15 @@
         <tr>
           <th> 添付された資料 </th>
         </tr>
-        <?php
+        <?php        
+        if (!empty($sq_no)) {
           $files = glob('document/sales_management/*.*');
           foreach ($files as $key => $value) {
-          $cut = str_replace('document/sales_management/', '', $value);
-          $chk = substr($cut,0,8);
-          if($sq_no == $chk){
-            echo "<tr><td><a href=".$value." target='_blank'>".$value."</a></td></tr>";
+            $cut = str_replace('document/sales_management/', '', $value);
+            $chk = substr($cut,0,strlen($sq_no));
+            if($sq_no == $chk){
+              echo "<tr><td><a href=".$value." target='_blank'>".$value."</a></td></tr>";
+            }
           }
         }
       ?>
@@ -247,7 +219,7 @@
           <th>バルブ仕様</th>
           <th>区分</th>
           <?php if ($process == 'detail') { echo '<th>担当者</th>'; } ?>
-          <th <?php if ($process !== 'detail') { echo 'width="160px"'; } ?>>処理</th>
+          <th <?php if ($process !== 'detail' && $title !== 'check' && $title !== 'approve') { echo 'width="160px"'; } ?>>処理</th>
         </tr>
         <tr>
           <?php 
@@ -255,7 +227,7 @@
               $regBtnDisabled = 'disabled';
             }
           ?>
-          <?php if ($process !== 'detail' && $title !== 'input' && $title !== 'check' && $title !== 'approve') { ?>
+          <?php if ($process !== 'detail' && $title !== 'check' && $title !== 'approve') { ?>
             <td colspan="11" style="text-align:left"><button class="createBtn" name="process2" value="new" <?= $regBtnDisabled ?>>新規作成</button></td>
           <?php } ?>
         </tr>
@@ -263,7 +235,7 @@
           $i = 1;
           if (isset($sq_detail_list) && !empty($sq_detail_list)) {
             foreach ($sq_detail_list as $item) {
-              if ($process == 'detail' && $title !=='set_route') { $employee_name = $item['employee_name']; } else { $employee_name = 'ss'; }
+              if ($process == 'detail' && $title !=='set_route') { $employee_name = $item['employee_name']; } else { $employee_name = ''; }
         ?>
         <tr>
           <td><?= $i ?></td>
@@ -280,7 +252,9 @@
           <td>
             <?php if ($process == 'update') { ?>
               <button class="updateBtn" name="process2" value="update" data-sq_line_no="<?= $item['sq_line_no'] ?>">更新</button>
+              <?php if ($title !== 'check' && $title !== 'approve') { ?>
               <button class="copyBtn" name="process2" value="copy" data-sq_line_no="<?= $item['sq_line_no'] ?>">コピー</button>
+              <?php } ?>
             <?php } else { ?>
               <button class="updateBtn" name="process2" value="detail" data-sq_line_no="<?= $item['sq_line_no'] ?>">明細画面</button>
             <?php } ?>

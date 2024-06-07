@@ -1,3 +1,6 @@
+<?php 
+  $e_title = substr($title, 3);
+?>
 <div class="container">
   <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="input3">
     <input type="hidden" name="process2" id="process2" value="<?= $process2 ?>">
@@ -122,7 +125,7 @@
             <select class="dropdown-menu" id="zaikoumeiList" name="zaikoumei">
               <option value="" class="">選択して下さい。</option>
             </select>
-            <input type="hidden" name="zkm_cd" id="zkm_cd" value="<?= $zkm_cd ?>">
+            <input type="hidden" name="zkm_code" id="zkm_code" value="<?= $zkm_code ?>">
 
             <label class="common_label" for="c_div">区分 </label>
             <input type="text" id="c_div" name="c_div" value="<?= $c_div ?>" class="readonlyText" readonly style="width:100px;">
@@ -386,12 +389,49 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="special_note">特記仕様</label>
-            <textarea type="text" id="special_note" name="special_note" rows="3" cols="100"><?= $special_note ?></textarea>
+            <textarea type="text" id="special_note" name="special_note" rows="3" cols="120"><?= $special_note ?></textarea>
           </div>
         </td>
       </tr>
+
+      <tr>
+        <td>
+          <div class="field-row">
+            <label class="common_label" for="entrant_comments">作成者コメント</label>
+            <textarea id="entrant_comment" name="entrant_comments" rows="3" cols="120" class="textarea-res"><?= $entrant_comments ?></textarea>
+          </div>
+        </td>
+      </tr>
+
+      <!-- 確認画面の場合だけに表示させる -->
+      <?php
+        if ($title == 'check' || $e_title == 'confirm' || $title == 'approve' || $e_title == 'approve') { 
+      ?>
+      <tr>
+        <td>
+          <div class="field-row">
+            <label class="common_label" for="confirmer_comments">確認者コメント</label>
+            <textarea id="confirmer_comment" name="confirmer_comments" rows="3" cols="120" class="textarea-res"><?= $confirmer_comments ?></textarea>
+          </div>
+        </td>
+      </tr>
+      <?php } ?>
+
+      <!-- 承認画面の場合だけに表示させる -->
       <?php 
-      $e_title = substr($title, 3, 7);
+        if ($title == 'approve' || $e_title == 'approve') { 
+      ?>
+      <tr>
+        <td>
+          <div class="field-row">
+            <label class="common_label" for="approver_comments">承認者コメント</label>
+            <textarea id="approver_comment" name="approver_comments" rows="3" cols="120" class="textarea-res"><?= $approver_comments ?></textarea>
+          </div>
+        </td>
+      </tr>
+      <?php } ?>
+
+      <?php
       if ($e_title == 'receipt' || $title == 'input' || $title == 'check' || $title == 'approve') { ?>
       <tr>
         <td>
@@ -399,6 +439,7 @@
             <div>
               <button id="returnBtn" class="returnBtn">前の画面に戻る </button>
             </div>
+              <!-- 入力画面の場合だけに表示させる -->
               <?php if($e_title == 'receipt') { ?>
                 <div>
                   <button id="updBtn" class="setEmp" style="background:#80dfff;" name="submit" onclick="person_in_charge(event)">担当者設定</button>
@@ -422,6 +463,7 @@
         </td>
       </tr>
       <?php } 
+      // ルート設定画面の場合だけに表示させる
       if ($title == 'set_route') {
       ?>
       <tr>
@@ -470,11 +512,14 @@
     <!-- /*..................................................................................................*/ -->
     <?php 
     $s_title = substr($title, 0, 2);
+    //営業管理部の場合
     if ($s_title == 'sm') {
       if ($title !== 'sm_receipt') {
         include('sq_detail_tr_sales_management_input4.php');
       }
-    } else if ($s_title == 'td') {
+    } 
+    //技術部の場合
+    else if ($s_title == 'td') {
       if ($title !== 'td_receipt') {
         if ($record_div == '1') {
           include('sq_detail_tr_engineering_input4.php');
@@ -483,7 +528,18 @@
         }
       }
     }
-    
+    //工事管理部の場合
+    else if ($s_title == 'cm') {
+      if ($title !== 'cm_receipt') {
+        include('sq_detail_tr_const_management_input4.php');
+      }
+    } 
+    //資材部の場合
+    else if ($s_title == 'pc') {
+      if ($title !== 'pc_receipt') {
+        include('sq_detail_tr_procurement_input4.php');
+      }
+    } 
     ?>
   </form><!-- Vertical Form -->
 </div>

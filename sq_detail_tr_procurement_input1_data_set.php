@@ -17,9 +17,8 @@ function get_sq_datas($title) {
                 SELECT DISTINCT(sq_no) 
                 FROM sq_route_tr 
                 WHERE ";
-
       switch ($title) {
-        case 'sm_receipt':
+        case 'pc_receipt':
           $sql .= "(
                       route1_dept = ? AND route1_receipt_date IS NULL
                     ) OR (
@@ -32,7 +31,7 @@ function get_sq_datas($title) {
                       route5_dept = ? AND route5_receipt_date IS NULL
                     )"; 
           break;
-        case 'sm_entrant':
+        case 'pc_entrant':
           $sql .= "(
                       route1_dept = ? AND route1_receipt_date IS NOT NULL AND route1_entrant_date IS NULL
                     ) OR (
@@ -45,7 +44,7 @@ function get_sq_datas($title) {
                       route5_dept = ? AND route5_receipt_date IS NOT NULL AND route5_entrant_date IS NULL
                     )"; 
           break;
-        case 'sm_confirm':
+        case 'pc_confirm':
           $sql .= "(
                       route1_dept = ? AND route1_entrant_date IS NOT NULL AND route1_confirm_date IS NULL
                     ) OR (
@@ -58,7 +57,7 @@ function get_sq_datas($title) {
                       route5_dept = ? AND route5_entrant_date IS NOT NULL AND route5_confirm_date IS NULL
                     )"; 
           break;
-        case 'sm_approve':
+        case 'pc_approve':
           $sql .= "(
                       route1_dept = ? AND route1_confirm_date IS NOT NULL AND route1_approval_date IS NULL
                     ) OR (
@@ -72,8 +71,7 @@ function get_sq_datas($title) {
                     )"; 
           break;
       }
-
-    $sql.=  ") AS dist_sq_route_tr ON h.sq_no = dist_sq_route_tr.sq_no";
+      $sql.=  ") AS dist_sq_route_tr ON h.sq_no = dist_sq_route_tr.sq_no";
   }
   $stmt = $pdo->prepare($sql);
   $params = array_fill(0, substr_count($sql, '?'), $dept_id);

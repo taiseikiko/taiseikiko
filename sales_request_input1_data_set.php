@@ -23,9 +23,6 @@
   $note = '';                       //備考
   $prior_notice_div = '';           //技術への事前連絡区分
   $prior_notice_date = '';          //技術への事前連絡日
-  $entrant_comments = '';           //入力者コメント
-  $confirmer_comments = '';          //確認者コメント
-  $approver_comments = '';           //承認者コメント
   $sq_header_datas = [];
   $item_name = '';                  //件名
   $daily_report_url = '';           //営業日報URL
@@ -60,9 +57,6 @@
         $note = $sq_header_datas['note'];                          //備考
         $prior_notice_div = $sq_header_datas['prior_notice_div'];  //技術への事前連絡区分
         $prior_notice_date = $sq_header_datas['prior_notice_date'];//技術への事前連絡日
-        $entrant_comments = $sq_header_datas['entrant_comments'];  //入力者コメント
-        $approver_comments = $sq_header_datas['approver_comments'];          //承認者コメント
-        $confirmer_comments = $sq_header_datas['confirmer_comments'];        //確認者コメント
         $degree_of_order = $sq_header_datas['degree_of_order'];     //発注確度
         $order_accuracy = $sq_header_datas['order_accuracy'];       //受注確度
         $item_name = $sq_header_datas['item_name'];                 //件名
@@ -150,6 +144,7 @@
     global $dept_id;
 
     $s_title = substr($title, 0, 2);
+    $e_title = substr($title, 3);
     //営業依頼書技術部の場合
     if ($process == 'detail' && $s_title == 'td') {
       $sql = "SELECT d.sq_no, d.sq_line_no, z.zkm_name, d.size, d.joint, d.pipe, d.inner_coating, d.outer_coating, d.fluid, d.valve, e.employee_name,
@@ -160,20 +155,25 @@
             END AS record_div_nm
             FROM sq_detail_tr d
             LEFT JOIN sq_zaikoumei z ON d.zkm_code = z.zkm_code AND d.class_code = z.class_code
-            INNER JOIN sq_route_tr r ON r.sq_no = d.sq_no AND r.sq_line_no = d.sq_line_no AND r.route1_dept = '$dept_id' ";
-      if ($title == 'td_receipt') {
-        $sql.= "AND r.route1_receipt_date IS NULL ";
-      } else if ($title == 'td_entrant') {
-        $sql.= "AND r.route1_entrant_date IS NULL AND r.route1_receipt_date IS NOT NULL ";
-      } else if ($title == 'td_confirm') {
-        $sql.= "AND r.route1_confirm_date IS NULL AND r.route1_entrant_date IS NOT NULL ";
-      } else if ($title == 'td_approve') {
-        $sql.= "AND r.route1_approval_date IS NULL AND r.route1_confirm_date IS NOT NULL ";
+            INNER JOIN sq_route_tr r ON r.sq_no = d.sq_no AND r.sq_line_no = d.sq_line_no AND r.route1_dept = ? ";
+      switch ($title) {
+        case 'td_receipt':
+          $sql .= "AND r.route1_receipt_date IS NULL ";
+          break;
+        case 'td_entrant':
+          $sql .= "AND r.route1_entrant_date IS NULL AND r.route1_receipt_date IS NOT NULL ";
+          break;
+        case 'td_confirm':
+          $sql .= "AND r.route1_confirm_date IS NULL AND r.route1_entrant_date IS NOT NULL ";
+          break;
+        case 'td_approve':
+          $sql .= "AND r.route1_approval_date IS NULL AND r.route1_confirm_date IS NOT NULL ";
+          break;
       }
-      $sql.=  "LEFT JOIN employee e ON e.employee_code = r.route1_entrant WHERE d.sq_no='$sq_no'";
+      $sql .=  "LEFT JOIN employee e ON e.employee_code = r.route1_entrant WHERE d.sq_no='$sq_no'";
     } 
-    //営業依頼書：営業管理部の場合
-    else if ($process == 'detail' && $s_title == 'sm') {
+    //営業依頼書：営業管理部、工事管理部、資材部の場合
+    else if ($process == 'detail' && ($s_title == 'sm' || $s_title == 'cm' || $s_title == 'pc')) {
       $sql = "SELECT d.sq_no, d.sq_line_no, z.zkm_name, d.size, d.joint, d.pipe, d.inner_coating, d.outer_coating, d.fluid, d.valve, e.employee_name,
             CASE d.record_div 
             WHEN '1' THEN '見積'
@@ -183,39 +183,90 @@
             FROM sq_detail_tr d
             LEFT JOIN sq_zaikoumei z ON d.zkm_code = z.zkm_code AND d.class_code = z.class_code
             INNER JOIN sq_route_tr r ON r.sq_no = d.sq_no AND r.sq_line_no = d.sq_line_no AND (";
-      if ($title == 'sm_receipt') {
-        $sql.= "(route1_dept = '$dept_id' AND route1_receipt_date IS NULL)
-        OR (route2_dept = '$dept_id' AND route2_receipt_date IS NULL)
-        OR (route3_dept = '$dept_id' AND route3_receipt_date IS NULL)
-        OR (route4_dept = '$dept_id' AND route4_receipt_date IS NULL)
-        OR (route5_dept = '$dept_id' AND route5_receipt_date IS NULL))";
-      } else if ($title == 'sm_entrant') {
-        $sql.= "(route1_dept = '$dept_id' AND route1_entrant_date IS NULL AND route1_receipt_date IS NOT NULL)
-        OR (route2_dept = '$dept_id' AND route2_entrant_date IS NULL AND route2_receipt_date IS NOT NULL)
-        OR (route3_dept = '$dept_id' AND route3_entrant_date IS NULL AND route3_receipt_date IS NOT NULL)
-        OR (route4_dept = '$dept_id' AND route4_entrant_date IS NULL AND route4_receipt_date IS NOT NULL)
-        OR (route5_dept = '$dept_id' AND route5_entrant_date IS NULL AND route5_receipt_date IS NOT NULL))";
-      } else if ($title == 'sm_confirm') {
-        $sql.= "(route1_dept = '$dept_id' AND route1_confirm_date IS NULL AND route1_entrant_date IS NOT NULL)
-        OR (route2_dept = '$dept_id' AND route2_confirm_date IS NULL AND route2_entrant_date IS NOT NULL)
-        OR (route3_dept = '$dept_id' AND route3_confirm_date IS NULL AND route3_entrant_date IS NOT NULL)
-        OR (route4_dept = '$dept_id' AND route4_confirm_date IS NULL AND route4_entrant_date IS NOT NULL)
-        OR (route5_dept = '$dept_id' AND route5_confirm_date IS NULL AND route5_entrant_date IS NOT NULL))";
-      } else if ($title == 'sm_approve') {
-        $sql.= "(route1_dept = '$dept_id' AND route1_approval_date IS NULL AND route1_confirm_date IS NOT NULL)
-        OR (route2_dept = '$dept_id' AND route2_approval_date IS NULL AND route2_confirm_date IS NOT NULL)
-        OR (route3_dept = '$dept_id' AND route3_approval_date IS NULL AND route3_confirm_date IS NOT NULL)
-        OR (route4_dept = '$dept_id' AND route4_approval_date IS NULL AND route4_confirm_date IS NOT NULL)
-        OR (route5_dept = '$dept_id' AND route5_approval_date IS NULL AND route5_confirm_date IS NOT NULL))";
+      switch ($e_title) {
+        case 'receipt':
+          $sql .= "(
+                      route1_dept = ? AND route1_receipt_date IS NULL
+                    ) OR (
+                      route2_dept = ? AND route2_receipt_date IS NULL
+                    ) OR (
+                      route3_dept = ? AND route3_receipt_date IS NULL
+                    ) OR (
+                      route4_dept = ? AND route4_receipt_date IS NULL
+                    ) OR (
+                      route5_dept = ? AND route5_receipt_date IS NULL
+                    ))";
+          break;
+        case 'entrant':
+          $sql .= "(
+                      route1_dept = ? AND route1_entrant_date IS NULL AND route1_receipt_date IS NOT NULL
+                    ) OR (
+                      route2_dept = ? AND route2_entrant_date IS NULL AND route2_receipt_date IS NOT NULL
+                    ) OR (
+                      route3_dept = ? AND route3_entrant_date IS NULL AND route3_receipt_date IS NOT NULL
+                    ) OR (
+                      route4_dept = ? AND route4_entrant_date IS NULL AND route4_receipt_date IS NOT NULL
+                    ) OR (
+                      route5_dept = ? AND route5_entrant_date IS NULL AND route5_receipt_date IS NOT NULL
+                    ))";
+          break;
+        case 'confirm':
+          $sql .= "(
+                      route1_dept = ? AND route1_confirm_date IS NULL AND route1_entrant_date IS NOT NULL
+                    ) OR (
+                      route2_dept = ? AND route2_confirm_date IS NULL AND route2_entrant_date IS NOT NULL
+                    ) OR (
+                      route3_dept = ? AND route3_confirm_date IS NULL AND route3_entrant_date IS NOT NULL
+                    ) OR (
+                      route4_dept = ? AND route4_confirm_date IS NULL AND route4_entrant_date IS NOT NULL
+                    ) OR (
+                      route5_dept = ? AND route5_confirm_date IS NULL AND route5_entrant_date IS NOT NULL
+                    ))";
+          break;
+        case 'approve':
+          $sql .= "(
+                      route1_dept = ? AND route1_approval_date IS NULL AND route1_confirm_date IS NOT NULL
+                    ) OR (
+                      route2_dept = ? AND route2_approval_date IS NULL AND route2_confirm_date IS NOT NULL
+                    ) OR (
+                      route3_dept = ? AND route3_approval_date IS NULL AND route3_confirm_date IS NOT NULL
+                    ) OR (
+                      route4_dept = ? AND route4_approval_date IS NULL AND route4_confirm_date IS NOT NULL
+                    ) OR (
+                      route5_dept = ? AND route5_approval_date IS NULL AND route5_confirm_date IS NOT NULL
+                    ))";
+          break;
       }
-      $sql.=  " LEFT JOIN employee e ON 
-      ((CASE route1_dept WHEN '$dept_id' THEN e.employee_code = route1_entrant END) OR
-      (CASE route2_dept WHEN '$dept_id' THEN e.employee_code = route2_entrant END) OR
-      (CASE route3_dept WHEN '$dept_id' THEN e.employee_code = route3_entrant END) OR
-      (CASE route4_dept WHEN '$dept_id' THEN e.employee_code = route4_entrant END) OR
-      (CASE route5_dept WHEN '$dept_id' THEN e.employee_code = route5_entrant END))
-      WHERE d.sq_no='$sq_no'";
-    }else {
+      $sql .=  " LEFT JOIN employee e ON (
+                  (
+                    CASE route1_dept 
+                      WHEN ? 
+                      THEN e.employee_code = route1_entrant 
+                    END
+                  ) OR (
+                    CASE route2_dept 
+                      WHEN ? 
+                      THEN e.employee_code = route2_entrant 
+                    END
+                  ) OR (
+                    CASE route3_dept 
+                      WHEN ? 
+                      THEN e.employee_code = route3_entrant 
+                    END
+                  ) OR (
+                    CASE route4_dept 
+                      WHEN ? 
+                      THEN e.employee_code = route4_entrant 
+                    END
+                  ) OR (
+                    CASE route5_dept 
+                      WHEN ? 
+                      THEN e.employee_code = route5_entrant 
+                    END
+                  )
+                )
+                WHERE d.sq_no='$sq_no'";
+    } else {
       //営業依頼書依頼入力の場合
       $sql = "SELECT d.sq_no, d.sq_line_no, z.zkm_name, d.size, d.joint, d.pipe, d.inner_coating, d.outer_coating, d.fluid, d.valve,
             CASE d.record_div 
@@ -230,7 +281,8 @@
             WHERE d.sq_no='$sq_no'";
     }
     $stmt = $pdo->prepare($sql);
-    $stmt->execute();
+    $params = array_fill(0, substr_count($sql, '?'), $dept_id);
+    $stmt->execute($params);
     $datas = $stmt->fetchAll();
 
     return $datas;

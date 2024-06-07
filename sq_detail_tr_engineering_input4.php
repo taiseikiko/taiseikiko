@@ -21,8 +21,8 @@
       $files = glob('document/engineering/quotation/*.*');
       foreach ($files as $key => $value) {
         $cut = str_replace('document/engineering/quotation/', '', $value);
-        $chk = substr($cut,0,8);
-        $type = mb_substr($cut,9,4);
+        $chk = substr($cut,0,strlen($sq_no)); //get sq_no from file name
+        $type = mb_substr($cut,(strlen($sq_no)+1),4);
         if($sq_no == $chk && $type == '見積図面'){
           echo "<tr><td><a href=".$value." target='_blank'>".$value."</a></td></tr>";
         }
@@ -50,8 +50,8 @@
       $files = glob('document/engineering/quotation/*.*');
       foreach ($files as $key => $value) {
         $cut = str_replace('document/engineering/quotation/', '', $value);
-        $chk = substr($cut,0,8);
-        $type = mb_substr($cut,9,2);
+        $chk = substr($cut,0,strlen($sq_no)); //get sq_no from file name
+        $type = mb_substr($cut,(strlen($sq_no)+1),2);
         if($sq_no == $chk && $type == '資料'){
           echo "<tr><td><a href=".$value." target='_blank'>".$value."</a></td></tr>";
         }
@@ -75,9 +75,9 @@
   <tr>
     <td>
       <div class="field-row" style="margin-top: 10px;">
-        <label class="common_label" for="confirmor_comments">確認者コメント</label>
-        <textarea id="confirmor_comments" name="confirmor_comments" rows="3" cols="120" class="textarea-res"
-        <?php if ($title !== 'td_confirm') { echo 'disabled style="background-color: #e6e6e6;"'; } ?>><?= $confirmor_comments ?></textarea>
+        <label class="common_label" for="confirmer_comments">確認者コメント</label>
+        <textarea id="confirmer_comments" name="confirmer_comments" rows="3" cols="120" class="textarea-res"
+        <?php if ($title !== 'td_confirm') { echo 'disabled style="background-color: #e6e6e6;"'; } ?>><?= $confirmer_comments ?></textarea>
       </div>
     </td>
   </tr>

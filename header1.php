@@ -178,6 +178,40 @@
           <li><a href="sq_detail_tr_sales_management_input1.php?title=sm_approve">営業依頼書：営業管理部　承認</a></li>
         </ul>
       </details>
+    </li>
+    <li>
+      <details>
+        <summary><a href="#components">営業依頼書：工事管理部</a></summary>
+        <ul>
+          <li><a href="sq_detail_tr_const_management_input1.php?title=cm_receipt">営業依頼書：工事管理部　受付</a></li>
+        </ul>
+        <ul>
+          <li><a href="sq_detail_tr_const_management_input1.php?title=cm_entrant">営業依頼書：工事管理部　入力</a></li>
+        </ul>
+        <ul>
+          <li><a href="sq_detail_tr_const_management_input1.php?title=cm_confirm">営業依頼書：工事管理部　確認</a></li>
+        </ul>
+        <ul>
+          <li><a href="sq_detail_tr_const_management_input1.php?title=cm_approve">営業依頼書：工事管理部　承認</a></li>
+        </ul>
+      </details>
+    </li>
+    <li>
+      <details>
+        <summary><a href="#components">営業依頼書：資材部</a></summary>
+        <ul>
+          <li><a href="sq_detail_tr_procurement_input1.php?title=pc_receipt">営業依頼書：資材部　受付</a></li>
+        </ul>
+        <ul>
+          <li><a href="sq_detail_tr_procurement_input1.php?title=pc_entrant">営業依頼書：資材部　入力</a></li>
+        </ul>
+        <ul>
+          <li><a href="sq_detail_tr_procurement_input1.php?title=pc_confirm">営業依頼書：資材部　確認</a></li>
+        </ul>
+        <ul>
+          <li><a href="sq_detail_tr_procurement_input1.php?title=pc_approve">営業依頼書：資材部　承認</a></li>
+        </ul>
+      </details>
     </li>';
     echo $s_menu1;}
 ?>

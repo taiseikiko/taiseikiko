@@ -38,11 +38,10 @@
         error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
       }
     }
+    //登録処理にエラーが無ければメール送信する
     if ($success) {
-      echo "<script>
-        window.close();
-        window.location.href='sales_route_input1.php';
-      </script>";
+      //メール送信する
+      include('sq_mail_send2.php');
     }
   }
 
@@ -95,7 +94,7 @@
     global $sq_no;
     global $sq_line_no;
     global $user_code;
-    $entrant = $confirmor = $approver = '';
+    $entrant = $confirmer = $approver = '';
     for ($i=1;$i<=5;$i++) {
       ${"route".$i."_dept"} = '';
     }
@@ -109,7 +108,7 @@
     //sq_detail_trからデータを取得する
     $sq_detail_tr = get_sq_detail_tr();
     if (!empty($sq_detail_tr) && isset($sq_detail_tr)) {
-      $confirmor = $sq_detail_tr['confirmor'];
+      $confirmer = $sq_detail_tr['confirmer'];
       $approver = $sq_detail_tr['approver'];
     }
 
@@ -126,7 +125,7 @@
       'sq_no' => $sq_no,
       'sq_line_no' => $sq_line_no,
       'entrant' => $entrant,
-      'confirmor' => $confirmor,
+      'confirmer' => $confirmer,
       'approver' => $approver, 
       'reception' => $user_code,
       'route1_dept' => $route1_dept,
@@ -137,9 +136,9 @@
       'add_date' => $today
     ];
 
-    $sql = "INSERT INTO sq_route_tr (route_id, sq_no, sq_line_no, entrant, confirmor, approver, reception, route1_dept, route2_dept, route3_dept,
+    $sql = "INSERT INTO sq_route_tr (route_id, sq_no, sq_line_no, entrant, confirmer, approver, reception, route1_dept, route2_dept, route3_dept,
           route4_dept, route5_dept, add_date) 
-          VALUES (:route_id, :sq_no, :sq_line_no, :entrant, :confirmor, :approver, :reception, :route1_dept, :route2_dept, :route3_dept,
+          VALUES (:route_id, :sq_no, :sq_line_no, :entrant, :confirmer, :approver, :reception, :route1_dept, :route2_dept, :route3_dept,
           :route4_dept, :route5_dept, :add_date)";
     $stmt = $pdo->prepare($sql);
     $stmt->execute($data);
@@ -152,7 +151,7 @@
     global $sq_no;
     global $sq_line_no;
     global $user_code;
-    $entrant = $confirmor = $approver = '';
+    $entrant = $confirmer = $approver = '';
     for ($i=1;$i<=5;$i++) {
       ${"route".$i."_dept"} = '';
     }
@@ -166,7 +165,7 @@
     //sq_detail_trからデータを取得する
     $sq_detail_tr = get_sq_detail_tr();
     if (!empty($sq_detail_tr) && isset($sq_detail_tr)) {
-      $confirmor = $sq_detail_tr['confirmor'];
+      $confirmer = $sq_detail_tr['confirmer'];
       $approver = $sq_detail_tr['approver'];
     }
 
@@ -183,10 +182,10 @@
       'sq_no' => $sq_no,
       'sq_line_no' => $sq_line_no,
       'entrant' => $entrant,
-      'confirmor' => $confirmor,
+      'confirmer' => $confirmer,
       'approver' => $approver,
       'entrant_ad' => getEmail($entrant),
-      'confirmor_ad' => getEmail($confirmor),
+      'confirmer_ad' => getEmail($confirmer),
       'approver_ad' => getEmail($approver),
       'reception' => $user_code,
       'reception_ad' => getEmail($user_code),
@@ -198,9 +197,9 @@
       'add_date' => $today
     ];
 
-    $sql = "INSERT INTO sq_route_mail_tr (route_id, sq_no, sq_line_no, entrant, confirmor, approver, entrant_ad, confirmor_ad, approver_ad, reception, 
+    $sql = "INSERT INTO sq_route_mail_tr (route_id, sq_no, sq_line_no, entrant, confirmer, approver, entrant_ad, confirmer_ad, approver_ad, reception, 
           reception_ad, route1_dept, route2_dept, route3_dept, route4_dept, route5_dept, add_date) 
-          VALUES (:route_id, :sq_no, :sq_line_no, :entrant, :confirmor, :approver, :entrant_ad, :confirmor_ad, :approver_ad, :reception, 
+          VALUES (:route_id, :sq_no, :sq_line_no, :entrant, :confirmer, :approver, :entrant_ad, :confirmer_ad, :approver_ad, :reception, 
           :reception_ad, :route1_dept, :route2_dept, :route3_dept, :route4_dept, :route5_dept, :add_date)";
     $stmt = $pdo->prepare($sql);
     $stmt->execute($data);
@@ -212,7 +211,7 @@
     global $sq_line_no;
     $datas = [];
 
-    $sql = "SELECT confirmor, approver FROM sq_detail_tr WHERE sq_no='$sq_no' AND sq_line_no='$sq_line_no'";
+    $sql = "SELECT confirmer, approver FROM sq_detail_tr WHERE sq_no='$sq_no' AND sq_line_no='$sq_line_no'";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);

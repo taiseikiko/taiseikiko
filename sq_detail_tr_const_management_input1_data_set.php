@@ -13,13 +13,12 @@ function get_sq_datas($title) {
           LEFT JOIN public_office pf ON h.p_office_no = pf.pf_code
           LEFT JOIN employee e ON pf.person_in_charge = e.employee_code";
   if ($title !== '') {
-    $sql .= " INNER JOIN (
-                SELECT DISTINCT(sq_no) 
-                FROM sq_route_tr 
-                WHERE ";
+    $sql.= " INNER JOIN (
+              SELECT DISTINCT(sq_no) 
+              FROM sq_route_tr WHERE ";
 
       switch ($title) {
-        case 'sm_receipt':
+        case 'cm_receipt':
           $sql .= "(
                       route1_dept = ? AND route1_receipt_date IS NULL
                     ) OR (
@@ -30,9 +29,9 @@ function get_sq_datas($title) {
                       route4_dept = ? AND route4_receipt_date IS NULL
                     ) OR (
                       route5_dept = ? AND route5_receipt_date IS NULL
-                    )"; 
+                    )";
           break;
-        case 'sm_entrant':
+        case 'cm_entrant':
           $sql .= "(
                       route1_dept = ? AND route1_receipt_date IS NOT NULL AND route1_entrant_date IS NULL
                     ) OR (
@@ -43,9 +42,9 @@ function get_sq_datas($title) {
                       route4_dept = ? AND route4_receipt_date IS NOT NULL AND route4_entrant_date IS NULL
                     ) OR (
                       route5_dept = ? AND route5_receipt_date IS NOT NULL AND route5_entrant_date IS NULL
-                    )"; 
+                    )";
           break;
-        case 'sm_confirm':
+        case 'cm_confirm':
           $sql .= "(
                       route1_dept = ? AND route1_entrant_date IS NOT NULL AND route1_confirm_date IS NULL
                     ) OR (
@@ -58,7 +57,7 @@ function get_sq_datas($title) {
                       route5_dept = ? AND route5_entrant_date IS NOT NULL AND route5_confirm_date IS NULL
                     )"; 
           break;
-        case 'sm_approve':
+        case 'cm_approve':
           $sql .= "(
                       route1_dept = ? AND route1_confirm_date IS NOT NULL AND route1_approval_date IS NULL
                     ) OR (
@@ -69,11 +68,10 @@ function get_sq_datas($title) {
                       route4_dept = ? AND route4_confirm_date IS NOT NULL AND route4_approval_date IS NULL
                     ) OR (
                       route5_dept = ? AND route5_confirm_date IS NOT NULL AND route5_approval_date IS NULL
-                    )"; 
+                    )";
           break;
       }
-
-    $sql.=  ") AS dist_sq_route_tr ON h.sq_no = dist_sq_route_tr.sq_no";
+      $sql.=  ") AS dist_sq_route_tr ON h.sq_no = dist_sq_route_tr.sq_no";
   }
   $stmt = $pdo->prepare($sql);
   $params = array_fill(0, substr_count($sql, '?'), $dept_id);

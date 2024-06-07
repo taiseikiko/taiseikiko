@@ -44,7 +44,6 @@ function sendMail($email_datas) {
 
         // 送受信先設定（第二引数は省略可）
         foreach ($email_datas as $item) {
-            
             $mail->setFrom($item['from_email'], $item['from_name']); // 送信者
             $mail->addAddress($item['to_email'], $item['to_name']);
             $mail->addReplyTo('peacefullife4497@gmail.com', 'HTET HTET'); // 返信先
@@ -61,9 +60,6 @@ function sendMail($email_datas) {
             }
             $sq_no = $item['sq_no'];
         }
-        // if ($success) {
-        //     header('location:sales_request_input1.php?sq_no='.$sq_no.'&process=update');
-        // }
 
     } catch (Exception $e) {
         $success = false;

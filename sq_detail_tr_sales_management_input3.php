@@ -37,7 +37,7 @@
 
     $("#classList").change(function() {
       let class_code = $(this).val();
-      $('#zkm_cd').val('');
+      $('#zkm_code').val('');
       fetchData(class_code, function(response) {
         console.log(response);
       }, function(error) {
@@ -66,7 +66,7 @@
       },
       success: function(response){
         var zaikoumeiList = JSON.parse(response);
-        var selected = $('#zkm_cd').val();
+        var selected = $('#zkm_code').val();
         let i = 1;
         $.each(zaikoumeiList, function(index, item) {
           $('#zaikoumeiList').append($('<option>', {
@@ -159,7 +159,7 @@
 
   //Disabled textarea 
   var textareas = document.getElementsByTagName('textarea');
-  const excludeTextarea = ['entrant_comments', 'confirmor_comments', 'approver_comments'];
+  const excludeTextarea = ['entrant_comments', 'confirmer_comments', 'approver_comments'];
   for (var j = 0; j < textareas.length; j++) {
     if (!excludeTextarea.includes(textareas[j].id)) {
       textareas[j].disabled = true;

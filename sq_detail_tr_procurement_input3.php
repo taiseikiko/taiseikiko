@@ -7,14 +7,16 @@
   include("header1.php");
 
   include("sales_request_input2_data_set.php");
+  include("sq_detail_tr_procurement_input4_data_set.php");
+
   $title = isset($_GET['title']) ? $_GET['title'] : '';
 ?>
 
 <main>
-  <div class="pagetitle">
-    <h3>営業依頼書：依頼入力（詳細）</h3>
-    <?php include("common_sales_input3.php"); ?>
-  </div>  
+<div class="pagetitle">
+  <h3>営業依頼書：依頼入力（詳細）</h3>
+  <?php include("common_sales_input3.php"); ?>
+</div>
 </main><!-- End #main -->
 </body>
 </html>
@@ -49,12 +51,7 @@
     })
 
     $("#returnBtn").click(function() {
-      $("#input3").attr("action", "sales_request_approve2.php?sq_no="+<?= $sq_no ?>+"&process=update&title=<?= $title ?>");
-    })
-
-    $("#updBtn").click(function() {
-      checkValidation(event);
-      $("#input3").attr("action", "sales_request_update2.php?title=<?= $title ?>");
+      $("#input3").attr("action", "sq_detail_tr_procurement_input2.php?sq_no="+<?= $sq_no ?>+"&process=detail&title=<?= $title ?>");
     })
   });
 
@@ -129,8 +126,95 @@
     });
   });
 
-</script>
+  //担当者設定子画面呼び出し
+  function person_in_charge(event) {
+    var sq_no = document.getElementById('sq_no').value;
+    var sq_line_no = document.getElementById('sq_line_no').value;
+    var record_div = document.getElementById('record_div').value;
+    var route_pattern = document.getElementById('route_pattern').value;
+    var dept_id = document.getElementById('dept_id').value;
+    var title = document.getElementById('title').value;
 
+    event.preventDefault();
+    var url = "sq_person_in_charge_input.php" + "?sq_no=" + sq_no + 
+    "&sq_line_no=" + sq_line_no + 
+    "&record_div=" + record_div +
+    "&route_pattern=" + route_pattern +
+    "&dept_id=" + dept_id +
+    "&title=" + title;
+    window.open(url,"popupWindow","width=500,height=200,left=100,top=50");
+  }
+
+  //Disabled Input 
+  var inputs = document.getElementsByTagName('input');
+  const excludeInputs = ['hidden', 'submit', 'file'];
+  for (var i = 0; i < inputs.length; i++) {
+    if (!excludeInputs.includes(inputs[i].type.toLowerCase()) && inputs[i].className !== 'mail') {
+      inputs[i].disabled = true;
+    }
+    if (inputs[i].type.toLowerCase() == 'text') {
+      inputs[i].style.backgroundColor = '#e6e6e6';
+    }
+  }
+
+  //Disabled textarea 
+  var textareas = document.getElementsByTagName('textarea');
+  const excludeTextarea = ['entrant_comments', 'confirmer_comments', 'approver_comments'];
+  for (var j = 0; j < textareas.length; j++) {
+    if (!excludeTextarea.includes(textareas[j].id)) {
+      textareas[j].disabled = true;
+      textareas[j].style.backgroundColor = '#e6e6e6';
+    }
+  }
+
+  //Disabled select 
+  var selects = document.getElementsByTagName('select');
+  for (var k = 0; k < selects.length; k++) {
+    if (selects[k].id !== 'otherProcess') {
+      selects[k].disabled = true;
+    }
+  }
+
+  //Disabled button 
+  var buttons = document.getElementsByTagName('button');
+  const excludeButtons = ['returnBtn', 'setEmp', 'update'];
+  for (var k = 0; k < buttons.length; k++) {
+    if (!excludeButtons.includes(buttons[k].className)) {
+      buttons[k].disabled = true;
+    }
+  }
+
+</script>
+<style>
+  .dropdown-menu {
+    width: 180px;
+  }
+
+  #checkbox_label {
+    width: 70px;
+    text-align: start;
+  }
+  
+  input.readonlyText {
+    background-color: #e6e6e6;
+  }
+
+  .flex-container {
+    display: flex;
+  }
+
+  .flex-container > div {
+    margin: 20px 5px;
+  }
+
+  #preassure2 {
+      margin-left: 0px; 
+      margin-right: 50px; 
+  }
+
+
+
+</style>
 <?php
 
 // フッターセット

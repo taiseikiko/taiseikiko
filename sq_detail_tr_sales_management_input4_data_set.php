@@ -1,5 +1,5 @@
 <?php
-  $mail_to1 = $mail_to2 = $mail_to3 = $mail_to4 = $mail_to5 = $entrant_comments = $confirmor_comments = $approver_comments = '';
+  $mail_to1 = $mail_to2 = $mail_to3 = $mail_to4 = $mail_to5 = $entrant_comments = $confirmer_comments = $approver_comments = '';
   if(isset($_POST['process2'])) {
     $process2 = $_POST['process2'];
     $sq_no = $_POST['sq_no'];
@@ -10,14 +10,12 @@
 
     $sq_detail_sm_datas = get_sq_detail_tr_sales_management($sq_no, $sq_line_no);
     if (isset($sq_detail_sm_datas) && !empty($sq_detail_sm_datas)) {
-      $mail_to1 = $sq_detail_sm_datas['mail_to1'];
-      $mail_to2 = $sq_detail_sm_datas['mail_to2'];
-      $mail_to3 = $sq_detail_sm_datas['mail_to3'];
-      $mail_to4 = $sq_detail_sm_datas['mail_to4'];
-      $mail_to5 = $sq_detail_sm_datas['mail_to5'];
-      $entrant_comments = $sq_detail_sm_datas['entrant_comments'];
-      $confirmor_comments = $sq_detail_sm_datas['confirmor_comments'];
-      $approver_comments = $sq_detail_sm_datas['approver_comments'];
+
+      $fields = ['mail_to1', 'mail_to2', 'mail_to3', 'mail_to4', 'mail_to5', 'entrant_comments', 'confirmer_comments', 'approver_comments'];
+
+      foreach ($fields as $field) {
+        ${$field} = $sq_detail_sm_datas[$field] ?? '';
+      }
     }
 
   }
