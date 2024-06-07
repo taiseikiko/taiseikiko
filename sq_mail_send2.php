@@ -3,18 +3,16 @@
     require_once('function.php');
     include('sq_mail_send_select.php');
 
-    // DB接続
-    $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
-    $group_id = $role = $confirmer_email = $approver_email = $name = $from_name = $from_email = '';
-    $email_datas = [];
-    $success = true;
+    try {
+        // DB接続
+        $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
+        $confirmer_email = $approver_email = $name = $from_name = $from_email = '';
+        $email_datas = [];
+        $success = true;
 
-    if (isset($_POST['submit'])) {
         //Employeeデータを取得する
-        $userdatas = get_sq_route_in_dept($dept_id, $_POST['user_code']);
-        if (!empty($userdatas) && isset($userdatas)) {
-            $group_id = $userdatas['group_id'];
-            $role = $userdatas['role'];
+        $userdatas = get_employee_datas($user_code);
+        if ($userdatas) {
             $from_name = $userdatas['employee_name'];
             $from_email = $userdatas['email'];
         }
@@ -57,23 +55,29 @@
         } else {
             header('location:sales_route_input1.php');
         }
+    } catch(PDOException $e) {
+        error_log("Error: " . $e->getMessage(), 3, "error_log.txt");
     }
 
-    function get_sq_route_in_dept($dept_id, $user_code) {
+    /***
+     * Employeeデータを取得する
+     */
+    function get_employee_datas($user_code) {
         global $pdo;
 
-        $sql = "SELECT r.group_id, r.role, e.employee_name, e.email
-                FROM sq_route_in_dept r
-                LEFT JOIN employee e 
-                ON r.employee_code = e.employee_code
-                WHERE r.dept_id = '$dept_id' AND r.employee_code = '$user_code'";
+        $sql = "SELECT * FROM employee
+                WHERE employee_code = :employee_code";
         $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':employee_code', $user_code);
         $stmt->execute();
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
         return $row;
     }
 
+    /***
+     * sq_route_in_deptを読む
+     */
     function get_sq_route_in_dept2($route1_dept) {
         global $pdo;
         $role = '0';    //受付者
@@ -92,6 +96,9 @@
         return $datas;
     }
 
+    /***
+     * sq_route_in_dept を読み
+     */
     function get_route1_dept() {
         global $pdo;
         global $route_pattern;
@@ -108,6 +115,9 @@
         return $route1_dept;
     }
 
+    /***
+     * メールの内容を取得する
+     */
     function getSqMailSentence() {
         global $pdo;
         global $title;

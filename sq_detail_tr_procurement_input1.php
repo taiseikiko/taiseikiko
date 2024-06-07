@@ -31,7 +31,7 @@
 
 <main>
   <div class="pagetitle">
-    <h3>【　営業依頼書：営業管理部　<?=$title_in_j?>　】</h3>
+    <h3>【　営業依頼書：資材部　<?=$title_in_j?>　】</h3>
     <?php include("common_sales_input1.php"); ?>
   </div>
 </main><!-- End #main -->

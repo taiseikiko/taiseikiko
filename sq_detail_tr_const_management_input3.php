@@ -9,7 +9,7 @@
   include("sales_request_input2_data_set.php");
   include("sq_detail_tr_const_management_input4_data_set.php");
 
-  $title = isset($_GET['title']) ? $_GET['title'] : '';
+  $title = $_GET['title'] ?? '';
 ?>
 
 <main>

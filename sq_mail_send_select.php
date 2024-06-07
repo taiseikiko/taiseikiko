@@ -13,6 +13,9 @@ require('PHPMailer/src/SMTP.php');
 mb_language('uni');
 mb_internal_encoding('UTF-8');
 
+/***
+ * メール送信する
+ */
 function sendMail($email_datas) {
     // インスタンスを生成（true指定で例外を有効化）
     $mail = new PHPMailer(true);

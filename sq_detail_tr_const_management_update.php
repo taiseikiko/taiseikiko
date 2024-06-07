@@ -10,7 +10,7 @@
   $route_pattern = $_POST['route_pattern'];
   $sq_no = $_POST['sq_no'];
   $sq_line_no = $_POST['sq_line_no'];
-  $title = isset($_POST['title']) ? $_POST['title'] : '';
+  $title = $_POST['title'] ?? '';
 
   //担当者設定ボタンを押下する場合
   if (isset($_POST['submit_receipt'])) {
@@ -45,11 +45,9 @@
         error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
       }
     }
+    //登録処理にエラーがなければメール送信する
     if ($success) {
-      echo "<script>
-        window.close();
-        window.opener.location.href='sq_detail_tr_const_management_input1.php?title=cm_receipt';
-      </script>";
+      include("sq_mail_send3.php");
     }
   }
 
@@ -116,8 +114,14 @@
     global $dept_id;
 
     $datas = [];
-    $sql = "SELECT * FROM sq_default_role WHERE dept_id = '$dept_id' AND entrant = '$entrant'";
+    $sql = "SELECT r.entrant, r.confirmer, r.approver, e.employee_name, e.email
+            FROM sq_default_role r
+            LEFT JOIN employee e
+            ON e.employee_code = r.confirmer
+            WHERE r.dept_id = :dept_id AND r.entrant = :entrant";
     $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':dept_id', $dept_id);
+    $stmt->bindParam(':entrant', $entrant);
     $stmt->execute();
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($row) {

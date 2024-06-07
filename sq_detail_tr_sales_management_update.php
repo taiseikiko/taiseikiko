@@ -45,11 +45,9 @@
         error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
       }
     }
+    //登録処理にエラーがなければメール送信する
     if ($success) {
-      echo "<script>
-        window.close();
-        window.opener.location.href='sq_detail_tr_sales_management_input1.php?title=sm_receipt';
-      </script>";
+      include("sq_mail_send3.php");
     }
   }
 
