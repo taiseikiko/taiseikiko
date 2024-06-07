@@ -11,6 +11,7 @@
     ];
 
     $s_title = substr($title, 0, 2);
+    $e_title = substr($title, 3);
     $redirect = $redirectList[$s_title];
 
     try {
@@ -31,43 +32,47 @@
         $mail_details = getSqMailSentence();
 
         //⑤各部署で、受付処理後、入力者へ送信
-        if (isset($_POST['submit_receipt'])) {
-            //sq_route_mail_tr の、該当の部署（route1_dept ～ route5_dept）の、
-            //入力者（route1_entrant ～ route5_entrant）へ送信
-            $sq_route_mail_datas = sq_route_mail_datas();
+        //if (array_intersect_key($_POST, array_flip(['submit_receipt', 'submit_entrant', 'submit_entrant1', 'submit_entrant2']))) {
+        //sq_route_mail_tr の、該当の部署（route1_dept ～ route5_dept）の、
+        //入力者（route1_entrant ～ route5_entrant）へ送信
+        $sq_route_mail_datas = get_sq_route_mail_datas($e_title);
 
-            if ($sq_route_mail_datas) {
-                foreach ($sq_route_mail_datas as $item) {
-                    //データベースからもらったテキストにclientとsq_noをセットする
-                    $search = array("client", "sq_no");
-                    $replace = array($from_name, $sq_no);
-                    $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
-                    $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
-                    $to_email = $item['entrant_email'];
+        if ($sq_route_mail_datas) {
+            foreach ($sq_route_mail_datas as $item) {
+                //データベースからもらったテキストにclientとsq_noをセットする
+                $search = array("client", "sq_no");
+                $replace = array($from_name, $sq_no);
+                $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
+                $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
+                $to_email = $item['email'];
 
-                    $email_datas[] = [
-                        'to_email' => $to_email,         //送信先email
-                        'to_name' => $to_name,           //送信先name
-                        'from_email' => $from_email,     //送信者email
-                        'from_name' => $from_name,       //送信者name
-                        'subject' => $subject,    
-                        'body' => $body,
-                        'sq_no' => $sq_no
-                    ];
-                }
+                $email_datas[] = [
+                    'to_email' => $to_email,         //送信先email
+                    'to_name' => $to_name,           //送信先name
+                    'from_email' => $from_email,     //送信者email
+                    'from_name' => $from_name,       //送信者name
+                    'subject' => $subject,    
+                    'body' => $body,
+                    'sq_no' => $sq_no
+                ];
+            }
 
-                //メール送信処理を行う
-                $success = sendMail($email_datas);
-                if ($success) {
-                echo "<script>
-                        window.close();
-                        window.opener.location.href='$redirect';
+            //メール送信処理を行う
+            $success = sendMail($email_datas);
+            if ($success) {
+                if ($e_title == 'receipt') {
+                    echo "<script>
+                    window.close();
+                    window.opener.location.href='$redirect';
                     </script>";
+                } else {
+                    echo "<script>window.location.href='$redirect'  </script>";
                 }
-            } else {
-                header($redirect);
-            }            
+            }
+        } else {
+            echo "<script>window.location.href='$redirect'  </script>";
         }
+
     } catch(PDOException $e) {
         error_log("Error: " . $e->getMessage(), 3, "error_log.txt");
     }
@@ -91,31 +96,33 @@
     /***
      * sq_route_mail_trを読む
      */
-    function sq_route_mail_datas() {
+    function get_sq_route_mail_datas($title) {
         global $pdo;
         global $route_pattern;
         global $sq_no;
         global $sq_line_no;
         global $dept_id;
 
+        $column = ($title === 'entrant') ? 'entrant_ad' : (($title === 'confirm') ? 'confirmer_ad' : 'approver_ad');
+
         $datas = [];
         $sql = "SELECT COALESCE(
                 CASE
-                    WHEN route1_dept = '$dept_id' THEN route1_entrant_ad
+                    WHEN route1_dept = '$dept_id' THEN route1_$column
                 END,
                 CASE
-                    WHEN route2_dept = '$dept_id' THEN route2_entrant_ad
+                    WHEN route2_dept = '$dept_id' THEN route2_$column
                 END,
                 CASE
-                    WHEN route3_dept = '$dept_id' THEN route3_entrant_ad
+                    WHEN route3_dept = '$dept_id' THEN route3_$column
                 END,
                 CASE
-                    WHEN route4_dept = '$dept_id' THEN route4_entrant_ad
+                    WHEN route4_dept = '$dept_id' THEN route4_$column
                 END,
                 CASE
-                    WHEN route5_dept = '$dept_id' THEN route5_entrant_ad
+                    WHEN route5_dept = '$dept_id' THEN route5_$column
                 END
-            ) AS entrant_email
+            ) AS email
         FROM sq_route_mail_tr
         WHERE route_id = :route_id AND sq_no = :sq_no AND sq_line_no = :sq_line_no";
         $stmt = $pdo->prepare($sql);

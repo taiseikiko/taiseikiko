@@ -54,14 +54,12 @@
   //入力画面から図面更新ボタンを押下場合
   if (isset($_POST['submit_entrant'])) {
     $success = true;
-    $entrant_comments = isset($_POST['entrant_comments']) ? $_POST['entrant_comments'] : '';
-    $confirmer_comments = isset($_POST['confirmer_comments']) ? $_POST['confirmer_comments'] : '';
-    $approver_comments = isset($_POST['approver_comments']) ? $_POST['approver_comments'] : '';
-    $mail_to1 = isset($_POST['mail_to1']) ? $_POST['mail_to1'] : '';
-    $mail_to2 = isset($_POST['mail_to2']) ? $_POST['mail_to2'] : '';
-    $mail_to3 = isset($_POST['mail_to3']) ? $_POST['mail_to3'] : '';
-    $mail_to4 = isset($_POST['mail_to4']) ? $_POST['mail_to4'] : '';
-    $mail_to5 = isset($_POST['mail_to5']) ? $_POST['mail_to5'] : '';
+
+    $variables = ['entrant_comments', 'confirmer_comments', 'approver_comments', 'mail_to1', 'mail_to2', 'mail_to3', 'mail_to4', 'mail_to5'];
+
+    foreach ($variables as $var) {
+        ${$var} = $_POST[$var] ?? '';
+    }
 
     try {
       $pdo->beginTransaction();
@@ -85,11 +83,9 @@
         error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
       }
     }
-    echo $success;
+    //登録処理にエラーがない場合
     if ($success) {
-      echo "<script>
-        window.location.href='sq_detail_tr_const_management_input1.php?title=".$title."';
-      </script>";
+      include('sq_mail_send3.php');
     }
   }
 
