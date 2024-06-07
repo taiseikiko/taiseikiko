@@ -9,12 +9,12 @@
   $group = '';
 
   //Parent Pageからデータを取得
-  $sq_no = isset($_GET['sq_no']) ? $_GET['sq_no'] : '';
-  $sq_line_no = isset($_GET['sq_line_no']) ? $_GET['sq_line_no'] : '';
-  $record_div = isset($_GET['record_div']) ? $_GET['record_div'] : '';
-  $route_pattern = isset($_GET['route_pattern']) ? $_GET['route_pattern'] : '';
-  $dept_id = isset($_GET['dept_id']) ? $_GET['dept_id'] : '';
-  $title = isset($_GET['title']) ? $_GET['title'] : '';
+  $sq_no = $_GET['sq_no'] ?? '';
+  $sq_line_no = $_GET['sq_line_no'] ?? '';
+  $record_div = $_GET['record_div'] ?? '';
+  $route_pattern = $_GET['route_pattern'] ?? '';
+  $dept_id = $_GET['dept_id'] ?? '';
+  $title = $_GET['title'] ?? '';
 
   //グループプルダウンのデータを取得する
   $group_datas = getGroupDatas();

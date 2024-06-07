@@ -10,14 +10,12 @@
 
     $sq_detail_cm_datas = get_sq_detail_tr_const_management($sq_no, $sq_line_no);
     if (isset($sq_detail_cm_datas) && !empty($sq_detail_cm_datas)) {
-      $mail_to1 = $sq_detail_cm_datas['mail_to1'];
-      $mail_to2 = $sq_detail_cm_datas['mail_to2'];
-      $mail_to3 = $sq_detail_cm_datas['mail_to3'];
-      $mail_to4 = $sq_detail_cm_datas['mail_to4'];
-      $mail_to5 = $sq_detail_cm_datas['mail_to5'];
-      $entrant_comments = $sq_detail_cm_datas['entrant_comments'];
-      $confirmer_comments = $sq_detail_cm_datas['confirmer_comments'];
-      $approver_comments = $sq_detail_cm_datas['approver_comments'];
+
+      $fields = ['mail_to1', 'mail_to2', 'mail_to3', 'mail_to4', 'mail_to5', 'entrant_comments', 'confirmer_comments', 'approver_comments'];
+
+      foreach ($fields as $field) {
+        ${$field} = $sq_detail_cm_datas[$field] ?? '';
+      }
     }
 
   }

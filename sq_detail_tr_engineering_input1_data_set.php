@@ -14,11 +14,24 @@ function get_sq_datas($title) {
           LEFT JOIN public_office pf ON h.p_office_no = pf.pf_code
           LEFT JOIN employee e ON pf.person_in_charge = e.employee_code";
   if ($title !== '') {
-    $sql.= " INNER JOIN (SELECT DISTINCT(sq_no) FROM sq_route_tr WHERE route1_dept = '$dept_id' AND ";
-    if ($title == 'td_receipt') { $sql.="route1_receipt_date IS NULL"; }
-    if ($title == 'td_entrant') { $sql.="route1_entrant_date IS NULL AND route1_receipt_date IS NOT NULL"; }
-    if ($title == 'td_confirm') { $sql.="route1_confirm_date IS NULL AND route1_entrant_date IS NOT NULL"; }
-    if ($title == 'td_approve') { $sql.="route1_approval_date IS NULL AND route1_confirm_date IS NOT NULL"; }
+    $sql .= " INNER JOIN (
+                SELECT DISTINCT(sq_no) 
+                FROM sq_route_tr 
+                WHERE route1_dept = '$dept_id' AND ";
+    switch ($title) {
+      case 'td_receipt':
+        $sql .= "route1_receipt_date IS NULL";
+        break;
+      case 'td_entrant':
+        $sql .= "route1_entrant_date IS NULL AND route1_receipt_date IS NOT NULL";
+        break;
+      case 'td_confirm':
+        $sql .= "route1_confirm_date IS NULL AND route1_entrant_date IS NOT NULL";
+        break;
+      case 'td_approve':
+        $sql .= "route1_approval_date IS NULL AND route1_confirm_date IS NOT NULL";
+        break;
+    }
     $sql.=  ") AS dist_sq_route_tr ON h.sq_no = dist_sq_route_tr.sq_no";
   }
   $stmt = $pdo->prepare($sql);
