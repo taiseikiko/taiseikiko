@@ -279,6 +279,14 @@
             ON d.zkm_code = z.zkm_code 
             AND d.class_code = z.class_code
             WHERE d.sq_no='$sq_no'";
+      //営業依頼書依頼確認の場合、確認日付がNULLのデータだけを取得する
+      if ($title == 'check') {
+        $sql .= "AND d.confirm_date IS NULL";
+      }
+      //営業依頼書依頼承認の場合、承認日付がNULLのデータだけを取得する
+      if ($title == 'approve') {
+        $sql .= "AND d.approve_date IS NULL";
+      }
     }
     $stmt = $pdo->prepare($sql);
     $params = array_fill(0, substr_count($sql, '?'), $dept_id);
