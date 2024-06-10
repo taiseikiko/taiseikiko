@@ -49,11 +49,11 @@
       'fluid' => $_POST['fluid'], //管内流体
       'valve' => $_POST['valve'], //バルブ仕様
       'o_c_direction' => $_POST['o_c_direction'], //開閉方向
-      'special_tube_od1' => $_POST['special_tube_od1'] ?? 0, //特殊管外径1
-      'special_tube_od2' => $_POST['special_tube_od2'] ?? 0, //特殊管外径2
-      'quantity' => $_POST['quantity'] ?? 0, //数量
-      'right_quantity' => $_POST['right_quantity'] ?? 0, //右用数量
-      'left_quantity' => $_POST['left_quantity'] ?? 0, //左用数量
+      'special_tube_od1' => $_POST['special_tube_od1'] ? $_POST['special_tube_od1'] : 0, //特殊管外径1
+      'special_tube_od2' => $_POST['special_tube_od2'] ? $_POST['special_tube_od2'] : 0, //特殊管外径2
+      'quantity' => $_POST['quantity'] ? $_POST['quantity'] : 0, //数量
+      'right_quantity' => $_POST['right_quantity'] ? $_POST['right_quantity'] : 0, //右用数量
+      'left_quantity' => $_POST['left_quantity'] ? $_POST['left_quantity'] : 0, //左用数量
       'design_water_pressure' => $_POST['design_water_pressure'], //設計水圧
       'water_outage' => $_POST['water_outage'] ?? '', //断水区分
       'normal_water_puressure' => $_POST['normal_water_puressure'], //常圧

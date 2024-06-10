@@ -11,7 +11,6 @@ function checkValidation(event) {
   var pf_pic = document.getElementById("pf_pic").value; //担当者
   var daily_report_url = document.getElementById("daily_report_url").value; //営業日報
   var note = document.getElementById("note").value; //備考
-  var entrant_comments = document.getElementById("entrant_comments").value; //作成者コメント
 
   if (!isErr && item_name.length > 200) {
     alert(errMsgForLength("件名", "200"));
@@ -45,11 +44,6 @@ function checkValidation(event) {
 
   if (!isErr && note.length > 80) {
     alert(errMsgForLength("備考", "80"));
-    isErr = true;
-  }
-
-  if (!isErr && entrant_comments.length > 80) {
-    alert(errMsgForLength("作成者コメント", "80"));
     isErr = true;
   }
 

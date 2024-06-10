@@ -25,7 +25,7 @@
         //入力画面と確認画面の場合
         if ($title !== 'approve') {
             //sq_default_roleからデータを取得する
-            $datas = getDefaultRoleUser($dept_id, $group_id);
+            $datas = getDefaultRoleUser($dept_id, $group_id, $_POST['user_code']);
         } 
         //承認画面の場合
         else {
@@ -136,18 +136,19 @@
     /***
      * sq_default_roleからデータを取得する
      */
-    function getDefaultRoleUser($dept_id, $group_id) {
+    function getDefaultRoleUser($dept_id, $group_id, $entrant) {
         global $pdo;
         $datas = [];
         $sql = "SELECT d.confirmer, d.approver, e1.email AS confirmer_email, e1.employee_name AS confirmer_name, e2.email AS approver_email, e2.employee_name AS approver_name
                 FROM sq_default_role d
                 LEFT JOIN employee e1 ON e1.employee_code = d.confirmer
                 LEFT JOIN employee e2 ON e2.employee_code = d.approver
-                WHERE dept_id = :dept_id AND group_id = :group_id ";
+                WHERE dept_id = :dept_id AND group_id = :group_id AND entrant = :entrant";
                 
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':dept_id', $dept_id);
-        $stmt->bindParma(':group_id', $group_id);
+        $stmt->bindParam(':group_id', $group_id);
+        $stmt->bindParam(':entrant', $entrant);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $datas[] = $row;

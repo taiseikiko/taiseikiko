@@ -32,30 +32,31 @@
         $mail_details = getSqMailSentence();
 
         //⑤各部署で、受付処理後、入力者へ送信
+        //⑥各部署で、入力完了後、確認者へ送信
+        //⑦各部署で、確認処理後、承認者へ送信
+        //⑧各部署で、承認処理後、sq_route_mail_tr の、次の部署（route1_dept ～ route5_dept）の、
+        //受付者（route1_receipt_person ～ route5_receipt_person）へ送信
+
         //if (array_intersect_key($_POST, array_flip(['submit_receipt', 'submit_entrant', 'submit_entrant1', 'submit_entrant2']))) {
-        //sq_route_mail_tr の、該当の部署（route1_dept ～ route5_dept）の、
-        //入力者（route1_entrant ～ route5_entrant）へ送信
         $sq_route_mail_datas = get_sq_route_mail_datas($e_title);
 
         if ($sq_route_mail_datas) {
-            foreach ($sq_route_mail_datas as $item) {
-                //データベースからもらったテキストにclientとsq_noをセットする
-                $search = array("client", "sq_no");
-                $replace = array($from_name, $sq_no);
-                $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
-                $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
-                $to_email = $item['email'];
+            //データベースからもらったテキストにclientとsq_noをセットする
+            $search = array("client", "sq_no");
+            $replace = array($from_name, $sq_no);
+            $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
+            $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
+            $to_email = $sq_route_mail_datas['email'];
 
-                $email_datas[] = [
-                    'to_email' => $to_email,         //送信先email
-                    'to_name' => $to_name,           //送信先name
-                    'from_email' => $from_email,     //送信者email
-                    'from_name' => $from_name,       //送信者name
-                    'subject' => $subject,    
-                    'body' => $body,
-                    'sq_no' => $sq_no
-                ];
-            }
+            $email_datas[] = [
+                'to_email' => $to_email,         //送信先email
+                'to_name' => $to_name,           //送信先name
+                'from_email' => $from_email,     //送信者email
+                'from_name' => $from_name,       //送信者name
+                'subject' => $subject,    
+                'body' => $body,
+                'sq_no' => $sq_no
+            ];
 
             //メール送信処理を行う
             $success = sendMail($email_datas);
@@ -103,9 +104,69 @@
         global $sq_line_no;
         global $dept_id;
 
-        $column = ($title === 'entrant') ? 'entrant_ad' : (($title === 'confirm') ? 'confirmer_ad' : 'approver_ad');
+        //⑤各部署で、受付処理後、入力者へ送信
+        //⑥各部署で、入力完了後、確認者へ送信
+        //⑦各部署で、確認処理後、承認者へ送信
+        
+        $column = ($title === 'receipt') ? 'entrant_ad' : (($title === 'entrant') ? 'confirmer_ad' : (($title === 'confirm') ? 'approver_ad' : ''));
 
         $datas = [];
+        if (!empty($column)) {
+            $datas = get_mail_receiver($dept_id, $column);
+        } 
+        //⑧各部署で、承認処理後、sq_route_mail_tr の、次の部署（route1_dept ～ route5_dept）の、
+        //受付者（route1_receipt_person ～ route5_receipt_person）へ送信
+        else {
+            $sql = "SELECT COALESCE(
+                        CASE
+                            WHEN route1_dept = '$dept_id' THEN COALESCE(route2_dept, route3_dept, route4_dept, route5_dept)
+                        END,
+                        CASE
+                            WHEN route2_dept = '$dept_id' THEN COALESCE(route3_dept, route4_dept, route5_dept)
+                        END,
+                        CASE
+                            WHEN route3_dept = '$dept_id' THEN COALESCE(route4_dept, route5_dept)
+                        END,
+                        CASE
+                            WHEN route4_dept = '$dept_id' THEN COALESCE(route5_dept)
+                        END
+                    ) AS column_name
+                    FROM sq_route_mail_tr
+                    WHERE route_id = :route_id AND sq_no = :sq_no AND sq_line_no = :sq_line_no";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':route_id', $route_pattern);
+            $stmt->bindParam(':sq_no', $sq_no);
+            $stmt->bindParam(':sq_line_no', $sq_line_no);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if ($row['column_name']) {
+                $next_dept_id = $row['column_name'];
+                $column = 'receipt_ad';
+                
+                $datas = get_mail_receiver($next_dept_id, $column);
+            } 
+            else {
+                $sql = "SELECT e.employee_name, e.email
+                        FROM sq_header_tr h
+                        LEFT JOIN employee e
+                        ON h.client = e.employee_code 
+                        WHERE sq_no = :sq_no";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(':sq_no', $sq_no);
+                $stmt->execute();
+                $datas = $stmt->fetch(PDO::FETCH_ASSOC);
+            }
+        }
+
+        return $datas;
+    }
+
+    function get_mail_receiver($dept_id, $column) {
+        global $pdo;
+        global $route_pattern;
+        global $sq_no;
+        global $sq_line_no;
         $sql = "SELECT COALESCE(
                 CASE
                     WHEN route1_dept = '$dept_id' THEN route1_$column
@@ -123,18 +184,16 @@
                     WHEN route5_dept = '$dept_id' THEN route5_$column
                 END
             ) AS email
-        FROM sq_route_mail_tr
-        WHERE route_id = :route_id AND sq_no = :sq_no AND sq_line_no = :sq_line_no";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':route_id', $route_pattern);
-        $stmt->bindParam(':sq_no', $sq_no);
-        $stmt->bindParam(':sq_line_no', $sq_line_no);
-        $stmt->execute();
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $datas[] = $row;
-        }
+            FROM sq_route_mail_tr
+            WHERE route_id = :route_id AND sq_no = :sq_no AND sq_line_no = :sq_line_no";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':route_id', $route_pattern);
+            $stmt->bindParam(':sq_no', $sq_no);
+            $stmt->bindParam(':sq_line_no', $sq_line_no);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $datas;
+        return $row;
     }
 
     /***
