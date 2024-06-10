@@ -5,6 +5,7 @@
   require_once('function.php');
   $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
   $title = isset($_GET['title']) ? $_GET['title'] : '';
+  $dept_code = $_SESSION['department_code'];
   include("sales_request_input2_data_set.php");
   // ヘッダーセット
   include("header1.php");

@@ -3,7 +3,8 @@
   require_once('function.php');
   // DB接続
   $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
-
+  //ログインユーザーの部署ID
+  $dept_id1 = getDeptId($dept_code);
   // 初期設定 & データセット
   $degree_of_order = '';            //発注確度
   $degree_of_order_list = [];
@@ -33,7 +34,7 @@
   //sales_request_input3から営業依頼書№を取得する
   $sq_no = isset($_GET['sq_no']) ? $_GET['sq_no'] : '';
   $process = isset($_GET['process']) ? $_GET['process'] : '';
-  $dept_id = isset($_POST['dept_id']) ? $_POST['dept_id'] : '';
+  $dept_id = isset($_POST['dept_id']) ? $_POST['dept_id'] : $dept_id1;
 
   //メールからURLをクリックしてた場合
   $from_mail_sq_no = isset($_GET['sq_no']) ? $_GET['sq_no'] : '';

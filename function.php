@@ -69,6 +69,22 @@ function redirect_to_register() {
   header('HTTP/1.1 301 Moved Permanently');
   header('Location: register.php');
 }
+/*
+* ログインユーザーの部署ID
+*/
+function getDeptId($dept_code) {
+  $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
+
+  $dept_id = '';
+  $sql = "SELECT dept_id FROM sq_dept WHERE sq_dept_code='$dept_code'";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute();
+  $row = $stmt->fetch(PDO::FETCH_ASSOC);
+  if ($row) {
+    $dept_id = $row['dept_id'];
+  }
+  return $dept_id;
+}
 
 /*
 * 共通ヘッダー

@@ -42,7 +42,6 @@
         }
 
         if ($datas) {
-            $url = '';
             foreach ($datas as $item) {
                 //データベースからもらったテキストにclientとsq_no、URLをセットする
                 $search = array("client", "sq_no");
@@ -66,6 +65,8 @@
 
                 if ($replace_from !== '') {
                     $url = str_replace($replace_from, $replace_to, $url) . "&sq_no=".$sq_no;
+                } else {
+                    $url = '';
                 }
 
                 switch ($title) {
