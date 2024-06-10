@@ -1,6 +1,6 @@
 <?php
 
-/* sales_request_input01_set.php                      */
+/* sales_request_input1_set.php                      */
 /*　・初期処理                                         */
 /*　・画面データ採取、画面フィールド変数へデータセット     */
   include("receptionist_input_data_set.php");

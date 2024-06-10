@@ -67,7 +67,7 @@
                 <details>
                   <summary><a href="#components">営業依頼書</a></summary>
                   <ul>
-                    <li><a href="sales_request_input01.php">営業依頼書　登録</a></li>
+                    <li><a href="sales_request_input1.php">営業依頼書　登録</a></li>
                   </ul>
                 </details>
               </li>';

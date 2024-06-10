@@ -5,152 +5,303 @@
   $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 
   // 初期設定 & データセット
-  $class_code = '';             //分類
-  $zkm_code = '';                 //材工名
-  $size = '';                   //サイズ
-  $joint = '';                  //接合形状
-  $pipe = '';                   //管種
-  $fluid = '';                  //管内流体
-  $inner_coating = '';          //内面塗装
-  $outer_coating = '';          //外面塗装
-  $valve = '';                  //バルブ仕様
-  $estimate_div1 = '';          //材料費
-  $estimate_div2 = '';          //工事費
-  $specification_div = '';      //仕様書必要
-  $drawing_div = '';            //参考図面必要
-  $document_div = '';           //資料必要
-  $check_type = '';             //日水協 or 社内証
-  $deadline_estimate_date = ''; //見積提出期限
-  $deadline_drawing_date = '';  //図面等提出期限
-  $cad_data_div = '';           //CADデータ
-  $const_div1 = '';             //昼間
-  $const_div2 = '';             //夜間
-  $const_div3 = '';             //昼間・夜間
-  $const_div4 = '';             //昼夜通し
-  $c_div = '';                  //区分
-  $design_water_pressure = '';  //設計水圧
-  $reducing_pressure_div = '';  //施工時減圧
-  $normal_water_puressure = ''; //常圧
-  $water_outage = '';           //断水
-  $inner_film = '';             //膜厚
-  $outer_film = '';             //膜厚
-  $quantity = '';               //数量
-  $right_quantity = '';         //右用
-  $left_quantity = '';          //左用
-  $special_note = '';           //特記仕様
-  $sq_line_no = '';             //営業依頼書行№	
-  $record_div = '';             //レコード区分
-  $special_tube_od1 = '';       //特殊管外径１
-  $special_tube_od2 = '';       //特殊管外径２
-  $sq_no = '';
-  $route_pattern = '';          //ルートパタン
-  $entrant_comments = '';           //入力者コメント
-  $confirmer_comments = '';          //確認者コメント
-  $approver_comments = '';           //承認者コメント
+  $degree_of_order = '';            //発注確度
+  $degree_of_order_list = [];
+  $order_accuracy = '';             //受注確度
+  $order_accuracy_list = [];
+  $cust_code = '';                  //提出先名
+  $cust_name = '';                  //提出先
+  $cust_dept = '';                  //担当部署
+  $cust_pic = '';                   //担当者
+  $pf_code = '';                    //事業体名
+  $pf_name = '';                    //事業体コード
+  $pf_dept = '';                    //事業体担当部署
+  $pf_pic = '';                     //事業体担当者
+  $planned_order_date = '';         //発注予定日
+  $planned_construction_date = '';  //施工予定日
+  $case_div = '';                   //案件区分
+  $note = '';                       //備考
+  $prior_notice_div = '';           //技術への事前連絡区分
+  $prior_notice_date = '';          //技術への事前連絡日
+  $sq_header_datas = [];
+  $item_name = '';                  //件名
+  $daily_report_url = '';           //営業日報URL
+  $sq_no = '';                      //営業依頼書№
+  $process = '';                    //処理
+  $regBtnDisabled = '';
 
-  $sizeDisabled = '';
-  $jointDisabled = '';
-  $pipeDisabled = '';
-  $fluidDisabled = '';
-  $inner_coatingDisabled = '';
-  $outer_coatingDisabled = '';
-  $valveDisabled = '';
-  $o_c_directionDisabled = '';
-  $zumen_disabled = false;
-  $mitsumori_disabled = false;
+  //sales_request_input3から営業依頼書№を取得する
+  $sq_no = isset($_GET['sq_no']) ? $_GET['sq_no'] : '';
+  $process = isset($_GET['process']) ? $_GET['process'] : '';
+  $dept_id = isset($_POST['dept_id']) ? $_POST['dept_id'] : '';
 
-  $class_datas = get_class_datas();                     //分類プルダウンにセットするデータを取得する
-  $sizeList = getDropdownData('size');                  //サイズ
-  $jointList = getDropdownData('joint');                //接合形状
-  $pipeList = getDropdownData('pipe');                  //管種
-  $fluidList = getDropdownData('fluid');                //管内流体
-  $inner_coatingList = getDropdownData('inner_coating');//内面塗装
-  $outer_coatingList = getDropdownData('outer_coating');//外面塗装
-  $valveList = getDropdownData('valve');                //バルブ仕様
-  $o_c_directionList = getDropdownData('o_c_direction');//開閉方向
+  //メールからURLをクリックしてた場合
+  $from_mail_sq_no = isset($_GET['sq_no']) ? $_GET['sq_no'] : '';
 
-  if(isset($_POST['process2'])) {
-    $process2 = $_POST['process2'];
-    $sq_no = $_POST['sq_no'];
-    $dept_id = isset($_POST['dept_id']) ? $_POST['dept_id'] : '';
+  if (isset($_POST['process']) || !empty($from_mail_sq_no)) {
+    if (isset($_POST['process'])) {
+      $process = $_POST['process']; //処理
+      $sq_no = $_POST['sq_no']; //営業依頼書№
+    } else {
+      //メールからURLをクリックしてた場合
+      $process = 'update';
+      $sq_no = $from_mail_sq_no;
+    }    
 
-    if ($process2 == 'update' || $process2 == 'copy' || $process2 == 'detail') {
-      $sq_line_no = $_GET['line'];
+    //一覧画面に更新ボタンを押下場合
+    if($process == 'update' || $process == 'detail') {
+      
+      //営業依頼書№でsq_header_trからデータを取得する
+      $sq_header_datas = get_sq_header_datas($sq_no);
 
-      $sq_detail_datas = get_sq_detail_datas($sq_no, $sq_line_no);
-      if (isset($sq_detail_datas) && !empty($sq_detail_datas)) {
+      if (isset($sq_header_datas) && !empty($sq_header_datas)) {
+        $cust_code = $sq_header_datas['cust_no'];                  //提出先
+        $cust_dept = $sq_header_datas['cust_dept'];                //担当部署
+        $cust_pic = $sq_header_datas['cust_pic'];                  //担当者
+        $pf_code = $sq_header_datas['p_office_no'];                //事業体コード
+        $pf_dept = $sq_header_datas['p_office_dept'];              //事業体担当部署
+        $pf_pic = $sq_header_datas['p_office_pic'];                //事業体担当者
+        $planned_order_date = $sq_header_datas['planned_order_date'];              //発注予定日
+        $planned_construction_date = $sq_header_datas['planned_construction_date'];//施工予定日
+        $case_div = $sq_header_datas['case_div'];                  //案件区分
+        $note = $sq_header_datas['note'];                          //備考
+        $prior_notice_div = $sq_header_datas['prior_notice_div'];  //技術への事前連絡区分
+        $prior_notice_date = $sq_header_datas['prior_notice_date'];//技術への事前連絡日
+        $degree_of_order = $sq_header_datas['degree_of_order'];     //発注確度
+        $order_accuracy = $sq_header_datas['order_accuracy'];       //受注確度
+        $item_name = $sq_header_datas['item_name'];                 //件名
+        $daily_report_url = $sq_header_datas['daily_report_url'];   //営業日報
+        $client = $sq_header_datas['client']; //依頼者
 
-        $fields = ['estimate_div1', 'estimate_div2', 'specification_div', 'drawing_div', 'document_div', 'check_type', 'deadline_estimate_date', 'deadline_drawing_date', 'cad_data_div', 'const_div1',
-        'const_div2', 'const_div3', 'const_div4', 'c_div', 'design_water_pressure', 'reducing_pressure_div', 'normal_water_puressure', 'water_outage', 'inner_film', 'outer_film', 'quantity', 
-        'right_quantity', 'left_quantity', 'special_note', 'size', 'joint', 'pipe', 'fluid', 'inner_coating', 'outer_coating', 'valve', 'record_div', 'class_code', 'zkm_code', 'special_tube_od1',
-        'special_tube_od2', 'route_pattern', 'entrant_comments', 'approver_comments', 'confirmer_comments'];
-
-        foreach ($fields as $field) {
-          ${$field} = $sq_detail_datas[$field];
+        //担当名を取得する
+        if ($cust_code !== '') {
+          $cust_name = get_cust_name($cust_code);
         }
-      }
+        //事業体名を取得する
+        if ($pf_code !== '') {
+          $pf_name = get_pf_name($pf_code);
+        }        
+      }    
     }
   }
 
-    /*----------------------------------------------------------------FUNCTION---------------------------------------------------------------------*/
-    
-  if (isset($_POST['function_name'])) {
-    $result = get_zaikoumei_datas();
-    echo json_encode($result);
+  //「発注確度」セレクトボックスにセットするデータを取得する
+  $code_id = 'degree_of_order';
+  $degree_of_order_list = get_dropdown_datas($code_id);
+
+  //「受注確度」セレクトボックスにセットするデータを取得する
+  $code_id = 'order_accuracy';
+  $order_accuracy_list = get_dropdown_datas($code_id);
+
+  if ($sq_no !== '') {
+    //sq_detail_trからデータを取得してテーブルにセットする
+    $sq_detail_list = get_sq_detail_datas($sq_no, $process);
   }
 
-  function get_class_datas() {
+  /*----------------------------------------------------------------FUNCTION---------------------------------------------------------------------*/
+  
+  function get_dropdown_datas($code_id) {
     global $pdo;
-    $sql = "SELECT * FROM sq_class";
+    $sql = "SELECT code_no, text1 FROM sq_code WHERE code_id = '$code_id'";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $datas = $stmt->fetchAll();
 
     return $datas;
-  } 
-
-  function get_zaikoumei_datas() {
-    global $pdo;
-    $class_code = $_POST['class_code'];
-    $datas = [];
-
-    $sql = "SELECT z.zkm_code, z.zkm_name, c.text1 ,c.code_no
-    FROM sq_zaikoumei z
-    LEFT JOIN sq_code c
-    ON z.c_div = c.code_no
-    AND c.code_id = 'c_div'
-    WHERE z.class_code = '$class_code'";
-
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-      $datas[] = $row;
-    }
-
-    return $datas;
   }
 
-  function getDropdownData($code_id) {
+  function get_sq_header_datas($sq_no) {
     global $pdo;
-    //sq_code テーブルからデータ取得する
-    $sql = "SELECT c.text1, zk.zk_div_data 
-    FROM sq_code c
-    LEFT JOIN sq_zk2 zk
-    ON c.code_id = zk.zk_division
-    AND c.text1 = zk.zk_tp
-    WHERE code_id='$code_id'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-    $datas = $stmt->fetchAll();
-    return $datas;
-  }
-
-  function get_sq_detail_datas($sq_no, $sq_line_no) {
-    global $pdo;
-    $sql = "SELECT * FROM sq_detail_tr WHERE sq_no='$sq_no' AND sq_line_no='$sq_line_no'";
+    $sql = "SELECT * FROM sq_header_tr WHERE sq_no = '$sq_no'";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $datas = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $datas;
+  }
+
+  function get_cust_name($cust_code) {
+    global $pdo;
+    $cust_name = '';
+    $sql = "SELECT cust_name FROM customer WHERE cust_code = '$cust_code'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $datas = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (isset($datas) && !empty($datas)) {
+      $cust_name = $datas['cust_name'];
+    }
+    return $cust_name;
+  }
+
+  function get_pf_name($pf_code) {
+    global $pdo;
+    $pf_name = '';
+    $sql = "SELECT pf_name FROM public_office WHERE pf_code = '$pf_code'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $datas = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    if (isset($datas) && !empty($datas)) {
+      $pf_name = $datas['pf_name'];
+    }
+    return $pf_name;
+  }
+
+  function get_sq_detail_datas($sq_no, $process) {
+    global $pdo;
+    global $title;
+    global $dept_id;
+
+    $s_title = substr($title, 0, 2);
+    $e_title = substr($title, 3);
+    //営業依頼書技術部の場合
+    if ($process == 'detail' && $s_title == 'td') {
+      $sql = "SELECT d.sq_no, d.sq_line_no, z.zkm_name, d.size, d.joint, d.pipe, d.inner_coating, d.outer_coating, d.fluid, d.valve, e.employee_name,
+            CASE d.record_div 
+            WHEN '1' THEN '見積'
+            WHEN '2' THEN '図面'
+            ELSE ''
+            END AS record_div_nm
+            FROM sq_detail_tr d
+            LEFT JOIN sq_zaikoumei z ON d.zkm_code = z.zkm_code AND d.class_code = z.class_code
+            INNER JOIN sq_route_tr r ON r.sq_no = d.sq_no AND r.sq_line_no = d.sq_line_no AND r.route1_dept = ? ";
+      switch ($title) {
+        case 'td_receipt':
+          $sql .= "AND r.route1_receipt_date IS NULL ";
+          break;
+        case 'td_entrant':
+          $sql .= "AND r.route1_entrant_date IS NULL AND r.route1_receipt_date IS NOT NULL ";
+          break;
+        case 'td_confirm':
+          $sql .= "AND r.route1_confirm_date IS NULL AND r.route1_entrant_date IS NOT NULL ";
+          break;
+        case 'td_approve':
+          $sql .= "AND r.route1_approval_date IS NULL AND r.route1_confirm_date IS NOT NULL ";
+          break;
+      }
+      $sql .=  "LEFT JOIN employee e ON e.employee_code = r.route1_entrant WHERE d.sq_no='$sq_no'";
+    } 
+    //営業依頼書：営業管理部、工事管理部、資材部の場合
+    else if ($process == 'detail' && ($s_title == 'sm' || $s_title == 'cm' || $s_title == 'pc')) {
+      $sql = "SELECT d.sq_no, d.sq_line_no, z.zkm_name, d.size, d.joint, d.pipe, d.inner_coating, d.outer_coating, d.fluid, d.valve, e.employee_name,
+            CASE d.record_div 
+            WHEN '1' THEN '見積'
+            WHEN '2' THEN '図面'
+            ELSE ''
+            END AS record_div_nm
+            FROM sq_detail_tr d
+            LEFT JOIN sq_zaikoumei z ON d.zkm_code = z.zkm_code AND d.class_code = z.class_code
+            INNER JOIN sq_route_tr r ON r.sq_no = d.sq_no AND r.sq_line_no = d.sq_line_no AND (";
+      switch ($e_title) {
+        case 'receipt':
+          $sql .= "(
+                      route1_dept = ? AND route1_receipt_date IS NULL
+                    ) OR (
+                      route2_dept = ? AND route2_receipt_date IS NULL
+                    ) OR (
+                      route3_dept = ? AND route3_receipt_date IS NULL
+                    ) OR (
+                      route4_dept = ? AND route4_receipt_date IS NULL
+                    ) OR (
+                      route5_dept = ? AND route5_receipt_date IS NULL
+                    ))";
+          break;
+        case 'entrant':
+          $sql .= "(
+                      route1_dept = ? AND route1_entrant_date IS NULL AND route1_receipt_date IS NOT NULL
+                    ) OR (
+                      route2_dept = ? AND route2_entrant_date IS NULL AND route2_receipt_date IS NOT NULL
+                    ) OR (
+                      route3_dept = ? AND route3_entrant_date IS NULL AND route3_receipt_date IS NOT NULL
+                    ) OR (
+                      route4_dept = ? AND route4_entrant_date IS NULL AND route4_receipt_date IS NOT NULL
+                    ) OR (
+                      route5_dept = ? AND route5_entrant_date IS NULL AND route5_receipt_date IS NOT NULL
+                    ))";
+          break;
+        case 'confirm':
+          $sql .= "(
+                      route1_dept = ? AND route1_confirm_date IS NULL AND route1_entrant_date IS NOT NULL
+                    ) OR (
+                      route2_dept = ? AND route2_confirm_date IS NULL AND route2_entrant_date IS NOT NULL
+                    ) OR (
+                      route3_dept = ? AND route3_confirm_date IS NULL AND route3_entrant_date IS NOT NULL
+                    ) OR (
+                      route4_dept = ? AND route4_confirm_date IS NULL AND route4_entrant_date IS NOT NULL
+                    ) OR (
+                      route5_dept = ? AND route5_confirm_date IS NULL AND route5_entrant_date IS NOT NULL
+                    ))";
+          break;
+        case 'approve':
+          $sql .= "(
+                      route1_dept = ? AND route1_approval_date IS NULL AND route1_confirm_date IS NOT NULL
+                    ) OR (
+                      route2_dept = ? AND route2_approval_date IS NULL AND route2_confirm_date IS NOT NULL
+                    ) OR (
+                      route3_dept = ? AND route3_approval_date IS NULL AND route3_confirm_date IS NOT NULL
+                    ) OR (
+                      route4_dept = ? AND route4_approval_date IS NULL AND route4_confirm_date IS NOT NULL
+                    ) OR (
+                      route5_dept = ? AND route5_approval_date IS NULL AND route5_confirm_date IS NOT NULL
+                    ))";
+          break;
+      }
+      $sql .=  " LEFT JOIN employee e ON (
+                  (
+                    CASE route1_dept 
+                      WHEN ? 
+                      THEN e.employee_code = route1_entrant 
+                    END
+                  ) OR (
+                    CASE route2_dept 
+                      WHEN ? 
+                      THEN e.employee_code = route2_entrant 
+                    END
+                  ) OR (
+                    CASE route3_dept 
+                      WHEN ? 
+                      THEN e.employee_code = route3_entrant 
+                    END
+                  ) OR (
+                    CASE route4_dept 
+                      WHEN ? 
+                      THEN e.employee_code = route4_entrant 
+                    END
+                  ) OR (
+                    CASE route5_dept 
+                      WHEN ? 
+                      THEN e.employee_code = route5_entrant 
+                    END
+                  )
+                )
+                WHERE d.sq_no='$sq_no'";
+    } else {
+      //営業依頼書依頼入力の場合
+      $sql = "SELECT d.sq_no, d.sq_line_no, z.zkm_name, d.size, d.joint, d.pipe, d.inner_coating, d.outer_coating, d.fluid, d.valve,
+            CASE d.record_div 
+            WHEN '1' THEN '見積'
+            WHEN '2' THEN '図面'
+            ELSE ''
+            END AS record_div_nm
+            FROM sq_detail_tr d
+            LEFT JOIN sq_zaikoumei z
+            ON d.zkm_code = z.zkm_code 
+            AND d.class_code = z.class_code
+            WHERE d.sq_no='$sq_no'";
+      //営業依頼書依頼確認の場合、確認日付がNULLのデータだけを取得する
+      if ($title == 'check') {
+        $sql .= "AND d.confirm_date IS NULL";
+      }
+      //営業依頼書依頼承認の場合、承認日付がNULLのデータだけを取得する
+      if ($title == 'approve') {
+        $sql .= "AND d.approve_date IS NULL AND d.confirm_date IS NOT NULL";
+      }
+    }
+    $stmt = $pdo->prepare($sql);
+    $params = array_fill(0, substr_count($sql, '?'), $dept_id);
+    $stmt->execute($params);
+    $datas = $stmt->fetchAll();
 
     return $datas;
   }

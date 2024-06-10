@@ -8,7 +8,7 @@
   // ヘッダーセット
   include("header1.php");
   $title = isset($_GET['title']) ? $_GET['title'] : '';
-  include("sales_request_input1_data_set.php");
+  include("sales_request_input2_data_set.php");
 ?>
 
 <main>
@@ -34,7 +34,7 @@
       //クリックされた行の営業依頼書行№	を取得する
       var selected = $(this).data('sq_line_no');
       
-      //sales_request_input2.phpへ移動する
+      //sales_request_input3.phpへ移動する
       $("#input2").attr("action", "sq_detail_tr_const_management_input3.php?line="+selected+"&title=<?= $title ?>");
     });
 

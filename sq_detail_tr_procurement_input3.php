@@ -6,7 +6,7 @@
   $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
   include("header1.php");
 
-  include("sales_request_input2_data_set.php");
+  include("sales_request_input3_data_set.php");
   include("sq_detail_tr_procurement_input4_data_set.php");
 
   $title = isset($_GET['title']) ? $_GET['title'] : '';
@@ -23,7 +23,7 @@
 <script type="text/javascript"></script>
 <script src="assets/js/inquiry_ent.js"></script>
 <script src="assets/js/inquiry_ent_check.js"></script>
-<script src="assets/js/sales_request_input2_check.js"></script>
+<script src="assets/js/sales_request_input3_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
@@ -58,7 +58,7 @@
   function fetchData(class_code) {
     $('#zaikoumeiList option:not(:first-child)').remove();
     $.ajax({
-      url: "sales_request_input2_data_set.php",
+      url: "sales_request_input3_data_set.php",
       type: "POST",
       data: {
         function_name: "get_zaikoumei_datas",

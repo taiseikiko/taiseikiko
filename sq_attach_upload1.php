@@ -14,7 +14,7 @@ $sq_no = $_POST['sq_no'] ?? '';
 //sm2 = 【　営業依頼書：営業管理部　入力　】【営業管理部入力画面・見積処理】見積定価のアップロードボタン 
 
 //directoryを設定する
-$redirectBase = "./sales_request_input01.php";
+$redirectBase = "./sales_request_input1.php";
 $redirectMap = [
   'sr' => $redirectBase,
   'e1' => "./sq_detail_tr_engineering_input1.php",

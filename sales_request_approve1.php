@@ -6,7 +6,7 @@ require_once('function.php');
 $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
 $dept_code = $_SESSION['department_code'];
 
-include("sales_request_input01_data_set.php");
+include("sales_request_input1_data_set.php");
 include("header1.php");
 $title = isset($_GET['title']) ? $_GET['title'] : '';
 $sq_datas = get_sq_datas("", ""); 
@@ -81,7 +81,7 @@ $(document).ready(function(){
     
     $.ajax({
       type: 'POST',
-      url: 'sales_request_input01_data_set.php',
+      url: 'sales_request_input1_data_set.php',
       data: { 
         isReturn: false,
         cust_name: cust_name, 
@@ -102,7 +102,7 @@ $(document).ready(function(){
 function handleWindowClose() {
   $.ajax({
     type: 'POST',
-    url: 'sales_request_input01_data_set.php',
+    url: 'sales_request_input1_data_set.php',
     data: { 
       return: false,
       cust_name: cust_name, 

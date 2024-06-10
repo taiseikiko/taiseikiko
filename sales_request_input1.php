@@ -1,92 +1,124 @@
 <?php
-  session_start();
-  header('Program-id: estimate_entry.php');
-  header('Content-type: text/html; charset=utf-8');
-  require_once('function.php');
-  $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
-  $title = $_GET['title'] ?? '';
-  include("sales_request_input1_data_set.php");
-  // ヘッダーセット
-  include("header1.php");
+session_start();
+header('Program-id: estimate_entry.php');
+header('Content-type: text/html; charset=utf-8');
+require_once('function.php');
+$_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
+$dept_code = $_SESSION['department_code'];
+include("sales_request_input1_data_set.php");
+include("header1.php");
+$title = $_GET['title'] ?? '';
+$sq_datas = get_sq_datas("", ""); 
 ?>
-
 <main>
-  <div class="pagetitle">
-    <h3>営業依頼書：依頼入力</h3>
-    <?php include("common_sales_input2.php"); ?>
+  <h3>【　営業依頼書：入力保守　】</h3>
+  <div class="container">
+    <form id="searchForm" class="row g-3" action="sales_request_input2.php?title=<?= $title ?>" method="POST">
+      <table style="width:auto;">
+        <tr>
+          <td>
+            <div class="field-row">
+              <label class="common_label" for="tokuisaki">得意先</label>
+              <input type="text" id="cust_name" name="cust_name">
+              <input type="hidden" name="cust_code" id="cust_code">
+              <input type="hidden" name="dept_id" value="<?= $dept_id ?>">
+              <button type="button" class="search_btn" onclick="customer_open(event)">得意先検索</button>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <div class="field-row">
+              <label class="common_label" for="tokuisaki">事業体</label>
+              <input type="text" id="pf_name" name="pf_name">
+              <input type="hidden" name="pf_code" id="pf_code">
+              <button type="button" class="search_btn" onclick="public_office_open(event)">事業体検索</button>
+            </div>
+          </td>
+        </tr>
+      </table>
+      
+      <table class="tab1" style="margin-top:20px;">
+        <tr>
+          <th>得意先</th>
+          <th>事業体</th>
+          <th>件名</th>
+          <th>処理状況</th>
+          <th>担当者</th>
+          <th>処理</th>
+        </tr>
+        <tr>
+          <td colspan="6">
+            <button type="submit" name="process" value="new">新規登録</button>
+          </td>
+        </tr>
+        <tbody id="sq_data_table">
+        <?php foreach ($sq_datas as $item): ?>
+        <tr>
+          <td><?= $item['cust_name'] ?></td>
+          <td><?= $item['pf_name'] ?></td>
+          <td><?= $item['item_name'] ?></td>
+          <td></td>
+          <td><?= $item['employee_name'] ?></td>
+          <td style="text-align:center">
+            <button type="submit" class="updateBtn" data-sq_no="<?= $item['sq_no'] ?>" name="process" value="update">更新</button>
+          </td>
+          <input type="hidden" class="sq_no" name="sq_no" value="">
+        </tr>
+        <?php endforeach; ?>
+        </tbody>
+      </table>
+    </form>
   </div>
-</main><!-- End #main -->
-</body>
-</html>
-<script src="assets/js/customer_ent.js"></script>
-<script src="assets/js/public_office_ent.js"></script>
-<script src="assets/js/sales_request_input_check.js"></script>
+</main>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="assets/js/customer_ent.js"></script> 
+<script src="assets/js/public_office_ent.js"></script>
 <script type="text/javascript">
-  $(document).ready(function(){
-    //一覧から新規作成を押下する場合
-    $(".createBtn").click(function(){
-      //localStorageにフォームデータを保存する
-      saveFormData();
-
-      //sales_request_input2.phpへ移動する
-      $("#input2").attr("action", "sales_request_input2.php?title=<?= $title ?>");
+  
+$(document).ready(function(){
+  $('#cust_name, #pf_name').on('input change', function() {
+    var cust_name = $('#cust_name').val();
+    var pf_name = $('#pf_name').val();
+    
+    $.ajax({
+      type: 'POST',
+      url: 'sales_request_input1_data_set.php',
+      data: { 
+        isReturn: false,
+        cust_name: cust_name, 
+        pf_name: pf_name 
+      },
+      success: function(response) {
+        $('#sq_data_table').html(response);
+      }      
     });
-
-    //一覧画面から更新 or コピーボタンを押下する場合
-    $(".updateBtn, .copyBtn").click(function(){
-      //クリックされた行の営業依頼書行№	を取得する
-      var selected = $(this).data('sq_line_no');
-
-      //localStorageにフォームデータを保存する
-      saveFormData();
-
-      //sales_request_input2.phpへ移動する
-      $("#input2").attr("action", "sales_request_input2.php?line="+selected+"&title=<?= $title ?>");
-    });
-
-    //アップロードボタンを押下する場合
-    $("#upload").click(function(){
-      //sq_attach_upload1.phpへ移動する
-      $("#input2").attr("action", "sq_attach_upload1.php?from=sr");
-    })
-
-    //確認ボタンを押下する場合
-    $(".approveBtn").click(function(){
-      checkValidation(event);
-      //sales_request_update.phpへ移動する
-      $("#input2").attr("action", "sales_request_update.php?title=<?= $title ?>");
-    })
-
-    //戻るボタンを押下する場合
-    $("#returnBtn").click(function(){
-      $("#input2").attr("action", "sales_request_input01.php?title=<?= $title ?>");
-    })
   });
 
-  function getById(id) {
-    return document.getElementById(id);
-  }
+  $(document).on('click', '.updateBtn', function() {
+    var selectedId = $(this).data('sq_no');
+    $('.sq_no').val(selectedId);
+  });
+});
 
-  const myForm = getById("input2");
-  //localStorageにフォームデータを保存する
-  function saveFormData() {
-    const formData = new FormData(myForm);
-    const jsonData = JSON.stringify(Object.fromEntries(formData));
-    localStorage.setItem('sales_request_form', jsonData);
-  }
+function handleWindowClose() {
+  $.ajax({
+    type: 'POST',
+    url: 'sales_request_input1_data_set.php',
+    data: { 
+      return: false,
+      cust_name: cust_name, 
+      pf_name: pf_name },
+    success: function(response) {
+      $('#sq_data_table').html(response);
+    }
+    
+  });
+}
 
-  //localStorageからフォームデータをセットする
-  const formData = JSON.parse(localStorage.getItem('sales_request_form'));
-  if (formData) {
-    Object.keys(formData).forEach(key => {
-      if (key !== 'uploaded_file') {
-        myForm.elements[key].value = formData[key];
-      }
-    })
-  }
+localStorage.removeItem('sales_request_form');
 </script>
 <?php
-// フッターセット
-footer_set();
+include("footer.html");
 ?>

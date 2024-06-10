@@ -3,6 +3,14 @@
     require_once('function.php');
     include('sq_mail_send_select.php');
 
+    $redirectList = [
+        'input' => './sales_request_input1.php?sq_no='.$sq_no.'&process=update&title='.$title,    //入力
+        'check' => './sales_request_check1.php?sq_no='.$sq_no.'&process=update&title='.$title,    //確認
+        'approve' => './sales_request_approve1.php?sq_no='.$sq_no.'&process=update&title='.$title,    //承認
+    ];
+
+    $redirect = $redirectList[$title];
+
     try {
         // DB接続
         $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
@@ -34,13 +42,32 @@
         }
 
         if ($datas) {
+            $url = '';
             foreach ($datas as $item) {
-                //データベースからもらったテキストにclientとsq_noをセットする
+                //データベースからもらったテキストにclientとsq_no、URLをセットする
                 $search = array("client", "sq_no");
                 $replace = array($from_name, $sq_no);
                 $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
                 $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
-                
+                //入力画面の場合確認画面へ移動出来るように設定する
+                if ($title == 'input') {
+                    $replace_from = $title;
+                    $replace_to = 'check';
+                }
+                //確認画面の場合承認画面へ移動出来るように設定する
+                else if ($title == 'check') {
+                    $replace_from = $title;
+                    $replace_to = 'approve';
+                } 
+                else {
+                    $replace_from = '';
+                    $replace_to = '';
+                }
+
+                if ($replace_from !== '') {
+                    $url = str_replace($replace_from, $replace_to, $url) . "&sq_no=".$sq_no;
+                }
+
                 switch ($title) {
                     //①営業部内で、入力完了後、sq_default_role にある、確認者（confirmor）へ送信
                     case 'input':
@@ -73,17 +100,18 @@
                     'from_name' => $from_name,       //送信者name
                     'subject' => $subject,    
                     'body' => $body,
-                    'sq_no' => $sq_no
+                    'sq_no' => $sq_no,
+                    'url' => $url
                 ];
             }
 
             //メール送信処理を行う
             $success = sendMail($email_datas);
             if ($success) {
-                header('location:sales_request_input1.php?sq_no='.$sq_no.'&process=update&title='.$title);
+                echo "<script>window.location.href='$redirect'  </script>";
             }
         } else {
-            header('location:sales_request_input1.php?sq_no='.$sq_no.'&process=update&title='.$title);
+            echo "<script>window.location.href='$redirect'  </script>";
         }
     } catch (PDOException $e) {
         error_log("Error:" . $e->getMessage(), 3, 'error_log.txt');

@@ -118,7 +118,7 @@
     }
 
     if ($success) {
-      header('location:sales_request_input01.php?title='.$title);
+      header('location:sales_request_input1.php?title='.$title);
     }
   }
 

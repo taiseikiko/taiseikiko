@@ -47,6 +47,9 @@ function sendMail($email_datas) {
 
         // 送受信先設定（第二引数は省略可）
         foreach ($email_datas as $item) {
+            $body = '';
+            $body = $item['body'] . "<br>"; // Add a line break before the link;
+            $body .= "<a href='" . $item['url'] . "'>" . $item['url'] . "</a>";
             $mail->setFrom($item['from_email'], $item['from_name']); // 送信者
             $mail->addAddress($item['to_email'], $item['to_name']);
             $mail->addReplyTo('peacefullife4497@gmail.com', 'HTET HTET'); // 返信先
@@ -54,9 +57,10 @@ function sendMail($email_datas) {
             $mail->Sender = $item['from_email']; // Return-path
 
             // 送信内容設定
-            $mail->isHTML(false); // Set email format to plain text
-            $mail->Subject = $item['subject']; 
-            $mail->Body    = $item['body'];
+            
+            $mail->Subject = $item['subject'];
+            $mail->isHTML(true); // Set email format to plain text
+            $mail->Body    = "<pre>$body</pre>";
 
             if(!$mail->send()){
                 $success = false;
