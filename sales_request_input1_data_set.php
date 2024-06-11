@@ -13,10 +13,10 @@ function get_sq_datas($cust_name = "", $pf_name = "") {
           FROM sq_header_tr h
           LEFT JOIN customer c ON h.cust_no = c.cust_code
           LEFT JOIN public_office pf ON h.p_office_no = pf.pf_code
-          LEFT JOIN employee e ON pf.person_in_charge = e.employee_code";
+          LEFT JOIN employee e ON pf.person_in_charge = e.employee_code ";
   //確認画面の場合、確認日がNULLのデータだけに表示させる
   if ($title == 'check') {
-    $sql .= " INNER JOIN (
+    $sql .= "INNER JOIN (
               SELECT DISTINCT (sq_no) 
               FROM sq_detail_tr
               WHERE confirm_date IS NULL
@@ -25,7 +25,7 @@ function get_sq_datas($cust_name = "", $pf_name = "") {
   }
   //承認画面の場合、承認日がNULLかつ、確認日がNOT NULLのデータだけに表示させる
   if ($title == 'approve') {
-    $sql .= " INNER JOIN (
+    $sql .= "INNER JOIN (
               SELECT DISTINCT (sq_no) 
               FROM sq_detail_tr
               WHERE approve_date IS NULL AND confirm_date IS NOT NULL

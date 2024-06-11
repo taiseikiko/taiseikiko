@@ -44,8 +44,15 @@
       $process = $_POST['process']; //処理
       $sq_no = $_POST['sq_no']; //営業依頼書№
     } else {
-      //メールからURLをクリックしてた場合
-      $process = 'update';
+      //メールからURLをクリックして来た場合
+      if ($title !== 'set_route') {
+        //確認画面と承認画面の場合更新処理を行う
+        $process = 'update';
+      } else {
+        //ルート設定の場合、画面の更新はしない
+        $process = 'detail';
+      }
+      //営業依頼書No
       $sq_no = $from_mail_sq_no;
     }    
 

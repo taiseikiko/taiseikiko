@@ -59,8 +59,8 @@
                     $replace_to = 'approve';
                 } 
                 else {
-                    $replace_from = '';
-                    $replace_to = '';
+                    $replace_from = 'sales_request_approve2.php?title=approve';
+                    $replace_to = 'sales_route_input2.php?title=set_route';
                 }
 
                 if ($replace_from !== '') {
