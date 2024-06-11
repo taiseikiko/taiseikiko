@@ -8,6 +8,7 @@
   // ヘッダーセット
   include("header1.php");
   $title = isset($_GET['title']) ? $_GET['title'] : '';
+  $dept_code = $_SESSION['department_code'];
   include("sales_request_input2_data_set.php");
 ?>
 

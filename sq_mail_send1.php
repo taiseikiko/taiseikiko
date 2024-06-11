@@ -48,25 +48,31 @@
                 $replace = array($from_name, $sq_no, $sq_line_no);
                 $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
                 $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
-                //入力画面の場合確認画面へ移動出来るように設定する
-                if ($title == 'input') {
-                    $replace_from = $title;
-                    $replace_to = 'check';
-                }
-                //確認画面の場合承認画面へ移動出来るように設定する
-                else if ($title == 'check') {
-                    $replace_from = $title;
-                    $replace_to = 'approve';
-                } 
-                else {
-                    $replace_from = 'sales_request_approve2.php?title=approve';
-                    $replace_to = 'sales_route_input2.php?title=set_route';
+                switch ($title) {
+                    //入力画面の場合確認画面へ移動出来るように設定する
+                    case 'input':
+                        $replace_from = $title;
+                        $replace_to = 'check';
+                        break;
+                    //確認画面の場合承認画面へ移動出来るように設定する
+                    case 'check':
+                        $replace_from = $title;
+                        $replace_to = 'approve';
+                        break;
+                    //承認画面の場合ルート設定画面へ移動するように設定する
+                    case 'approve':
+                        $replace_from = 'sales_request_approve2.php?title=approve';
+                        $replace_to = 'sales_route_input2.php?title=set_route';
+                        break;
+                    
+                    default:
+                        $replace_from = '';
+                        $replace_to = '';
+                        break;
                 }
 
                 if ($replace_from !== '') {
                     $url = str_replace($replace_from, $replace_to, $url) . "&sq_no=".$sq_no;
-                } else {
-                    $url = '';
                 }
 
                 switch ($title) {

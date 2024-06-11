@@ -45,7 +45,7 @@
       $sq_no = $_POST['sq_no']; //営業依頼書№
     } else {
       //メールからURLをクリックして来た場合
-      if ($title !== 'set_route') {
+      if ($title == 'check' || $title == 'confirm') {
         //確認画面と承認画面の場合更新処理を行う
         $process = 'update';
       } else {

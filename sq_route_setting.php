@@ -11,6 +11,7 @@
   $dept_id = $_POST['dept_id'];
 
   if (isset($_POST['submit'])) {
+    $url = $_POST['url'] ?? ''; //メール送信する時、利用するため
     $route_pattern = isset($_POST['route_pattern']) ? $_POST['route_pattern'] : '';
     $success = true;
     try {

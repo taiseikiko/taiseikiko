@@ -2,7 +2,7 @@
 require_once('function.php');
 $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 //ログインユーザーの部署ID
-$dept_id = getDeptId();
+$dept_id = getDeptId($dept_code);
 
 function get_sq_datas($title) {
   global $pdo;
@@ -81,19 +81,4 @@ function get_sq_datas($title) {
 
   $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
   return $datas;
-}
-
-function getDeptId() {
-  global $pdo;
-  global $dept_code;
-
-  $dept_id = '';
-  $sql = "SELECT dept_id FROM sq_dept WHERE sq_dept_code='$dept_code'";
-  $stmt = $pdo->prepare($sql);
-  $stmt->execute();
-  $row = $stmt->fetch(PDO::FETCH_ASSOC);
-  if ($row) {
-    $dept_id = $row['dept_id'];
-  }
-  return $dept_id;
 }
