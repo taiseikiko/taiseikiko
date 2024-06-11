@@ -2,6 +2,7 @@
     // 初期処理
     require_once('function.php');
     include('sq_mail_send_select.php');
+    $url = $_SERVER['HTTP_REFERER']; //メール送信する時、利用するため
 
     try {
         // DB接続
@@ -22,6 +23,39 @@
         
         //route1_deptをsq_routeから取得する
         $route1_dept = get_route1_dept();
+        
+        //baseurl を設定する
+        $parsed_url = parse_url($url);
+
+        if ($parsed_url !== false) {
+            if (isset($parsed_url['port'])) {
+                $base_url = $parsed_url['scheme'] . '://' . $parsed_url['host'] . ':' . $parsed_url['port'] . '/';
+            } else {
+                $base_url = $parsed_url['scheme'] . '://' . $parsed_url['host'] . '/taisei/taiseikiko/';
+            }
+        }
+
+        //メール内容に渡すURL
+        //部署によって移動する画面が違います
+        switch ($route1_dept) {                    
+            //部署IDが「０２」の場合、技術部の入力画面へ移動する
+            case '02':
+                $url = $base_url . "sq_detail_tr_engineering_input2.php?title=td_receipt&sq_no=" . $sq_no;
+                break;
+            //部署IDが「０５」の場合、営業管理部の入力画面へ移動する
+            case '05':
+                $url = $base_url . "sq_detail_tr_sales_management_input2.php?title=sm_receipt&sq_no=" . $sq_no;
+                break;
+            //部署IDが「０４」の場合、資材部の入力画面へ移動する
+            case '04':
+                $url = $base_url . "sq_detail_tr_procurement_input2.php?title=pc_receipt&sq_no=" . $sq_no;
+                break;
+            //部署IDが「０６」の場合、工事管理部の入力画面へ移動する
+            case '06':
+                $url = $base_url . "sq_detail_tr_const_management_input2.php?title=cm_receipt&sq_no=" . $sq_no;
+                break;
+        }
+
         //④ルート設定後、sq_route_tr の、route1_dept をKEYにして、sq_route_in_dept を読み、
         //role = "0"：受付者　全員に送信（※group_id は無視）
         $datas = get_sq_route_in_dept2($route1_dept);
@@ -35,35 +69,7 @@
                 $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
                 $to_email = $item['email'];
                 $to_name = $item['email'];
-                //部署によって移動する画面が違います
-                $replace_from = "sales_route_input2.php?title=set_route";
-                switch ($route1_dept) {                    
-                    //部署IDが「０２」の場合、技術部の入力画面へ移動する
-                    case '02':
-                        $replace_to = "sq_detail_tr_engineering_input2.php?title=td_receipt";
-                        break;
-                    //部署IDが「０５」の場合、営業管理部の入力画面へ移動する
-                    case '05':
-                        $replace_to = "sq_detail_tr_sales_management_input2.php?title=sm_receipt";
-                        break;
-                    //部署IDが「０４」の場合、資材部の入力画面へ移動する
-                    case '04':
-                        $replace_to = "sq_detail_tr_procurement_input2.php?title=pc_receipt";
-                        break;
-                    //部署IDが「０６」の場合、工事管理部の入力画面へ移動する
-                    case '06':
-                        $replace_to = "sq_detail_tr_const_management_input2.php?title=cm_receipt";
-                        break;
-                    
-                    default:
-                        $replace_from = "";
-                        $replace_to = "";
-                        break;
-                }
 
-                if ($replace_from !== '') {
-                    $url = str_replace($replace_from, $replace_to, $url) . "&sq_no=".$sq_no;
-                }
 
                 $email_datas[] = [
                     'to_email' => $to_email,         //送信先email

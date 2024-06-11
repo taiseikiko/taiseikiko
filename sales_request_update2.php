@@ -14,7 +14,6 @@
     $process = $_POST['process2'];  //更新 || 登録
     $sq_no = $_POST['sq_no'];       //営業依頼書№
     $dept_id = $_POST['dept_id'] ?? '';
-    $url = $_POST['url'] ?? ''; //メール送信する時、利用するため
 
     $estimate_div1 = $_POST['estimate_div1'] ?? '';
     $estimate_div2 = $_POST['estimate_div2'] ?? '';

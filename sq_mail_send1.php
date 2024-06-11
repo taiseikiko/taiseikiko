@@ -2,6 +2,7 @@
     // 初期処理
     require_once('function.php');
     include('sq_mail_send_select.php');
+    $url = $_SERVER['HTTP_REFERER']; //メール送信する時、利用するため
 
     $redirectList = [
         'input' => './sales_request_input1.php?sq_no='.$sq_no.'&process=update&title='.$title,    //入力
@@ -41,6 +42,32 @@
             $datas = get_sq_route_in_dept2();
         }
 
+        //baseurl を設定する
+        $parsed_url = parse_url($url);
+
+        if ($parsed_url !== false) {
+            if (isset($parsed_url['port'])) {
+                $base_url = $parsed_url['scheme'] . '://' . $parsed_url['host'] . ':' . $parsed_url['port'] . '/';
+            } else {
+                $base_url = $parsed_url['scheme'] . '://' . $parsed_url['host'] . '/taisei/taiseikiko/';
+            }
+        }
+
+        switch ($title) {
+            //入力画面の場合確認画面へ移動出来るように設定する
+            case 'input':
+                $url = $base_url . "sales_request_check2.php?title=check&sq_no=".$sq_no;
+                break;
+            //確認画面の場合承認画面へ移動出来るように設定する
+            case 'check':
+                $url = $base_url . "sales_request_approve2.php?title=approve&sq_no=".$sq_no;
+                break;
+            //承認画面の場合ルート設定画面へ移動するように設定する
+            case 'approve':
+                $url = $base_url . "sales_route_input2.php?title=set_route&sq_no=".$sq_no;
+                break;
+        }
+
         if ($datas) {
             foreach ($datas as $item) {
                 //データベースからもらったテキストにclientとsq_no、URLをセットする
@@ -48,32 +75,6 @@
                 $replace = array($from_name, $sq_no, $sq_line_no);
                 $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
                 $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
-                switch ($title) {
-                    //入力画面の場合確認画面へ移動出来るように設定する
-                    case 'input':
-                        $replace_from = $title;
-                        $replace_to = 'check';
-                        break;
-                    //確認画面の場合承認画面へ移動出来るように設定する
-                    case 'check':
-                        $replace_from = $title;
-                        $replace_to = 'approve';
-                        break;
-                    //承認画面の場合ルート設定画面へ移動するように設定する
-                    case 'approve':
-                        $replace_from = 'sales_request_approve2.php?title=approve';
-                        $replace_to = 'sales_route_input2.php?title=set_route';
-                        break;
-                    
-                    default:
-                        $replace_from = '';
-                        $replace_to = '';
-                        break;
-                }
-
-                if ($replace_from !== '') {
-                    $url = str_replace($replace_from, $replace_to, $url) . "&sq_no=".$sq_no;
-                }
 
                 switch ($title) {
                     //①営業部内で、入力完了後、sq_default_role にある、確認者（confirmor）へ送信
