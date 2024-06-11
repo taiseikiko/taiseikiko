@@ -123,7 +123,8 @@
       }      
     } else {
       //更新の場合
-      $datas['sq_line_no'] = $_POST['sq_line_no'];
+      $sq_line_no = $_POST['sq_line_no'];
+      $datas['sq_line_no'] = $sq_line_no;
       $datas['upd_date'] = $today;
       //更新する
       $success = updateData($datas);

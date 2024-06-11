@@ -3,17 +3,36 @@ require_once('function.php');
 $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 //ログインユーザーの部署ID
 $dept_id = getDeptId($dept_code);
+$title = $_GET['title'] ?? '';
 
 function get_sq_datas($cust_name = "", $pf_name = "") {
   global $pdo;
+  global $title;
+
   $sql = "SELECT h.sq_no, h.cust_no, c.cust_name, h.p_office_no, pf.pf_name, pf.person_in_charge, e.employee_name, h.item_name
           FROM sq_header_tr h
           LEFT JOIN customer c ON h.cust_no = c.cust_code
           LEFT JOIN public_office pf ON h.p_office_no = pf.pf_code
-          LEFT JOIN employee e ON pf.person_in_charge = e.employee_code
-          -- LEFT JOIN sq_detail_tr d ON h.sq_no = d.sq_no
-          -- LEFT JOIN sq_zaikoumei zk ON d.zkm_code = zk.zkm_code AND d.class_code = zk.class_code // d.zkm_code, zk.zkm_name 
-          WHERE c.cust_name LIKE :cust_name AND pf.pf_name LIKE :pf_name";
+          LEFT JOIN employee e ON pf.person_in_charge = e.employee_code";
+  //確認画面の場合、確認日がNULLのデータだけに表示させる
+  if ($title == 'check') {
+    $sql .= " INNER JOIN (
+              SELECT DISTINCT (sq_no) 
+              FROM sq_detail_tr
+              WHERE confirm_date IS NULL
+            ) AS detail 
+            ON h.sq_no = detail.sq_no ";
+  }
+  //承認画面の場合、承認日がNULLかつ、確認日がNOT NULLのデータだけに表示させる
+  if ($title == 'approve') {
+    $sql .= " INNER JOIN (
+              SELECT DISTINCT (sq_no) 
+              FROM sq_detail_tr
+              WHERE approve_date IS NULL AND confirm_date IS NOT NULL
+            ) AS detail 
+            ON h.sq_no = detail.sq_no ";
+  }
+  $sql .= "WHERE c.cust_name LIKE :cust_name AND pf.pf_name LIKE :pf_name";
   $stmt = $pdo->prepare($sql);
   $stmt->execute([
     ':cust_name' => '%' . $cust_name . '%',

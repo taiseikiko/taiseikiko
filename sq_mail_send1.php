@@ -44,8 +44,8 @@
         if ($datas) {
             foreach ($datas as $item) {
                 //データベースからもらったテキストにclientとsq_no、URLをセットする
-                $search = array("client", "sq_no");
-                $replace = array($from_name, $sq_no);
+                $search = array("client", "sq_no", "sq_line_no");
+                $replace = array($from_name, $sq_no, $sq_line_no);
                 $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
                 $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
                 //入力画面の場合確認画面へ移動出来るように設定する
