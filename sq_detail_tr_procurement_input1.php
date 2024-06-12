@@ -49,5 +49,5 @@
       $("#input1").attr("action", "sq_detail_tr_procurement_input2.php?title=<?= $title ?>");
     }); 
   });
-  localStorage.removeItem('detail_procurement');
+  // localStorage.removeItem('detail_procurement');
 </script>

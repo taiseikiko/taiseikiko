@@ -28,7 +28,7 @@
 <script type="text/javascript">
   $(document).ready(function(){
     //localStorageにフォームデータを保存する
-    saveFormData();
+    // saveFormData();
     disableInput();
     //一覧画面から更新 or コピーボタンを押下する場合
     $(".updateBtn").click(function(){
@@ -49,23 +49,23 @@
     return document.getElementById(id);
   }
 
-  const myForm = getById("input2");
-  //localStorageにフォームデータを保存する
-  function saveFormData() {
-    const formData = new FormData(myForm);
-    const jsonData = JSON.stringify(Object.fromEntries(formData));
-    localStorage.setItem('detail_engineering', jsonData);
-  }
+  // const myForm = getById("input2");
+  // //localStorageにフォームデータを保存する
+  // function saveFormData() {
+  //   const formData = new FormData(myForm);
+  //   const jsonData = JSON.stringify(Object.fromEntries(formData));
+  //   localStorage.setItem('detail_engineering', jsonData);
+  // }
 
-  //localStorageからフォームデータをセットする
-  const formData = JSON.parse(localStorage.getItem('detail_engineering'));
-  if (formData) {
-    Object.keys(formData).forEach(key => {
-      if (key !== 'uploaded_file') {
-        myForm.elements[key].value = formData[key];
-      }
-    })
-  }
+  // //localStorageからフォームデータをセットする
+  // const formData = JSON.parse(localStorage.getItem('detail_engineering'));
+  // if (formData) {
+  //   Object.keys(formData).forEach(key => {
+  //     if (key !== 'uploaded_file') {
+  //       myForm.elements[key].value = formData[key];
+  //     }
+  //   })
+  // }
 
   function disableInput() {
     //Disabled Input 

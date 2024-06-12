@@ -28,7 +28,7 @@
     //一覧から新規作成を押下する場合
     $(".createBtn").click(function(){
       //localStorageにフォームデータを保存する
-      saveFormData();
+      // saveFormData();
 
       //sales_request_approve3.phpへ移動する
       $("#input2").attr("action", "sales_request_approve3.php?title=<?= $title ?>");
@@ -40,7 +40,7 @@
       var selected = $(this).data('sq_line_no');
 
       //localStorageにフォームデータを保存する
-      saveFormData();
+      // saveFormData();
 
       //sales_request_approve3.phpへ移動する
       $("#input2").attr("action", "sales_request_approve3.php?line="+selected+"&title=<?= $title ?>");
@@ -69,23 +69,23 @@
     return document.getElementById(id);
   }
 
-  const myForm = getById("input2");
-  //localStorageにフォームデータを保存する
-  function saveFormData() {
-    const formData = new FormData(myForm);
-    const jsonData = JSON.stringify(Object.fromEntries(formData));
-    localStorage.setItem('sales_request_form', jsonData);
-  }
+  // const myForm = getById("input2");
+  // //localStorageにフォームデータを保存する
+  // function saveFormData() {
+  //   const formData = new FormData(myForm);
+  //   const jsonData = JSON.stringify(Object.fromEntries(formData));
+  //   localStorage.setItem('sales_request_form', jsonData);
+  // }
 
-  //localStorageからフォームデータをセットする
-  const formData = JSON.parse(localStorage.getItem('sales_request_form'));
-  if (formData) {
-    Object.keys(formData).forEach(key => {
-      if (key !== 'uploaded_file') {
-        myForm.elements[key].value = formData[key];
-      }
-    })
-  }
+  // //localStorageからフォームデータをセットする
+  // const formData = JSON.parse(localStorage.getItem('sales_request_form'));
+  // if (formData) {
+  //   Object.keys(formData).forEach(key => {
+  //     if (key !== 'uploaded_file') {
+  //       myForm.elements[key].value = formData[key];
+  //     }
+  //   })
+  // }
 </script>
 <?php
 // フッターセット

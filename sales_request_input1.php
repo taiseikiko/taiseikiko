@@ -121,7 +121,7 @@ function handleWindowClose() {
   });
 }
 
-localStorage.removeItem('sales_request_form');
+// localStorage.removeItem('sales_request_form');
 </script>
 <?php
 include("footer.html");

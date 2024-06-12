@@ -49,5 +49,5 @@
       $("#input1").attr("action", "sq_detail_tr_engineering_input2.php?title=<?= $title ?>");
     }); 
   });
-  localStorage.removeItem('detail_engineering');
+  // localStorage.removeItem('detail_engineering');
 </script>

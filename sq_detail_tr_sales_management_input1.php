@@ -49,5 +49,5 @@
       $("#input1").attr("action", "sq_detail_tr_sales_management_input2.php?title=<?= $title ?>");
     }); 
   });
-  localStorage.removeItem('detail_sales_management');
+  // localStorage.removeItem('detail_sales_management');
 </script>
