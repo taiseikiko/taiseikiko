@@ -56,15 +56,15 @@
         switch ($title) {
             //入力画面の場合確認画面へ移動出来るように設定する
             case 'input':
-                $url = $base_url . "sales_request_check2.php?title=check&sq_no=".$sq_no;
+                $url = $base_url . "sales_request_check2.php?from=mail&title=check&sq_no=".$sq_no;
                 break;
             //確認画面の場合承認画面へ移動出来るように設定する
             case 'check':
-                $url = $base_url . "sales_request_approve2.php?title=approve&sq_no=".$sq_no;
+                $url = $base_url . "sales_request_approve2.php?from=mail&title=approve&sq_no=".$sq_no;
                 break;
             //承認画面の場合ルート設定画面へ移動するように設定する
             case 'approve':
-                $url = $base_url . "sales_route_input2.php?title=set_route&sq_no=".$sq_no;
+                $url = $base_url . "sales_route_input2.php?from=mail&title=set_route&sq_no=".$sq_no;
                 break;
         }
 

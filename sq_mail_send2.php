@@ -40,19 +40,19 @@
         switch ($route1_dept) {                    
             //部署IDが「０２」の場合、技術部の入力画面へ移動する
             case '02':
-                $url = $base_url . "sq_detail_tr_engineering_input2.php?title=td_receipt&sq_no=" . $sq_no;
+                $url = $base_url . "sq_detail_tr_engineering_input2.php?from=mail&title=td_receipt&sq_no=" . $sq_no;
                 break;
             //部署IDが「０５」の場合、営業管理部の入力画面へ移動する
             case '05':
-                $url = $base_url . "sq_detail_tr_sales_management_input2.php?title=sm_receipt&sq_no=" . $sq_no;
+                $url = $base_url . "sq_detail_tr_sales_management_input2.php?from=mail&title=sm_receipt&sq_no=" . $sq_no;
                 break;
             //部署IDが「０４」の場合、資材部の入力画面へ移動する
             case '04':
-                $url = $base_url . "sq_detail_tr_procurement_input2.php?title=pc_receipt&sq_no=" . $sq_no;
+                $url = $base_url . "sq_detail_tr_procurement_input2.php?from=mail&title=pc_receipt&sq_no=" . $sq_no;
                 break;
             //部署IDが「０６」の場合、工事管理部の入力画面へ移動する
             case '06':
-                $url = $base_url . "sq_detail_tr_const_management_input2.php?title=cm_receipt&sq_no=" . $sq_no;
+                $url = $base_url . "sq_detail_tr_const_management_input2.php?from=mail&title=cm_receipt&sq_no=" . $sq_no;
                 break;
         }
 

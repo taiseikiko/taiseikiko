@@ -37,7 +37,11 @@
   $dept_id = isset($_POST['dept_id']) ? $_POST['dept_id'] : $dept_id1;
 
   //メールからURLをクリックしてた場合
-  $from_mail_sq_no = isset($_GET['sq_no']) ? $_GET['sq_no'] : '';
+  if (isset($_POST['from'])) {
+    if ($_POST['from'] == 'mail') {
+      $from_mail_sq_no = isset($_GET['sq_no']) ? $_GET['sq_no'] : '';
+    }
+  }  
 
   if (isset($_POST['process']) || !empty($from_mail_sq_no)) {
     if (isset($_POST['process'])) {

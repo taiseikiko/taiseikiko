@@ -129,10 +129,10 @@
 
             //メール送信する時、渡すURL
             $url_list = [
-                'td' => 'sq_detail_tr_engineering_input2.php?title=',        //技術部
-                'sm' => 'sq_detail_tr_sales_management_input2.php?title=',   //営業管理部
-                'cm' => 'sq_detail_tr_const_management_input2.php?title=',   //工事管理部
-                'pc' => 'sq_detail_tr_procurement_input2.php?title='         //資材部
+                'td' => 'sq_detail_tr_engineering_input2.php?from=mail&title=',        //技術部
+                'sm' => 'sq_detail_tr_sales_management_input2.php?from=mail&title=',   //営業管理部
+                'cm' => 'sq_detail_tr_const_management_input2.php?from=mail&title=',   //工事管理部
+                'pc' => 'sq_detail_tr_procurement_input2.php?from=mail&title='         //資材部
             ];
 
             switch ($e_title) {
