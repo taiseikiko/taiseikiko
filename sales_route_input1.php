@@ -32,5 +32,5 @@
       $("#input1").attr("action", "sales_route_input2.php?title=set_route");
     }); 
   });
-  localStorage.removeItem('sales_route');
+  //localStorage.removeItem('sales_route');
 </script>

@@ -37,17 +37,20 @@
   $dept_id = isset($_POST['dept_id']) ? $_POST['dept_id'] : $dept_id1;
 
   //メールからURLをクリックしてた場合
-  if (isset($_POST['from'])) {
-    if ($_POST['from'] == 'mail') {
+  if (isset($_GET['from'])) {
+    if ($_GET['from'] == 'mail') {
       $from_mail_sq_no = isset($_GET['sq_no']) ? $_GET['sq_no'] : '';
     }
-  }  
+  } else if (isset($_GET['sq_no'])) {
+    //明細画面から来る場合
+    $from_detail_sq_no = isset($_GET['sq_no']) ? $_GET['sq_no'] : '';
+  }
 
-  if (isset($_POST['process']) || !empty($from_mail_sq_no)) {
+  if (isset($_POST['process']) || !empty($from_mail_sq_no) || !empty($from_detail_sq_no)) {
     if (isset($_POST['process'])) {
       $process = $_POST['process']; //処理
       $sq_no = $_POST['sq_no']; //営業依頼書№
-    } else {
+    } else if (!empty($from_mail_sq_no)) {
       //メールからURLをクリックして来た場合
       if ($title == 'check' || $title == 'confirm' || $title == 'approve') {
         //確認画面と承認画面の場合更新処理を行う
@@ -58,7 +61,9 @@
       }
       //営業依頼書No
       $sq_no = $from_mail_sq_no;
-    }    
+    } else {
+      $sq_no = $from_detail_sq_no;
+    }
 
     //一覧画面に更新ボタンを押下場合
     if($process == 'update' || $process == 'detail') {
