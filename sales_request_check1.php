@@ -78,6 +78,8 @@ $(document).ready(function(){
   $('#cust_name, #pf_name').on('input change', function() {
     var cust_name = $('#cust_name').val();
     var pf_name = $('#pf_name').val();
+    var dept_code = <?= $dept_code ?>;
+    var title = "<?= $title ?>";
     
     $.ajax({
       type: 'POST',
@@ -85,7 +87,9 @@ $(document).ready(function(){
       data: { 
         isReturn: false,
         cust_name: cust_name, 
-        pf_name: pf_name 
+        pf_name: pf_name,
+        dept_code: dept_code,
+        title: title
       },
       success: function(response) {
         $('#sq_data_table').html(response);

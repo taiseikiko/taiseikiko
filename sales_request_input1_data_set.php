@@ -2,12 +2,13 @@
 require_once('function.php');
 $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 //ログインユーザーの部署ID
-$dept_id = getDeptId($dept_code);
-$title = $_GET['title'] ?? '';
+$dept_cd = $_POST['dept_code'] ?? $dept_code;
+$dept_id = getDeptId($dept_cd);
+$title1 = $_POST['title'] ?? $_GET['title'];
 
 function get_sq_datas($cust_name = "", $pf_name = "") {
   global $pdo;
-  global $title;
+  global $title1;
 
   $sql = "SELECT h.sq_no, h.cust_no, c.cust_name, h.p_office_no, pf.pf_name, pf.person_in_charge, e.employee_name, h.item_name
           FROM sq_header_tr h
@@ -15,7 +16,7 @@ function get_sq_datas($cust_name = "", $pf_name = "") {
           LEFT JOIN public_office pf ON h.p_office_no = pf.pf_code
           LEFT JOIN employee e ON pf.person_in_charge = e.employee_code ";
   //確認画面の場合、確認日がNULLのデータだけに表示させる
-  if ($title == 'check') {
+  if ($title1 == 'check') {
     $sql .= "INNER JOIN (
               SELECT DISTINCT (sq_no) 
               FROM sq_detail_tr
@@ -24,7 +25,7 @@ function get_sq_datas($cust_name = "", $pf_name = "") {
             ON h.sq_no = detail.sq_no ";
   }
   //承認画面の場合、承認日がNULLかつ、確認日がNOT NULLのデータだけに表示させる
-  if ($title == 'approve') {
+  if ($title1 == 'approve') {
     $sql .= "INNER JOIN (
               SELECT DISTINCT (sq_no) 
               FROM sq_detail_tr
@@ -54,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       echo '<tr>';
       echo '<td>' . htmlspecialchars($item['cust_name']) . '</td>';
       echo '<td>' . htmlspecialchars($item['pf_name']) . '</td>';
-      echo '<td>' . htmlspecialchars($item['zkm_name']) . '</td>';
+      echo '<td>' . htmlspecialchars($item['item_name']) . '</td>';
       echo '<td></td>';
       echo '<td>' . htmlspecialchars($item['employee_name']) . '</td>';
       echo '<td style="text-align:center"><button type="submit" class="updateBtn" data-sq_no="' . htmlspecialchars($item['sq_no']) . '" name="process" value="update">更新</button></td>';
