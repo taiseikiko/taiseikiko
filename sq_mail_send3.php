@@ -49,24 +49,26 @@
         $sq_route_mail_datas = get_sq_route_mail_datas($title, $base_url);
 
         if ($sq_route_mail_datas) {
-            //データベースからもらったテキストにclientとsq_noをセットする
-            $search = array("client", "sq_no");
-            $replace = array($from_name, $sq_no);
-            $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
-            $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
-            $to_email = $sq_route_mail_datas['email'];
-            $url = $sq_route_mail_datas['url'];
+            foreach ($sq_route_mail_datas as $item) {
+                //データベースからもらったテキストにclientとsq_noをセットする
+                $search = array("client", "sq_no");
+                $replace = array($from_name, $sq_no);
+                $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
+                $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
+                $to_email = $item['email'];
+                $url = $item['url'];
 
-            $email_datas[] = [
-                'to_email' => $to_email,         //送信先email
-                'to_name' => $to_name,           //送信先name
-                'from_email' => $from_email,     //送信者email
-                'from_name' => $from_name,       //送信者name
-                'subject' => $subject,    
-                'body' => $body,
-                'sq_no' => $sq_no,
-                'url' => $url
-            ];
+                $email_datas[] = [
+                    'to_email' => $to_email,         //送信先email
+                    'to_name' => $to_name,           //送信先name
+                    'from_email' => $from_email,     //送信者email
+                    'from_name' => $from_name,       //送信者name
+                    'subject' => $subject,    
+                    'body' => $body,
+                    'sq_no' => $sq_no,
+                    'url' => $url
+                ];
+            }
 
             //メール送信処理を行う
             $success = sendMail($email_datas);
@@ -124,9 +126,6 @@
 
         $datas = [];
         if (!empty($column)) {
-            //送信先の情報を取得する
-            $datas = get_mail_receiver($dept_id, $column);
-
             //メール送信する時、渡すURL
             $url_list = [
                 'td' => 'sq_detail_tr_engineering_input2.php?from=mail&title=',        //技術部
@@ -149,7 +148,9 @@
                     $url_to = $base_url . $url_list[$s_title] . $s_title . "_approve&sq_no=" . $sq_no;
                     break;
             }
-            $datas['url'] = $url_to;
+
+            //送信先の情報を取得する
+            $datas = get_mail_receiver($dept_id, $column, $url_to);
         } 
         //⑧各部署で、承認処理後、sq_route_mail_tr の、次の部署（route1_dept ～ route5_dept）の、
         //受付者（route1_receipt_person ～ route5_receipt_person）へ送信
@@ -183,17 +184,15 @@
 
                 //メール送信する時、渡すURL
                 $url_list = [
-                    '02' => 'sq_detail_tr_engineering_input2.php?title=td_receipt&sq_no=',        //技術部
-                    '05' => 'sq_detail_tr_sales_management_input2.php?title=sm_receipt&sq_no=',   //営業管理部
-                    '06' => 'sq_detail_tr_const_management_input2.php?title=cm_receipt&sq_no=',   //工事管理部
-                    '04' => 'sq_detail_tr_procurement_input2.php?title=pc_receipt&sq_no='         //資材部
+                    '02' => 'sq_detail_tr_engineering_input2.php?from=mail&title=td_receipt&sq_no=',        //技術部
+                    '05' => 'sq_detail_tr_sales_management_input2.php?from=mail&title=sm_receipt&sq_no=',   //営業管理部
+                    '06' => 'sq_detail_tr_const_management_input2.php?from=mail&title=cm_receipt&sq_no=',   //工事管理部
+                    '04' => 'sq_detail_tr_procurement_input2.php?from=mail&title=pc_receipt&sq_no='         //資材部
                 ];
                 $url_to = $base_url . $url_list[$next_dept_id] . $sq_no;
 
                 //送信先の情報を取得する
-                $datas = get_mail_receiver($next_dept_id, $column);
-
-                $datas['url'] = $url_to;
+                $datas = get_mail_receiver_from_sq_route_in_dept($next_dept_id, $column, $url_to);
             } 
             //存在しない場合、sq_header_tr の、client（依頼者）へ送信
             else {
@@ -215,11 +214,13 @@
     /**
      * 送信先の情報を取得する
      */
-    function get_mail_receiver($dept_id, $column) {
+    function get_mail_receiver($dept_id, $column, $url) {
         global $pdo;
         global $route_pattern;
         global $sq_no;
         global $sq_line_no;
+        $i = 0;
+        $datas = [];
         $sql = "SELECT COALESCE(
                 CASE
                     WHEN route1_dept = '$dept_id' THEN route1_$column
@@ -244,9 +245,13 @@
             $stmt->bindParam(':sq_no', $sq_no);
             $stmt->bindParam(':sq_line_no', $sq_line_no);
             $stmt->execute();
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $datas[] = $row;
+                $datas[$i]['url'] = $url;
+                $i++;
+            }
 
-        return $row;
+        return $datas;
     }
 
     /***
@@ -312,6 +317,29 @@
         $row = $stmt->fetch(PDO::FETCH_ASSOC);        
 
         return $row;
+    }
+
+    function get_mail_receiver_from_sq_route_in_dept($dept_id, $column, $url) {
+        global $pdo;
+        $role = '0';    //受付者
+        $datas = [];
+        $i = 0;
+        $sql = "SELECT e.employee_name, e.email
+                FROM sq_route_in_dept r
+                LEFT JOIN employee e 
+                ON r.employee_code = e.employee_code
+                WHERE r.dept_id = :dept_id AND r.role = :role";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':dept_id', $dept_id);
+        $stmt->bindParam(':role', $role);
+        $stmt->execute();
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $datas[] = $row;
+            $datas[$i]['url'] = $url;
+            $i++;
+        }
+
+        return $datas;
     }
     
 ?>
