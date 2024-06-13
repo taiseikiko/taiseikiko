@@ -127,7 +127,7 @@
       
     } else {
       $datas['upd_date'] = $today;
-      $sql1 = 'UPDATE skip_log_tr SET dept_id=:dept_id, sq_no=:sq_no, sq_line_no=:sq_line_no, skip_person=:skip_person, comments=:comments, upd_date=:upd_date';
+      $sql1 = 'UPDATE skip_log_tr SET skip_person=:skip_person, comments=:comments, upd_date=:upd_date WHERE dept_id=:dept_id AND sq_no=:sq_no AND sq_line_no=:sq_line_no';
     }
 
     $stmt1 = $pdo->prepare($sql1);
