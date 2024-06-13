@@ -41,7 +41,7 @@
 
     //戻るボタンを押下する場合
     $(".returnBtn").click(function(){
-      $("#input2").attr("action", "sales_route_input1.php");
+      $("#input2").attr("action", "sales_route_input1.php?title=<?= $title ?>");
     })
   });
 

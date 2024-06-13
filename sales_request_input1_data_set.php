@@ -33,6 +33,15 @@ function get_sq_datas($cust_name = "", $pf_name = "") {
             ) AS detail 
             ON h.sq_no = detail.sq_no ";
   }
+  //ルート設定の場合、承認日がNOT NULLかつroute_patternがNULLのデータだけを取得する
+  if ($title1 == 'set_route') {
+    $sql .= "INNER JOIN (
+              SELECT DISTINCT (sq_no) 
+              FROM sq_detail_tr
+              WHERE approve_date IS NOT NULL AND route_pattern IS NULL
+            ) AS detail 
+            ON h.sq_no = detail.sq_no ";
+  }
   $sql .= "WHERE c.cust_name LIKE :cust_name AND pf.pf_name LIKE :pf_name";
   $stmt = $pdo->prepare($sql);
   $stmt->execute([
