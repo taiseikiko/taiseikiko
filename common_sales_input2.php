@@ -27,7 +27,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="item_name" >件名</label>
-            <textarea type="text" style="margin-left: 1rem;" name="item_name" id="item_name" rows="3" cols="120" class="readonlyText textarea-res"><?= $item_name ?></textarea>
+            <textarea style="margin-left: 1rem;" name="item_name" id="item_name" rows="3" cols="120" class="readonlyText textarea-res"><?= $item_name ?></textarea>
           </div>
         </td>
       </tr>

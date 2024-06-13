@@ -6,7 +6,7 @@
 
   // 初期設定 & データセット
   $class_code = '';             //分類
-  $zkm_code = '';                 //材工名
+  $zkm_code = '';               //材工名
   $size = '';                   //サイズ
   $joint = '';                  //接合形状
   $pipe = '';                   //管種
@@ -44,9 +44,9 @@
   $special_tube_od2 = '';       //特殊管外径２
   $sq_no = '';
   $route_pattern = '';          //ルートパタン
-  $entrant_comments = '';           //入力者コメント
-  $confirmer_comments = '';          //確認者コメント
-  $approver_comments = '';           //承認者コメント
+  $entrant_comments = '';       //入力者コメント
+  $confirmer_comments = '';     //確認者コメント
+  $approver_comments = '';      //承認者コメント
 
   $sizeDisabled = '';
   $jointDisabled = '';

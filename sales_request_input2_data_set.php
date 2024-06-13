@@ -27,6 +27,7 @@
   $sq_header_datas = [];
   $item_name = '';                  //件名
   $daily_report_url = '';           //営業日報URL
+  $client = '';                     //依頼者
   $sq_no = '';                      //営業依頼書№
   $process = '';                    //処理
   $regBtnDisabled = '';
@@ -88,7 +89,7 @@
         $order_accuracy = $sq_header_datas['order_accuracy'];       //受注確度
         $item_name = $sq_header_datas['item_name'];                 //件名
         $daily_report_url = $sq_header_datas['daily_report_url'];   //営業日報
-        $client = $sq_header_datas['client']; //依頼者
+        $client = $sq_header_datas['client'];                       //依頼者
 
         //担当名を取得する
         if ($cust_code !== '') {

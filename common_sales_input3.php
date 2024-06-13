@@ -446,7 +446,7 @@
                 </div>
                 <div style="margin-top:13px; margin-left:435px">            
                   <label class="common_label" for="other">その他処理 </label>
-                  <select class="dropdown-menu" id="otherProcess" name="otherProcess">
+                  <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)">
                     <option value="" class="">選択して下さい。</option>
                     <option value="1" class="">差し出し</option>
                     <option value="2" class="">中止</option>
@@ -496,7 +496,7 @@
             </div>
             <div style="margin-top:13px; margin-left:435px">            
               <label class="common_label" for="other">その他処理 </label>
-              <select class="dropdown-menu" id="otherProcess" name="otherProcess">
+              <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)>
                 <option value="" class="">選択して下さい。</option>
                 <option value="1" class="">差し出し</option>
                 <option value="2" class="">中止</option>
@@ -543,6 +543,30 @@
     ?>
   </form><!-- Vertical Form -->
 </div>
+<script type="text/javascript">
+  //その他処理が変わる場合
+  function other_process(event) {
+    event.preventDefault();
+    var sq_no = document.getElementById('sq_no').value;
+    var sq_line_no = document.getElementById('sq_line_no').value;
+    var dept_id = document.getElementById('dept_id').value;
+    var title = document.getElementById('title').value;
+    var route_pattern = document.getElementById('route_pattern').value;
+
+    var process = document.getElementById('otherProcess').value;
+    //スキップ処理の場合
+    if (process == 3) {
+      var url = "skip_division_input1.php" + "?sq_no=" + sq_no + 
+      "&sq_line_no=" + sq_line_no +
+      "&dept_id=" + dept_id +
+      "&route_pattern=" + route_pattern +
+      "&title=" + title;
+
+      window.open(url, "popupWindow", "width=900,height=200,left=100,top=50");
+    }
+
+  }
+</script>
 <style>
   .dropdown-menu {
     width: 180px;
