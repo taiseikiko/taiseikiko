@@ -47,31 +47,36 @@ function sendMail($email_datas) {
 
         // 送受信先設定（第二引数は省略可）
         foreach ($email_datas as $item) {
-            $body = '';
-            $body = $item['body'] . "<br>"; // Add a line break before the link;
-            $body .= "<a href='" . $item['url'] . "'>" . $item['url'] . "</a>";
-            $mail->setFrom($item['from_email'], $item['from_name']); // 送信者
-            $mail->addAddress($item['to_email'], $item['to_name']);
-            $mail->addReplyTo('peacefullife4497@gmail.com', 'HTET HTET'); // 返信先
-            //$mail->addCC($cc_address, $cc_person_name); // CC宛先
-            $mail->Sender = $item['from_email']; // Return-path
+            if ($item['from_email'] !== '' || $item['to_email'] !== '') {
+                $body = '';
+                $body = $item['body'] . "<br>"; // Add a line break before the link;
+                $body .= "<a href='" . $item['url'] . "'>" . $item['url'] . "</a>";
+                $mail->setFrom($item['from_email'], $item['from_name']); // 送信者
+                $mail->addAddress($item['to_email'], $item['to_name']);
+                $mail->addReplyTo('peacefullife4497@gmail.com', 'HTET HTET'); // 返信先
+                //$mail->addCC($cc_address, $cc_person_name); // CC宛先
+                $mail->Sender = $item['from_email']; // Return-path
 
-            // 送信内容設定
-            
-            $mail->Subject = $item['subject'];
-            $mail->isHTML(true); // Set email format to plain text
-            $mail->Body    = "<pre>$body</pre>";
+                // 送信内容設定
+                
+                $mail->Subject = $item['subject'];
+                $mail->isHTML(true); // Set email format to plain text
+                $mail->Body    = "<pre>$body</pre>";
 
-            if(!$mail->send()){
+                if(!$mail->send()){
+                    $success = false;
+                }
+                $sq_no = $item['sq_no'];
+            } else {
                 $success = false;
+                // エラーの場合
+                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
             }
-            $sq_no = $item['sq_no'];
         }
-
     } catch (Exception $e) {
         $success = false;
-    // エラーの場合
-    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        // エラーの場合
+        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     }
     return $success;
 }
