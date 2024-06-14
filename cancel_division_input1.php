@@ -22,13 +22,14 @@
       <form method="POST" action="sq_detail_tr_engineering_update.php" id="cancel_form">
         <input type="hidden" name="sq_no" value="<?= $sq_no ?>">
         <input type="hidden" name="sq_line_no" value="<?= $sq_line_no ?>">
+        <input type="hidden" name="dept_id" id="dept_id" value="<?=$dept_id?>">
         <input type="hidden" name="title" id="title" value="<?=$title?>">
         <div class="field-row">
-          <label class="common_label" for="other">中止コメント </label>
+          <label class="common_label" for="other">中止コメント</label>
           <textarea style="margin-left: 1rem;" name="comments" id="comments" rows="3" cols="120" class="textarea-res"><?= $comments ?></textarea>
         </div> 
-        <!-- 現在の部署が「技術部と資材部」かつ、受付画面のみに、スキップ処理ボタンを表示。        -->
-        <?php if (($dept_id == '02' && $e_title == 'receipt') || ($dept_id == '04' && $e_title == 'receipt')) {
+        <!--         -->
+        <?php if (($e_title == 'confirm') || ($e_title == 'approve')) {
           $disabled_btn = '';
         }?>
         <div class="field-row" style="margin-top: 20px; margin-left: 400px;">
