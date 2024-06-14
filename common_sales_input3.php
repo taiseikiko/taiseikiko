@@ -496,8 +496,8 @@
             </div>
             <div style="margin-top:13px; margin-left:435px">            
               <label class="common_label" for="other">その他処理 </label>
-              <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)>
-                <option value="" class="">選択して下さい。</option>
+              <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)">
+                <option value="">選択して下さい。</option>
                 <option value="1" class="">差し出し</option>
                 <option value="2" class="">中止</option>
                 <option value="3" class="">スキップ</option>
@@ -562,6 +562,13 @@
       "&route_pattern=" + route_pattern +
       "&title=" + title;
 
+      window.open(url, "popupWindow", "width=900,height=200,left=100,top=50");
+    }
+    //中止処理の場合
+    if (process == 2) {
+      var url = "cancel_division_input1.php" + "?sq_no=" + sq_no + 
+      "&sq_line_no=" + sq_line_no +
+      "&title=" + title;
       window.open(url, "popupWindow", "width=900,height=200,left=100,top=50");
     }
 
