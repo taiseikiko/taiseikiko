@@ -138,7 +138,7 @@
           <li><a href="sales_request_approve1.php?title=approve">営業依頼書　承認</a></li>
         </ul>
         <ul>
-          <li><a href="sales_route_input1.php">営業依頼書：ルート設定</a></li>
+          <li><a href="sales_route_input1.php?title=set_route">営業依頼書：ルート設定</a></li>
         </ul>
         <ul>
           <li><a href="sq_default_role.php">部署内初期ルート設定</a></li>

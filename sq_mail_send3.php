@@ -29,9 +29,6 @@
             $from_email = $userdatas['email'];
         }
 
-        //メールの内容を取得する
-        $mail_details = getSqMailSentence();
-
         //baseurl を設定する
         $parsed_url = parse_url($url);
 
@@ -43,8 +40,6 @@
             }
         }
 
-        //if (array_intersect_key($_POST, array_flip(['submit_receipt', 'submit_entrant', 'submit_entrant1', 'submit_entrant2']))) {
-
         //sq_route_mail_trを読む
         $sq_route_mail_datas = get_sq_route_mail_datas($title, $base_url);
 
@@ -53,20 +48,18 @@
                 //データベースからもらったテキストにclientとsq_noをセットする
                 $search = array("client", "sq_no");
                 $replace = array($from_name, $sq_no);
-                $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
-                $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
-                $to_email = $item['email'];
-                $url = $item['url'];
+                $subject = str_replace($search, $replace, $item['subject']); //subject
+                $body = str_replace($search, $replace, $item['body']); //body
 
                 $email_datas[] = [
-                    'to_email' => $to_email,         //送信先email
+                    'to_email' => $item['email'],         //送信先email
                     'to_name' => $to_name,           //送信先name
                     'from_email' => $from_email,     //送信者email
                     'from_name' => $from_name,       //送信者name
                     'subject' => $subject,    
                     'body' => $body,
                     'sq_no' => $sq_no,
-                    'url' => $url
+                    'url' => $item['url']
                 ];
             }
 
@@ -194,17 +187,34 @@
                 //送信先の情報を取得する
                 $datas = get_mail_receiver_from_sq_route_in_dept($next_dept_id, $column, $url_to);
             } 
-            //存在しない場合、sq_header_tr の、client（依頼者）へ送信
+            //最後の部署の承認終わった後はsq_route_mail_trの該当依頼書No、依頼書行Noのentrant,confirmer,approverにメールを送信
             else {
-                $sql = "SELECT e.employee_name, e.email
-                        FROM sq_header_tr h
-                        LEFT JOIN employee e
-                        ON h.client = e.employee_code 
-                        WHERE sq_no = :sq_no";
+                //メールの内容を取得する
+                $mail_details = getSqMailSentence($complete = true);
+                
+                $sql = "SELECT e1.email AS entrant, e2.email AS confirmer, e3.email AS approver
+                        FROM sq_route_mail_tr r
+                        LEFT JOIN employee e1 on e1.employee_code = r.entrant
+                        LEFT JOIN employee e2 on e2.employee_code = r.confirmer
+                        LEFT JOIN employee e3 on e3.employee_code = r.approver
+                        WHERE r.route_id=:route_id AND r.sq_no=:sq_no AND r.sq_line_no=:sq_line_no";
                 $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(':route_id', $route_pattern);
                 $stmt->bindParam(':sq_no', $sq_no);
+                $stmt->bindParam(':sq_line_no', $sq_line_no);
                 $stmt->execute();
-                $datas = $stmt->fetch(PDO::FETCH_ASSOC);
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($row) {
+                    $emails = ['entrant', 'confirmer', 'approver'];
+                    $i = 0;
+                    foreach ($emails as $email) {
+                        $datas[$i]['email'] = $row[$email];
+                        $datas[$i]['url'] = '';
+                        $datas[$i]['subject'] = $mail_details['sq_mail_title'];
+                        $datas[$i]['body'] = $mail_details['sq_mail_sentence'];
+                        $i++;
+                    }
+                }
             }
         }
 
@@ -221,6 +231,10 @@
         global $sq_line_no;
         $i = 0;
         $datas = [];
+
+        //メールの内容を取得する
+        $mail_details = getSqMailSentence($complete = false);
+
         $sql = "SELECT COALESCE(
                 CASE
                     WHEN route1_dept = '$dept_id' THEN route1_$column
@@ -248,6 +262,8 @@
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $datas[] = $row;
                 $datas[$i]['url'] = $url;
+                $datas[$i]['subject'] = $mail_details['sq_mail_title'];
+                $datas[$i]['body'] = $mail_details['sq_mail_sentence'];
                 $i++;
             }
 
@@ -276,52 +292,61 @@
     /***
      * メールの内容を取得する
      */
-    function getSqMailSentence() {
+    function getSqMailSentence($complete) {
         global $pdo;
         global $title;
+        $datas = [];
 
         $e_title = substr($title, 3);
-
-        switch ($e_title) {
-            //各部署で、受付処理の場合
-            case 'receipt':
-                $sq_mail_id = '03';
-                $seq_no = '1';
-                break;
-            //各部署で、入力完了後の場合
-            case 'entrant':
-                $sq_mail_id = '03';
-                $seq_no = '2';
-                break;
-            //各部署で、確認完了後の場合
-            case 'confirm':
-                $sq_mail_id = '03';
-                $seq_no = '3';
-                break;
-            //各部署で、承認完了後の場合
-            case 'approve':
-                $sq_mail_id = '03';
-                $seq_no = '4';
-                break;
-            default:
-                $sq_mail_id = '';
-                $seq_no = '';
-                break;
+        //最後の部署の承認は終わってない場合
+        if (!$complete) {
+            switch ($e_title) {
+                //各部署で、受付処理の場合
+                case 'receipt':
+                    $sq_mail_id = '03';
+                    $seq_no = '1';
+                    break;
+                //各部署で、入力完了後の場合
+                case 'entrant':
+                    $sq_mail_id = '03';
+                    $seq_no = '2';
+                    break;
+                //各部署で、確認完了後の場合
+                case 'confirm':
+                    $sq_mail_id = '03';
+                    $seq_no = '3';
+                    break;
+                //各部署で、承認完了後の場合
+                case 'approve':
+                    $sq_mail_id = '03';
+                    $seq_no = '4';
+                    break;
+            }
+        } 
+        //最後の部署の承認まで終わった場合
+        else {
+            $sq_mail_id = '03';
+            $seq_no = '5';
         }
+        
 
         $sql = "SELECT sq_mail_title, sq_mail_sentence FROM sq_mail_sentence WHERE sq_mail_id = :sq_mail_id AND seq_no = :seq_no";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':sq_mail_id', $sq_mail_id);
         $stmt->bindParam(':seq_no', $seq_no);
         $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);        
-
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        
         return $row;
     }
 
     function get_mail_receiver_from_sq_route_in_dept($dept_id, $column, $url) {
         global $pdo;
         $role = '0';    //受付者
+
+        //メールの内容を取得する
+        $mail_details = getSqMailSentence($complete = false);
+
         $datas = [];
         $i = 0;
         $sql = "SELECT e.employee_name, e.email
@@ -336,6 +361,8 @@
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $datas[] = $row;
             $datas[$i]['url'] = $url;
+            $datas[$i]['subject'] = $mail_details['sq_mail_title'];
+            $datas[$i]['body'] = $mail_details['sq_mail_sentence'];
             $i++;
         }
 

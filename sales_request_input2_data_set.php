@@ -166,6 +166,9 @@
     return $pf_name;
   }
 
+  /**
+   * 明細一覧のデータを取得する
+   */
   function get_sq_detail_datas($sq_no, $process) {
     global $pdo;
     global $title;
@@ -314,6 +317,10 @@
       //営業依頼書依頼承認の場合、承認日付がNULLのデータだけを取得する
       if ($title == 'approve') {
         $sql .= "AND d.approve_date IS NULL AND d.confirm_date IS NOT NULL";
+      }
+      //ルート設定の場合、承認日がNOT NULLかつroute_patternがNULLのデータだけを取得する
+      if ($title == 'set_route') {
+        $sql .= "AND d.approve_date IS NOT NULL AND d.route_pattern IS NULL";
       }
     }
     $stmt = $pdo->prepare($sql);

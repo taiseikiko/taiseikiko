@@ -8,8 +8,8 @@
 
   $dept_code = $_SESSION['department_code'];
   include("sales_request_input1_data_set.php");
-  $title = isset($_GET['title']) ? $_GET['title'] : '';
-  $sq_datas = get_sq_datas($title);
+  $title = $_GET['title'] ?? '';
+  $sq_datas = get_sq_datas("", ""); 
  
 ?>
 <main>
