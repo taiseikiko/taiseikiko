@@ -219,13 +219,13 @@
           $sql .= "(
                       route1_dept = ? AND route1_receipt_date IS NULL
                     ) OR (
-                      route2_dept = ? AND route2_receipt_date IS NULL
+                      route2_dept = ? AND route2_receipt_date IS NULL AND route1_approval_date IS NOT NULL
                     ) OR (
-                      route3_dept = ? AND route3_receipt_date IS NULL
+                      route3_dept = ? AND route3_receipt_date IS NULL AND route2_approval_date IS NOT NULL
                     ) OR (
-                      route4_dept = ? AND route4_receipt_date IS NULL
+                      route4_dept = ? AND route4_receipt_date IS NULL AND route3_approval_date IS NOT NULL
                     ) OR (
-                      route5_dept = ? AND route5_receipt_date IS NULL
+                      route5_dept = ? AND route5_receipt_date IS NULL AND route4_approval_date IS NOT NULL
                     ))";
           break;
         case 'entrant':

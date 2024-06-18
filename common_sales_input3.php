@@ -393,7 +393,10 @@
           </div>
         </td>
       </tr>
-
+      <!-- 登録、確認、承認画面の場合だけに表示させる -->
+      <?php
+        if ($title == 'input' || $title == 'check' || $title == 'approve') { 
+      ?>
       <tr>
         <td>
           <div class="field-row">
@@ -402,10 +405,11 @@
           </div>
         </td>
       </tr>
+      <?php } ?>
 
       <!-- 確認画面の場合だけに表示させる -->
       <?php
-        if ($title == 'check' || $e_title == 'confirm' || $title == 'approve' || $e_title == 'approve') { 
+        if ($title == 'check' || $title == 'approve') { 
       ?>
       <tr>
         <td>
@@ -419,7 +423,7 @@
 
       <!-- 承認画面の場合だけに表示させる -->
       <?php 
-        if ($title == 'approve' || $e_title == 'approve') { 
+        if ($title == 'approve') { 
       ?>
       <tr>
         <td>
@@ -432,6 +436,7 @@
       <?php } ?>
 
       <?php
+      //各部署の受付画面、と営業部のすべて画面の場合
       if ($e_title == 'receipt' || $title == 'input' || $title == 'check' || $title == 'approve') { ?>
       <tr>
         <td>
@@ -443,20 +448,22 @@
               <?php if($e_title == 'receipt') { ?>
                 <div>
                   <button id="updBtn" class="setEmp" style="background:#80dfff;" name="submit" onclick="person_in_charge(event)">担当者設定</button>
-                </div>
-                <div style="margin-top:13px; margin-left:435px">            
-                  <label class="common_label" for="other">その他処理 </label>
-                  <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)">
-                    <option value="" class="">選択して下さい。</option>
-                    <option value="1" class="">差し出し</option>
-                    <option value="2" class="">中止</option>
-                    <option value="3" class="">スキップ</option>
-                  </select>
-                </div>
+                </div>                
               <?php } else { ?>
                 <div>
                   <button id="updBtn" class="createOrUpdate" style="background:#80dfff;" name="submit">営業依頼書 明細の作成・更新 </button>
                 </div>
+              <?php } 
+                if ($title !== 'input') { ?>
+              <div style="margin-top:13px; margin-left:435px">            
+                <label class="common_label" for="other">その他処理 </label>
+                <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)">
+                  <option value="" class="">選択して下さい。</option>
+                  <option value="1" class="">差し出し</option>
+                  <option value="2" class="">中止</option>
+                  <option value="3" class="">スキップ</option>
+                </select>
+              </div>
               <?php } ?>
             </div>
           </div>
@@ -496,7 +503,7 @@
             </div>
             <div style="margin-top:13px; margin-left:435px">            
               <label class="common_label" for="other">その他処理 </label>
-              <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)>
+              <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)">
                 <option value="" class="">選択して下さい。</option>
                 <option value="1" class="">差し出し</option>
                 <option value="2" class="">中止</option>
@@ -561,10 +568,16 @@
       "&dept_id=" + dept_id +
       "&route_pattern=" + route_pattern +
       "&title=" + title;
-
-      window.open(url, "popupWindow", "width=900,height=200,left=100,top=50");
     }
-
+    //差し戻し処理の場合
+    else if (process == 1) {
+      var url = "sq_send_back.php" + "?sq_no=" + sq_no + 
+      "&sq_line_no=" + sq_line_no +
+      "&dept_id=" + dept_id +
+      "&route_pattern=" + route_pattern +
+      "&title=" + title;
+    }
+    window.open(url, "popupWindow", "width=900,height=260,left=100,top=50");
   }
 </script>
 <style>

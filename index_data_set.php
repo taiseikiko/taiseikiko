@@ -64,6 +64,14 @@
       $_SESSION['m5'] = $row['menu5'];
       $_SESSION['m6'] = $row['menu6'];
       $_SESSION['m7'] = $row['menu7'];
+      $_SESSION['m8'] = $row['menu8'];
+      $_SESSION['m9'] = $row['menu9'];
+      $_SESSION['m10'] = $row['menu10'];
+      $_SESSION['m11'] = $row['menu11'];
+      $_SESSION['m12'] = $row['menu12'];
+      $_SESSION['m13'] = $row['menu13'];
+      $_SESSION['m14'] = $row['menu14'];
+      $_SESSION['m15'] = $row['menu15'];
     }
 
 ?>

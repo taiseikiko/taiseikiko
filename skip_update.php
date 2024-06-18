@@ -39,7 +39,7 @@
 
     //更新処理にエラーがなければメール送信する
     if ($success) {
-      include('sq_mail_send4.php');
+      include('sq_mail_send5.php');
     }
   }
 

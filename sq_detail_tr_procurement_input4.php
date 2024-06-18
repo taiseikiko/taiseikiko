@@ -186,10 +186,10 @@
         <button id="updBtn" style="background:#80dfff;" class="update" name="submit_entrant" value="update">更新 </button>
       </div>
       <?php
-      if ($title == 'pc_confirm') { ?>
+      if ($title == 'pc_confirm' || $title == 'pc_approve') { ?>
       <div style="margin-top:13px; margin-left:435px">            
         <label class="common_label" for="other">その他処理 </label>
-        <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)>
+        <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)">
           <option value="" class="">選択して下さい。</option>
           <option value="1" class="">差し出し</option>
           <option value="2" class="">中止</option>
