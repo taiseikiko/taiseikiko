@@ -18,7 +18,7 @@
       <div class="title-bar-controls">
       </div>
     </div>
-    <div class="window-body has-space" style="min-height:150px; overflow:hidden;">
+    <div class="window-body has-space" style="min-height:210px; overflow:hidden;">
       <form method="POST" action="sq_detail_tr_engineering_update.php" id="skip_form">
         <input type="hidden" name="sq_no" value="<?= $sq_no ?>">
         <input type="hidden" name="sq_line_no" value="<?= $sq_line_no ?>">
@@ -41,10 +41,6 @@
     </div>
   </div>
 </body>
-<?php
-  // フッターセット
-  echo "Copyright <strong><span>情報システムグループ</span></strong>. All Rights Reserved<hr>";
-?>
   </div>
 </div>
 </body>
