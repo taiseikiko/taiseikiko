@@ -11,7 +11,7 @@ function get_sq_datas($title) {
           FROM sq_header_tr h
           LEFT JOIN customer c ON h.cust_no = c.cust_code
           LEFT JOIN public_office pf ON h.p_office_no = pf.pf_code
-          LEFT JOIN employee e ON pf.person_in_charge = e.employee_code";
+          LEFT JOIN employee e ON h.client = e.employee_code";
   if ($title !== '') {
     $sql .= " INNER JOIN (
                 SELECT DISTINCT(sq_no) 
