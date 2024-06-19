@@ -303,6 +303,8 @@
         global $sq_line_no;
         global $pdo;
         $filter_datas = [];
+        $start = false;
+        $end = false;
 
         $sql1 = "SELECT * FROM sq_route_mail_tr WHERE route_id='$route_pattern' AND sq_no='$sq_no' AND sq_line_no='$sq_line_no'";
         $stmt1 = $pdo->prepare($sql1);
