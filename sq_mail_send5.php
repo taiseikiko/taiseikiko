@@ -43,8 +43,11 @@
             }
         }
 
+        //スキップの場合
+        //sq_route_mail_tr の、次の部署の受付者（reception）へ送信
+
         //sq_route_mail_trを読む
-        $sq_route_mail_datas = get_sq_route_mail_datas($title, $base_url, $send_back_dept_id, $send_back_user);
+        $sq_route_mail_datas = get_sq_route_mail_datas($title, $base_url);
 
         if ($sq_route_mail_datas) {
             foreach ($sq_route_mail_datas as $item) {
@@ -107,7 +110,7 @@
     /***
      * sq_route_mail_trを読む
      */
-    function get_sq_route_mail_datas($title, $base_url, $send_back_dept_id, $send_back_user) {
+    function get_sq_route_mail_datas($title, $base_url) {
         global $pdo;
         global $route_pattern;
         global $sq_no;
@@ -116,46 +119,23 @@
         $s_title = substr($title, 0, 2);
         $e_title = substr($title, 3);
 
-        //部署内での差し戻し
-        //sq_route_mail_tr の、同じ部署の差し戻し先へ送信
+        //⑧各部署で、承認処理後、sq_route_mail_tr の、次の部署（route1_dept ～ route5_dept）の、
+        //受付者（route1_receipt_person ～ route5_receipt_person）へ送信
 
-        $sql = "SELECT (
+        $sql = "SELECT COALESCE(
                     CASE
-                        WHEN route1_dept = '$dept_id' THEN 
-                            CASE
-                                WHEN route1_confirmer_person = '$send_back_user' THEN route1_entrant_ad
-                                WHEN route1_approver_person = '$send_back_user' THEN route1_entrant_ad, route1_confirmer_ad
-                            END
+                        WHEN route1_dept = '$dept_id' THEN COALESCE(route2_dept, route3_dept, route4_dept, route5_dept)
                     END,
                     CASE
-                        WHEN route2_dept = '$dept_id' THEN 
-                            CASE
-                                WHEN route2_confirmer_person = '$send_back_user' THEN route2_entrant_ad
-                                WHEN route2_approver_person = '$send_back_user' THEN route2_entrant_ad, route2_confirmer_ad
-                            END
+                        WHEN route2_dept = '$dept_id' THEN COALESCE(route3_dept, route4_dept, route5_dept)
                     END,
                     CASE
-                        WHEN route3_dept = '$dept_id' THEN 
-                            CASE
-                                WHEN route3_confirmer_person = '$send_back_user' THEN route3_entrant_ad
-                                WHEN route3_approver_person = '$send_back_user' THEN route3_entrant_ad, route3_confirmer_ad
-                            END
+                        WHEN route3_dept = '$dept_id' THEN COALESCE(route4_dept, route5_dept)
                     END,
                     CASE
-                        WHEN route4_dept = '$dept_id' THEN 
-                            CASE
-                                WHEN route4_confirmer_person = '$send_back_user' THEN route4_entrant_ad
-                                WHEN route4_approver_person = '$send_back_user' THEN route4_entrant_ad, route4_confirmer_ad
-                            END
-                    END,
-                    CASE
-                        WHEN route5_dept = '$dept_id' THEN 
-                            CASE
-                                WHEN route5_confirmer_person = '$send_back_user' THEN route5_entrant_ad
-                                WHEN route5_approver_person = '$send_back_user' THEN route5_entrant_ad, route5_confirmer_ad
-                            END
-                    END,
-                )
+                        WHEN route4_dept = '$dept_id' THEN COALESCE(route5_dept)
+                    END
+                ) AS column_name
                 FROM sq_route_mail_tr
                 WHERE route_id = :route_id AND sq_no = :sq_no AND sq_line_no = :sq_line_no";
         $stmt = $pdo->prepare($sql);
@@ -192,7 +172,7 @@
         global $pdo;
  
         $sq_mail_id = '05';
-        $seq_no = '1';
+        $seq_no = '1';        
 
         $sql = "SELECT sq_mail_title, sq_mail_sentence FROM sq_mail_sentence WHERE sq_mail_id = :sq_mail_id AND seq_no = :seq_no";
         $stmt = $pdo->prepare($sql);
