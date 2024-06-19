@@ -21,7 +21,7 @@
             <td><?= $item['cust_name'] ?></td>
             <td><?= $item['pf_name']?></td>
             <td><?= $item['item_name']?></td>
-            <td></td>
+            <td><?= $item['employee_name']?></td>
             <td style="text-align:center"><button class="updateBtn" data-sq_no="<?= $item['sq_no'] ?>" name="process" value="detail">詳細</button></td>
             <input type="hidden" class="sq_no" name="sq_no" value="">              
           </tr>
