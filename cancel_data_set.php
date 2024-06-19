@@ -11,4 +11,8 @@
   $title = $_GET['title'] ?? '';
   $route_pattern = $_GET['route_pattern'] ?? '';
   $e_title = substr($title, 3);
+
+  if (($e_title == 'confirm') || ($e_title == 'approve')) {
+    $disabled_btn = '';
+  }
 ?>

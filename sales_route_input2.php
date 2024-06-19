@@ -85,11 +85,18 @@
         textareas[j].disabled = true;
         textareas[j].style.backgroundColor = '#e6e6e6';
     }
+    var selects = document.getElementsByTagName('select');
+    const excludeSelect = ['otherProcess'];
+    for (var k = 0; k < selects.length; k++) {
+      if (!excludeSelect.includes(selects[k].id)) {
+        selects[k].disabled = true;
+      }
+    }
 
     //Disabled select 
     var selects = document.getElementsByTagName('select');
     for (var k = 0; k < selects.length; k++) {
-        selects[k].disabled = true;
+        
     }
 
     //Disabled button 

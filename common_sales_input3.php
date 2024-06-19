@@ -568,6 +568,7 @@
     if (process == 2) {
       var url = "cancel_division_input1.php" + "?sq_no=" + sq_no + 
       "&dept_id=" + dept_id +
+      "&route_pattern=" + route_pattern +
       "&sq_line_no=" + sq_line_no +
       "&title=" + title;
       window.open(url, "popupWindow", "width=900,height=200,left=100,top=50");

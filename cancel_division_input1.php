@@ -24,14 +24,11 @@
         <input type="hidden" name="sq_line_no" value="<?= $sq_line_no ?>">
         <input type="hidden" name="dept_id" id="dept_id" value="<?=$dept_id?>">
         <input type="hidden" name="title" id="title" value="<?=$title?>">
+        <input type="hidden" name="route_pattern" id="title" value="<?=$route_pattern?>">
         <div class="field-row">
           <label class="common_label" for="other">中止コメント</label>
           <textarea style="margin-left: 1rem;" name="comments" id="comments" rows="3" cols="120" class="textarea-res"><?= $comments ?></textarea>
-        </div> 
-        <!--         -->
-        <?php if (($e_title == 'confirm') || ($e_title == 'approve')) {
-          $disabled_btn = '';
-        }?>
+        </div>         
         <div class="field-row" style="margin-top: 20px; margin-left: 400px;">
           <button class="cancelBtn" name="cancel" id="cancel" <?= $disabled_btn ?>>中止処理実行 </button>
         </div>

@@ -64,13 +64,13 @@
     try {
       $pdo->beginTransaction();
       //テーブルID : sq_detail_tr_engineering / テーブル名称：営業依頼書・明細T/R_技術
-      // entrant_cu_sq_detail_tr_engineering1($entrant_comments, $confirmer_comments, $approver_comments, $title);
+      entrant_cu_sq_detail_tr_engineering1($entrant_comments, $confirmer_comments, $approver_comments, $title);
 
-      // //テーブルID : sq_detail_tr / テーブル名称：営業依頼書・明細T/R
-      // entrant_cu_sq_detail_tr($title);
+      //テーブルID : sq_detail_tr / テーブル名称：営業依頼書・明細T/R
+      entrant_cu_sq_detail_tr($title);
 
-      // //テーブルID : sq_route_tr / テーブル名称：部署ルートトランザクション
-      // entrant_cu_sq_route_tr($title);
+      //テーブルID : sq_route_tr / テーブル名称：部署ルートトランザクション
+      entrant_cu_sq_route_tr($title);
 
       $pdo->commit();
     } catch (PDOException $e) {

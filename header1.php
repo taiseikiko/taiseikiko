@@ -127,7 +127,7 @@
     $s_menu1 = '
     <li>
       <details>
-        <summary><a href="#components">営業依頼書</a></summary>
+        <summary><a href="#components">営業依頼書：営業</a></summary>
         <ul>
           <li><a href="sales_request_input1.php?title=input">営業依頼書　登録</a></li>
         </ul>
@@ -138,13 +138,15 @@
           <li><a href="sales_request_approve1.php?title=approve">営業依頼書　承認</a></li>
         </ul>
         <ul>
-          <li><a href="sales_route_input1.php?title=set_route">営業依頼書：ルート設定</a></li>
-        </ul>
-        <ul>
           <li><a href="sq_default_role.php">部署内初期ルート設定</a></li>
         </ul>
       </details>
-    </li>
+    </li>';
+    echo $s_menu1;}
+?>
+
+<?php if($_SESSION['m2'] =="1"){ 
+    $s_menu1 = '
     <li>
       <details>
         <summary><a href="#components">営業依頼書：技術部</a></summary>
@@ -160,11 +162,22 @@
         <ul>
           <li><a href="sq_detail_tr_engineering_input1.php?title=td_approve">営業依頼書：技術部　承認</a></li>
         </ul>
+        <ul>
+          <li><a href="sq_default_role.php">部署内初期ルート設定</a></li>
+        </ul>
       </details>
-    </li>
+    </li>';
+    echo $s_menu1;}
+?>
+
+<?php if($_SESSION['m3'] =="1"){ 
+    $s_menu1 = '
     <li>
       <details>
         <summary><a href="#components">営業依頼書：営業管理部</a></summary>
+        <ul>
+          <li><a href="sales_route_input1.php?title=set_route">営業依頼書：ルート設定</a></li>
+        </ul>
         <ul>
           <li><a href="sq_detail_tr_sales_management_input1.php?title=sm_receipt">営業依頼書：営業管理部　受付</a></li>
         </ul>
@@ -177,8 +190,16 @@
         <ul>
           <li><a href="sq_detail_tr_sales_management_input1.php?title=sm_approve">営業依頼書：営業管理部　承認</a></li>
         </ul>
+        <ul>
+          <li><a href="sq_default_role.php">部署内初期ルート設定</a></li>
+        </ul>
       </details>
-    </li>
+    </li>';
+    echo $s_menu1;}
+?>
+
+<?php if($_SESSION['m4'] =="1"){ 
+    $s_menu1 = '
     <li>
       <details>
         <summary><a href="#components">営業依頼書：工事管理部</a></summary>
@@ -194,8 +215,16 @@
         <ul>
           <li><a href="sq_detail_tr_const_management_input1.php?title=cm_approve">営業依頼書：工事管理部　承認</a></li>
         </ul>
+        <ul>
+          <li><a href="sq_default_role.php">部署内初期ルート設定</a></li>
+        </ul>
       </details>
-    </li>
+    </li>';
+    echo $s_menu1;}
+?>
+
+<?php if($_SESSION['m5'] =="1"){ 
+    $s_menu1 = '
     <li>
       <details>
         <summary><a href="#components">営業依頼書：資材部</a></summary>
@@ -211,12 +240,15 @@
         <ul>
           <li><a href="sq_detail_tr_procurement_input1.php?title=pc_approve">営業依頼書：資材部　承認</a></li>
         </ul>
+        <ul>
+          <li><a href="sq_default_role.php">部署内初期ルート設定</a></li>
+        </ul>
       </details>
     </li>';
     echo $s_menu1;}
 ?>
 
-<?php if($_SESSION['m2'] =="1"){ 
+<?php if($_SESSION['m6'] =="1"){ 
     $s_menu2 = '
     <li>
       <details>
@@ -229,7 +261,7 @@
     echo $s_menu2;}
 ?>
 
-<?php if($_SESSION['m3'] =="1"){ 
+<?php if($_SESSION['m7'] =="1"){ 
     $s_menu3 = '
     <li>
       <details>
@@ -242,7 +274,7 @@
     echo $s_menu3;}
 ?>
 
-<?php if($_SESSION['m4'] =="1"){ 
+<?php if($_SESSION['m8'] =="1"){ 
     $s_menu4 = '
     <li>
       <details>
@@ -255,7 +287,7 @@
     echo $s_menu4;}
 ?>
 
-<?php if($_SESSION['m5'] =="1"){ 
+<?php if($_SESSION['m9'] =="1"){ 
     $s_menu5 = '
     <li>
       <details>
@@ -268,7 +300,7 @@
     echo $s_menu5;}
 ?>
 
-<?php if($_SESSION['m6'] =="1"){ 
+<?php if($_SESSION['m10'] =="1"){ 
     $s_menu6 = '
     <li>
       <details>
@@ -281,7 +313,7 @@
     echo $s_menu6;}
 ?>
 
-<?php if($_SESSION['m7'] =="1"){ 
+<?php if($_SESSION['m11'] =="1"){ 
     $s_menu7 = '
     <li>
       <details>

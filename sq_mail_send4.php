@@ -2,25 +2,12 @@
     // 初期処理
     require_once('function.php');
     include('sq_mail_send_select.php');
-    $url = $_SERVER['HTTP_REFERER']; //メール送信する時、利用するため
-    $s_title = substr($title, 0, 2);
-    $e_title = substr($title, 3);
-
-    $redirectList = [
-        'td' => './sq_detail_tr_engineering_input1.php?title=' . $title,        //技術部
-        'sm' => './sq_detail_tr_sales_management_input1.php?title=' . $title,   //営業管理部
-        'cm' => './sq_detail_tr_const_management_input1.php?title=' . $title,   //工事管理部
-        'pc' => './sq_detail_tr_procurement_input1.php?title=' . $title         //資材部
-    ];
-
-    $redirect = $redirectList[$s_title];
+    $url = $_SERVER['HTTP_REFERER']; //メール送信する時、利用するため    
 
     try {
         // DB接続
-        $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
-        $confirmer_email = $approver_email = $name = $from_name = $from_email = $to_name = $to_email = '';
-        $email_datas = [];
-        $success = true;
+        $from_name = $from_email = $to_name = '';
+        $email_datas = [];        
 
         //Employeeデータを取得する
         $userdatas = get_employee_datas($user_code);
@@ -43,21 +30,18 @@
             }
         }
 
-        //スキップの場合
-        //sq_route_mail_tr の、次の部署の受付者（reception）へ送信
-
         //sq_route_mail_trを読む
-        $sq_route_mail_datas = get_sq_route_mail_datas($title, $base_url);
+        $route_mail_datas = get_sq_route_mail_datas();
 
-        if ($sq_route_mail_datas) {
-            foreach ($sq_route_mail_datas as $item) {
-                //データベースからもらったテキストにclientとsq_noをセットする
+        if ($route_mail_datas) {
+            foreach ($route_mail_datas as $item) {
+                //データベースからもらったテキストにclientとsq_no、URLをセットする
                 $search = array("client", "sq_no");
                 $replace = array($from_name, $sq_no);
                 $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
                 $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
                 $to_email = $item['email'];
-                $url = $item['url'];
+                $url = $base_url . $item['url'];
 
                 $email_datas[] = [
                     'to_email' => $to_email,         //送信先email
@@ -72,23 +56,14 @@
             }
 
             //メール送信処理を行う
-            $success = sendMail($email_datas);
-            if ($success) {
-                if ($e_title == 'receipt') {
-                    echo "<script>
-                    window.close();
-                    window.opener.location.href='$redirect';
-                    </script>";
-                } else {
-                    echo "<script>window.location.href='$redirect'  </script>";
-                }
-            }
+            $success_mail = sendMail($email_datas);
         } else {
-            echo "<script>window.location.href='$redirect'  </script>";
+            $success_mail = false;
         }
 
-    } catch(PDOException $e) {
-        error_log("Error: " . $e->getMessage(), 3, "error_log.txt");
+    } catch (PDOException $e) {
+        $success_mail = false;
+        error_log("Error:" . $e->getMessage(), 3, 'error_log.txt');
     }
 
     /***
@@ -110,69 +85,202 @@
     /***
      * sq_route_mail_trを読む
      */
-    function get_sq_route_mail_datas($title, $base_url) {
-        global $pdo;
+    function get_sq_route_mail_datas() {
+        global $return_dept;    //差し戻し先
+        global $dept_id;        //ログインユーザーの部署
+        global $title;
         global $route_pattern;
         global $sq_no;
         global $sq_line_no;
-        global $dept_id;
+        global $pdo;
+        $sq_route_mail = [];
+        $sq_header_tr = [];
+        $send_mail_datas = [];
         $s_title = substr($title, 0, 2);
         $e_title = substr($title, 3);
 
-        //⑧各部署で、承認処理後、sq_route_mail_tr の、次の部署（route1_dept ～ route5_dept）の、
-        //受付者（route1_receipt_person ～ route5_receipt_person）へ送信
-
-        $sql = "SELECT COALESCE(
-                    CASE
-                        WHEN route1_dept = '$dept_id' THEN COALESCE(route2_dept, route3_dept, route4_dept, route5_dept)
-                    END,
-                    CASE
-                        WHEN route2_dept = '$dept_id' THEN COALESCE(route3_dept, route4_dept, route5_dept)
-                    END,
-                    CASE
-                        WHEN route3_dept = '$dept_id' THEN COALESCE(route4_dept, route5_dept)
-                    END,
-                    CASE
-                        WHEN route4_dept = '$dept_id' THEN COALESCE(route5_dept)
-                    END
-                ) AS column_name
-                FROM sq_route_mail_tr
-                WHERE route_id = :route_id AND sq_no = :sq_no AND sq_line_no = :sq_line_no";
+        //sq_route_mail_tr に存在しない差し戻し先の場合
+        //sq_header_tr の、依頼者（client）・確認者（confirmor）・承認者（approver）　へ送信
+        /*-------------------------------------------------------開始---------------------------------------------------------------------- */
+        $sql = "SELECT e1.employee_name AS client_name, e1.email AS client_email, h.confirmer,
+                e2.employee_name AS confirmer_name, e2.email AS confirmer_email, 
+                e3.employee_name AS approver_name, e3.email AS approver_email
+                FROM sq_header_tr h
+                LEFT JOIN employee e1 ON e1.employee_code = h.client
+                LEFT JOIN employee e2 ON e2.employee_code = h.confirmer
+                LEFT JOIN employee e3 ON e3.employee_code = h.approver
+                WHERE h.sq_no='$sq_no'";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':route_id', $route_pattern);
-        $stmt->bindParam(':sq_no', $sq_no);
-        $stmt->bindParam(':sq_line_no', $sq_line_no);
         $stmt->execute();
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        //存在する場合、次の部署（route1_dept ～ route5_dept）の、受付者（route1_receipt_person ～ route5_receipt_person）へ送信
-        if ($row['column_name']) {
-            $next_dept_id = $row['column_name'];
-            $column = 'receipt_ad';
-
-            //メール送信する時、渡すURL
-            $url_list = [
-                '02' => 'sq_detail_tr_engineering_input2.php?from=mail&title=td_receipt&sq_no=',        //技術部
-                '05' => 'sq_detail_tr_sales_management_input2.php?from=mail&title=sm_receipt&sq_no=',   //営業管理部
-                '06' => 'sq_detail_tr_const_management_input2.php?from=mail&title=cm_receipt&sq_no=',   //工事管理部
-                '04' => 'sq_detail_tr_procurement_input2.php?from=mail&title=pc_receipt&sq_no='         //資材部
-            ];
-            $url_to = $base_url . $url_list[$next_dept_id] . $sq_no;
-
-            //送信先の情報を取得する
-            $datas = get_mail_receiver_from_sq_route_in_dept($next_dept_id, $column, $url_to);
+        $sq_header_tr = $stmt->fetch(PDO::FETCH_ASSOC);
+        /*-------------------------------------------------------完了---------------------------------------------------------------------- */
+ 
+        //sq_route_mail_tr に存在する差し戻し先の場合
+        //sq_route_mail_tr を自部署で検索し、自部署以前の全ての処理者へ送信
+        //差し戻し先までに存在する全ての担当者（受付者（reception）・入力者（entrant）・確認者（confirmor）・承認者（approver））へ送信
+        /*-------------------------------------------------------開始---------------------------------------------------------------------- */
+        $start = false;
+        $end = false;
+        $sql1 = "SELECT * FROM sq_route_mail_tr WHERE route_id='$route_pattern' AND sq_no='$sq_no' AND sq_line_no='$sq_line_no'";
+        $stmt1 = $pdo->prepare($sql1);
+        $stmt1->execute();
+        $sq_route_mail_tr = $stmt1->fetch(PDO::FETCH_ASSOC);
+        
+        if (isset($sq_route_mail_tr) && !empty($sq_route_mail_tr)) {
+            foreach ($sq_route_mail_tr as $item) {
+                for ($i = 0; $i < 5; $i ++) {
+                    $x = $i+1;
+                    if ($sq_route_mail_tr['route'.$x.'_dept'] == $return_dept || $return_dept == '00') {
+                        $filter_datas[$i]['route'] = $x;
+                        $indexs = ['dept', 'receipt_ad', 'entrant_ad', 'confirmer_ad', 'approver_ad'];
+                        foreach ($indexs as $index) {
+                            $filter_datas[$i][$index] = $sq_route_mail_tr['route'.$x.'_'.$index];
+                        }
+                        $start = true;
+                    } 
+                    if ($sq_route_mail_tr['route'.$x.'_dept'] == $dept_id) {
+                        $filter_datas[$i]['route'] = $x;
+                        $indexs = ['dept', 'receipt_ad', 'entrant_ad', 'confirmer_ad', 'approver_ad'];
+                        foreach ($indexs as $index) {
+                            $filter_datas[$i][$index] = $sq_route_mail_tr['route'.$x.'_'.$index];
+                        }
+                        $end = true;
+                        break;
+                    }
+                    if ($start && !($end)) {
+                        $filter_datas[$i]['route'] = $x;
+                        $indexs = ['dept', 'receipt_ad', 'entrant_ad', 'confirmer_ad', 'approver_ad'];
+                        foreach ($indexs as $index) {
+                            $filter_datas[$i][$index] = $sq_route_mail_tr['route'.$x.'_'.$index];
+                        }
+                    }
+                    $x++;
+                }          
+            }
+            //array keyをrearrangeする
+            $sq_route_mail = array_values($filter_datas);
         }
+        /*-------------------------------------------------------完了---------------------------------------------------------------------- */
 
-        return $datas;
+        //営業部画面の場合
+        if ($title == 'check' || $title == 'approve') {
+            //sq_header_trからclient、確認者と承認者へ送信
+            if (!empty($sq_header_tr) && isset($sq_header_tr)) {
+                $i = 0;
+                //メール送信する時、渡すURLを設定する
+                //登録画面へ移動する
+                $url = 'sales_request_input1.php?title=input';
+                //確認画面の場合
+                if ($title == 'check') {
+                    //clientへメール送信する
+                    $send_mail_datas[$i]['email'] = $sq_header_tr['client'];
+                    $send_mail_datas[$i]['url'] = $url;
+                } 
+                //承認画面の場合
+                else {
+                    $indexs = ['client_email', 'confirmer_email'];
+                    //確認者とclientへメール送信する
+                    foreach ($indexs as $index) {
+                        $send_mail_datas[$i]['email'] = $sq_header_tr[$index];
+                        $send_mail_datas[$i]['url'] = $url;
+                        $i++;
+                    }
+                }
+            }
+        }
+        //その他の部署の画面の場合
+        else {
+            //営業部へ差し戻しする場合
+            if ($return_dept == '00') {
+                $i = 0;
+                //メール送信する時、渡すURLを設定する
+                //登録画面へ移動する
+                $url = 'sales_request_input1.php?title=input';
+                //自部署以前の全ての担当者へ送信する
+                foreach ($sq_route_mail as $item) {
+                    $indexs = ['receipt_ad', 'entrant_ad', 'confirmer_ad', 'approver_ad'];
+                    foreach ($indexs as $index) {
+                        if ($item[$index] !== '' && $item[$index] !== NULL) {
+                            $send_mail_datas[$i]['email'] = $item[$index];
+                            $send_mail_datas[$i]['url'] = $url;
+                            $i++;
+                        }
+                    }
+                }
+                //client、確認者と承認者へも送信する
+                if (!empty($sq_header_tr) && isset($sq_header_tr)) {
+                    $indexs = ['client_email', 'confirmer_email', 'approver_email'];
+                    //承認画面の場合、確認者とclientへメール送信する
+                    foreach ($indexs as $index) {
+                        $send_mail_datas[$i]['email'] = $sq_header_tr[$index];
+                        $send_mail_datas[$i]['url'] = $url;
+                        $i++;
+                    }
+                }
+            } else {
+                //メール送信する時、渡すURLを設定する
+                //各部署の入力画面へ移動する
+                $redirectList = [
+                    '02' => 'sq_detail_tr_engineering_input2.php?from=mail&title=' .$s_title . '_entrant&sq_no=' . $sq_no,        //技術部
+                    '05' => 'sq_detail_tr_sales_management_input2.php?from=mail&title=' . $s_title .'_entrant&sq_no=' . $sq_no,   //営業管理部
+                    '06' => 'sq_detail_tr_const_management_input2.php?from=mail&title=' . $s_title .'_entrant&sq_no=' . $sq_no,   //工事管理部
+                    '04' => 'sq_detail_tr_procurement_input2.php?from=mail&title=' . $s_title .'_entrant&sq_no=' . $sq_no         //資材部
+                ];
+
+                $url = $redirectList[$return_dept];
+                //部署内での差し戻しの場合
+                if ($return_dept == $dept_id) {
+                    $i = 0;
+                    
+                    //sq_route_mail_tr の、同じ部署の差し戻し先へ送信
+                    foreach ($sq_route_mail as $item) {
+                        //承認者の場合、
+                        if ($e_title == 'approve') {                            
+                            //確認者（confirmor）　と　入力者（entrant）　へ送信
+                            $indexs = ['entrant_ad', 'confirmer_ad'];
+                            foreach ($indexs as $index) {
+                                $send_mail_datas[$i]['email'] = $item[$index];
+                                $send_mail_datas[$i]['url'] = $url;
+                                $i++;
+                            }
+                        }
+                        //確認者の場合、
+                        else if ($e_title == 'confirm') {
+                            //入力者（entrant）　へ送信
+                            $send_mail_datas[$i]['email'] = $item['entrant_ad'];
+                            $send_mail_datas[$i]['url'] = $url;
+                        }
+                    }
+                }
+                //（営業部以外）他部署への差し戻しの場合
+                else {
+                    $i = 0;
+                    //自部署以前の全ての担当者へ送信する
+                    foreach ($sq_route_mail as $item) {
+                        $indexs = ['receipt_ad', 'entrant_ad', 'confirmer_ad', 'approver_ad'];
+                        foreach ($indexs as $index) {
+                            if ($item[$index] !== '' && $item[$index] !== NULL) {
+                                $send_mail_datas[$i]['email'] = $item[$index];
+                                $send_mail_datas[$i]['url'] = $url;
+                                $i++;
+                            }                            
+                        }
+                    }
+                }
+            }
+        }
+        return $send_mail_datas;
     }
-
+    
     /***
      * メールの内容を取得する
      */
     function getSqMailSentence() {
         global $pdo;
- 
-        $sq_mail_id = '05';
-        $seq_no = '1';        
+        global $title;        
+
+        $sq_mail_id = '04';
+        $seq_no = '1';
 
         $sql = "SELECT sq_mail_title, sq_mail_sentence FROM sq_mail_sentence WHERE sq_mail_id = :sq_mail_id AND seq_no = :seq_no";
         $stmt = $pdo->prepare($sql);
@@ -184,27 +292,62 @@
         return $row;
     }
 
-    function get_mail_receiver_from_sq_route_in_dept($dept_id, $column, $url) {
+    /**
+     * 現在の部署までの部署リストをsq_route_mail_trから取得する
+     */
+    function getDeptList() {
+        global $return_dept;    //差し戻し先
+        global $dept_id;        //ログインユーザーの部署
+        global $route_pattern;
+        global $sq_no;
+        global $sq_line_no;
         global $pdo;
-        $role = '0';    //受付者
-        $datas = [];
-        $i = 0;
-        $sql = "SELECT e.employee_name, e.email
-                FROM sq_route_in_dept r
-                LEFT JOIN employee e 
-                ON r.employee_code = e.employee_code
-                WHERE r.dept_id = :dept_id AND r.role = :role";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':dept_id', $dept_id);
-        $stmt->bindParam(':role', $role);
-        $stmt->execute();
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $datas[] = $row;
-            $datas[$i]['url'] = $url;
-            $i++;
+        $filter_datas = [];
+
+        $sql1 = "SELECT * FROM sq_route_mail_tr WHERE route_id='$route_pattern' AND sq_no='$sq_no' AND sq_line_no='$sq_line_no'";
+        $stmt1 = $pdo->prepare($sql1);
+        $stmt1->execute();
+        $sq_route_mail_tr = $stmt1->fetch(PDO::FETCH_ASSOC);
+            
+        if (isset($sq_route_mail_tr) && !empty($sq_route_mail_tr)) {
+            foreach ($sq_route_mail_tr as $item) {
+                for ($i = 0; $i < 5; $i ++) {
+                    $x = $i+1;
+                    if ($sq_route_mail_tr['route'.$x.'_dept'] == $return_dept) {
+                        $filter_datas[$i]['route'] = $x;
+                        $filter_datas[$i]['dept'] = $sq_route_mail_tr['route'.$x.'_dept'];
+                        $filter_datas[$i]['receipt_ad'] = $sq_route_mail_tr['route'.$x.'_receipt_ad'];
+                        $filter_datas[$i]['entrant_ad'] = $sq_route_mail_tr['route'.$x.'_entrant_ad'];
+                        $filter_datas[$i]['confirmer_ad'] = $sq_route_mail_tr['route'.$x.'_confirmer_ad'];
+                        $filter_datas[$i]['approver_ad'] = $sq_route_mail_tr['route'.$x.'_approver_ad'];
+                        $start = true;
+                    } 
+                    if ($sq_route_mail_tr['route'.$x.'_dept'] == $dept_id) {
+                        $filter_datas[$i]['route'] = $x;
+                        $filter_datas[$i]['dept'] = $sq_route_mail_tr['route'.$x.'_dept'];
+                        $filter_datas[$i]['receipt_ad'] = $sq_route_mail_tr['route'.$x.'_receipt_ad'];
+                        $filter_datas[$i]['entrant_ad'] = $sq_route_mail_tr['route'.$x.'_entrant_ad'];
+                        $filter_datas[$i]['confirmer_ad'] = $sq_route_mail_tr['route'.$x.'_confirmer_ad'];
+                        $filter_datas[$i]['approver_ad'] = $sq_route_mail_tr['route'.$x.'_approver_ad'];
+                        $end = true;
+                        break;
+                    }
+                    if ($start && !($end)) {
+                        $filter_datas[$i]['route'] = $x;
+                        $filter_datas[$i]['dept'] = $sq_route_mail_tr['route'.$x.'_dept'];
+                        $filter_datas[$i]['receipt_ad'] = $sq_route_mail_tr['route'.$x.'_receipt_ad'];
+                        $filter_datas[$i]['entrant_ad'] = $sq_route_mail_tr['route'.$x.'_entrant_ad'];
+                        $filter_datas[$i]['confirmer_ad'] = $sq_route_mail_tr['route'.$x.'_confirmer_ad'];
+                        $filter_datas[$i]['approver_ad'] = $sq_route_mail_tr['route'.$x.'_approver_ad'];
+                    }
+                    $x++;
+                }          
+            }
+            //array keyをrearrangeする
+            $filter_datas = array_values($filter_datas); 
         }
 
-        return $datas;
+        return $filter_datas;
     }
     
 ?>
