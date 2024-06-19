@@ -14,10 +14,29 @@
   $return_dept = $_POST['dept'];  //差し戻し先部署
   $send_back_to_person = $_POST['send_back_to_person'];  //差し戻し先担当者
   $success = true;
+  $success_mail = true;
+  $s_title = substr($title, 0, 2);
+  $e_title = substr($title, 3);
+  
+
+  //処理後、移動する画面を指定する
+  $redirectList = [
+      'ch' => './sales_request_check1.php?title=' . $title,        //確認
+      'ap' => './sales_request_approve1.php?title=' . $title,        //承認
+      'td' => './sq_detail_tr_engineering_input1.php?title=' . $title,        //技術部
+      'sm' => './sq_detail_tr_sales_management_input1.php?title=' . $title,   //営業管理部
+      'cm' => './sq_detail_tr_const_management_input1.php?title=' . $title,   //工事管理部
+      'pc' => './sq_detail_tr_procurement_input1.php?title=' . $title         //資材部
+  ];
+
+  $redirect = $redirectList[$s_title];
 
   if (isset($_POST['send_back'])) {   
-    //try {
+    try {
       $pdo->beginTransaction();
+      //メール送信する
+      include('sq_mail_send4.php');
+
       //テーブルID : sq_detail_tr
       cu_sq_detail_tr();
 
@@ -26,23 +45,24 @@
 
       //テーブルID : sq_route_tr
       cu_sq_route_tr();
-
+      
       $pdo->commit();
-    // } catch (PDOException $e) {
-    //   $success = false;
-    //   if (strpos($e->getMessage(), 'SQLSTATE[42000]') !== false) {
-    //     error_log("SQL Syntax Error or Access Violation: " . $e->getMessage(),3,'error_log.txt');
-    //   } else {
-    //     $pdo->rollback();
-    //     throw($e);
-    //     error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
-    //   }
-    // }
+    } catch (PDOException $e) {
+      $success = false;
+      if (strpos($e->getMessage(), 'SQLSTATE[42000]') !== false) {
+        error_log("SQL Syntax Error or Access Violation: " . $e->getMessage(),3,'error_log.txt');
+      } else {
+        $pdo->rollback();
+        throw($e);
+        error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
+      }
+    }
 
-    //更新処理にエラーがなければメール送信する
-    // if ($success) {
-    //   include('sq_mail_send5.php');
-    // }
+    if ($success && $success_mail) {
+      echo "<script>window.close();window.opener.location.href='$redirect';</script>";
+    } else {
+      echo "<script>window.close();window.opener.location.href='$redirect';</script>";
+    }
   }
 
   //テーブルID : sq_detail_tr
@@ -56,20 +76,28 @@
     $data = [
       'sq_no' => $sq_no,
       'sq_line_no' => $sq_line_no,
-      'processing_status' => NULL,
       'upd_date' => $today
     ];
 
     //営業部の場合
     if ($return_dept == '00') {
       $data['processing_dept'] = NULL;
+      $data['processing_status'] = NULL;
       $data['route_pattern'] = NULL; //ルート設定もやり直し
-      $sql = 'UPDATE sq_detail_tr SET processing_dept=:processing_dept, processing_status=:processing_status, route_pattern=:route_pattern, upd_date=:upd_date
+      $data['confirmer_comments'] = NULL;
+      $data['confirmer'] = NULL;
+      $data['approver_comments'] = NULL;
+      $data['approver'] = NULL;
+      $data['confirm_date'] = NULL;
+      $data['approve_date'] = NULL;
+      $sql = 'UPDATE sq_detail_tr SET processing_dept=:processing_dept, processing_status=:processing_status, route_pattern=:route_pattern,
+              confirmer_comments=:confirmer_comments, approver_comments=:approver_comments, confirmer=:confirmer, approver=:approver,
+              confirm_date=:confirm_date, approve_date=:approve_date, upd_date=:upd_date
               WHERE sq_no=:sq_no AND sq_line_no=:sq_line_no';
     } else {
       //その他の部署の場合
       $data['processing_dept'] = $return_dept;
-      $data['route_pattern'] = 1; //受付
+      $data['processing_status'] = '1'; //受付
       $sql = 'UPDATE sq_detail_tr SET processing_dept=:processing_dept, processing_status=:processing_status, upd_date=:upd_date
               WHERE sq_no=:sq_no AND sq_line_no=:sq_line_no';
     }

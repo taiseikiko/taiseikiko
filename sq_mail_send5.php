@@ -191,8 +191,8 @@
     function getSqMailSentence() {
         global $pdo;
  
-        $sq_mail_id = '04';
-        $seq_no = '1';        
+        $sq_mail_id = '05';
+        $seq_no = '1';
 
         $sql = "SELECT sq_mail_title, sq_mail_sentence FROM sq_mail_sentence WHERE sq_mail_id = :sq_mail_id AND seq_no = :seq_no";
         $stmt = $pdo->prepare($sql);

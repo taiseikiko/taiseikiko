@@ -80,16 +80,7 @@
           break;
       }
 
-      $left_join_table = "LEFT JOIN employee e ON e.employee_code = main.entrant ";
-      //差し戻し部署が営業管理部以外の場合
-      // if ($selected_dept !== '05') {
-      //   //各部署の入力者に差し戻し
-        
-      // } else {
-      //   //業管理部の場合、headerのclientに差し戻し
-      //   $on_condition = "ON e.employee_code = main.client ";
-      // }
-      
+      $left_join_table = "LEFT JOIN employee e ON e.employee_code = main.entrant ";      
       
       //同部署内
       if ($log_in_dept_id == $selected_dept) {        

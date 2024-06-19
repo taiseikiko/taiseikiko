@@ -86,10 +86,10 @@
             //メール送信処理を行う
             $success = sendMail($email_datas);
             if ($success) {
-                header('location:sales_route_input1.php');
+                header('location:sales_route_input1.php?title=set_route');
             }
         } else {
-            header('location:sales_route_input1.php');
+            header('location:sales_route_input1.php?title=set_route');
         }
     } catch(PDOException $e) {
         error_log("Error: " . $e->getMessage(), 3, "error_log.txt");

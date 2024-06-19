@@ -82,15 +82,45 @@
 
     try {
       $pdo->beginTransaction();
+      //確認画面の時だけ確認者をセットする
+      if ($title == 'check') {
+        //$datas['confirmer_comments'] = $_POST['confirmer_comments'];  //確認者コメント
+        $datas['confirmer'] = $_POST['user_code'];                    //確認者
+        $datas['confirm_date'] = $today;                              //確認日
+      } 
+      //承認画面の時だけ確認者をセットする
+      else if ($title == 'approve') {
+        //$datas['approver_comments'] = $_POST['approver_comments'];  //承認者コメント
+        $datas['approver'] = $_POST['user_code'];                    //承認者
+        $datas['approve_date'] = $today;                              //承認日
+      }
       //新規作成の場合
       if ($process == 'new') {
         $datas['add_date'] = $today;
         $datas['sq_no'] = $sq_no;
 
         $sql = 'INSERT INTO sq_header_tr(sq_no,client,cust_no,cust_dept,cust_pic,p_office_no,p_office_dept,p_office_pic,planned_order_date,planned_construction_date,
-              degree_of_order,order_accuracy,case_div,related_sq_no,daily_report_url,note,prior_notice_div,prior_notice_date,add_date, item_name) 
-              VALUES (:sq_no,:client,:cust_no,:cust_dept,:cust_pic,:p_office_no,:p_office_dept,:p_office_pic,:planned_order_date,:planned_construction_date,
-              :degree_of_order,:order_accuracy,:case_div,:related_sq_no,:daily_report_url,:note,:prior_notice_div,:prior_notice_date,:add_date,:item_name)';
+              degree_of_order,order_accuracy,case_div,related_sq_no,daily_report_url,note,prior_notice_div,prior_notice_date,';
+        //確認画面の時だけ確認者をセットする
+        if ($title == 'check') {
+          $sql.= 'confirmer,confirm_date,';
+        } 
+        //承認画面の時だけ確認者をセットする
+        else if ($title == 'approve') {
+          $sql.= 'approver,approve_date,';
+        }
+        $sql .= 'add_date, item_name) 
+               VALUES (:sq_no,:client,:cust_no,:cust_dept,:cust_pic,:p_office_no,:p_office_dept,:p_office_pic,:planned_order_date,:planned_construction_date,
+              :degree_of_order,:order_accuracy,:case_div,:related_sq_no,:daily_report_url,:note,:prior_notice_div,:prior_notice_date,';
+        //確認画面の時だけ確認者をセットする
+        if ($title == 'check') {
+          $sql.= ':confirmer,:confirm_date,';
+        } 
+        //承認画面の時だけ確認者をセットする
+        else if ($title == 'approve') {
+          $sql.= ':approver,:approve_date,';
+        }
+        $sql .= ':add_date,:item_name)';
       } 
       //更新の場合
       else {
@@ -100,7 +130,16 @@
         $sql = 'UPDATE sq_header_tr SET client=:client,cust_no=:cust_no,cust_dept=:cust_dept,cust_pic=:cust_pic,p_office_no=:p_office_no,p_office_dept=:p_office_dept,
               p_office_pic=:p_office_pic,planned_order_date=:planned_order_date,planned_construction_date=:planned_construction_date,
               degree_of_order=:degree_of_order,order_accuracy=:order_accuracy,case_div=:case_div,related_sq_no=:related_sq_no,daily_report_url=:daily_report_url,note=:note,
-              prior_notice_div=:prior_notice_div,prior_notice_date=:prior_notice_date,item_name=:item_name, upd_date=:upd_date WHERE sq_no=:sq_no';
+              prior_notice_div=:prior_notice_div,prior_notice_date=:prior_notice_date,item_name=:item_name, ';
+        //確認画面の時だけ確認者をセットする
+        if ($title == 'check') {
+          $sql.= 'confirmer=:confirmer,confirm_date=:confirm_date,';
+        }
+        //承認画面の時だけ確認者をセットする
+        else if ($title == 'approve') {
+          $sql.= 'approver=:approver,approve_date=:approve_date,';
+        }
+        $sql .= 'upd_date=:upd_date WHERE sq_no=:sq_no';
       }
       
       $stmt = $pdo->prepare($sql);
