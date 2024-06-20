@@ -180,7 +180,7 @@
         <button id="updBtn" style="background:#80dfff;" class="update" name="submit_entrant" value="update">更新 </button>
       </div>
       <?php
-      if ($title == 'sm_confirm') { ?>
+      if ($title == 'sm_confirm' || $title == 'sm_approve') { ?>
       <div style="margin-top:13px; margin-left:435px">            
         <label class="common_label" for="other">その他処理 </label>
         <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)">

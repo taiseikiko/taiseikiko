@@ -2,11 +2,11 @@
   <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="input2">
     <?php include('dialog.php'); ?>
     <input type="hidden" name="process" value="<?= $process ?>">
-    <input type="hidden" name="dept_id" value="<?= $dept_id ?>">
+    <input type="hidden" name="dept_id" id="dept_id" value="<?= $dept_id ?>">
     <input type="hidden" name="client" value="<?= $client ?>">
     <input type="hidden" name="title" id="title" value="<?= $title ?>">
     <table style="width:auto;">
-      <input type="hidden" name="sq_no" value="<?= $sq_no ?>">
+      <input type="hidden" name="sq_no" id="sq_no" value="<?= $sq_no ?>">
       <tr style="height:10px; margin-top:20px"></tr>
       <tr style="height:10px;"></tr>
       <tr>
@@ -285,12 +285,54 @@
           <div>
             <button class="approveBtn" name="submit" value="update"><?= $btn_name ?> </button>
           </div>
+          <?php if (strpos($title, 'confirm') !== false || strpos($title, 'approve') !== false): ?>
+            <div style="margin-top:13px; margin-left:435px">            
+              <label class="common_label" for="other">その他処理 </label>
+              <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)">
+                <option value="" class="">選択して下さい。</option>
+                <option value="1" class="" disabled>差し出し</option>
+                <option value="2" class="">中止</option>
+                <option value="3" class="" disabled>スキップ</option>
+              </select>
+            </div>
+          <?php endif; ?>
         </div>
       </tr>          
     </table>        
   </form><!-- Vertical Form -->
 </div>
+<script type="text/javascript">
+  //その他処理が変わる場合
+  function other_process(event) {
+    event.preventDefault();
+    var sq_no = document.getElementById('sq_no').value;
+    // var sq_line_no = document.getElementById('sq_line_no').value;
+    var dept_id = document.getElementById('dept_id').value;
+    var title = document.getElementById('title').value;
+    // var route_pattern = document.getElementById('route_pattern').value;
 
+    var process = document.getElementById('otherProcess').value;
+    // //スキップ処理の場合
+    // if (process == 3) {
+    //   var url = "skip_division_input1.php" + "?sq_no=" + sq_no + 
+    //   "&sq_line_no=" + sq_line_no +
+    //   "&dept_id=" + dept_id +
+    //   "&route_pattern=" + route_pattern +
+    //   "&title=" + title;
+
+    //   window.open(url, "popupWindow", "width=900,height=200,left=100,top=50");
+    // }
+    
+    //中止処理の場合
+    if (process == 2) {
+      var url = "cancel_division_input1.php" + "?sq_no=" + sq_no + 
+      "&dept_id=" + dept_id +
+      "&title=" + title;
+      window.open(url, "popupWindow", "width=900,height=200,left=100,top=50");
+    }
+
+  }
+</script>
 <style>
   .clearfix:after {
     clear: both;
