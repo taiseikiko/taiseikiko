@@ -3,6 +3,7 @@
 ?>
 <div class="container">
   <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="input3">
+    <?php include('dialog.php'); ?>
     <input type="hidden" name="process2" id="process2" value="<?= $process2 ?>">
     <input type="hidden" name="sq_no" id="sq_no" value="<?= $sq_no ?>">
     <input type="hidden" name="sq_line_no" id="sq_line_no" value="<?= $sq_line_no ?>">

@@ -1,9 +1,10 @@
 <div class="container">
   <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="input2">
+    <?php include('dialog.php'); ?>
     <input type="hidden" name="process" value="<?= $process ?>">
     <input type="hidden" name="dept_id" value="<?= $dept_id ?>">
     <input type="hidden" name="client" value="<?= $client ?>">
-    <input type="hidden" name="title" value="<?= $title ?>">
+    <input type="hidden" name="title" id="title" value="<?= $title ?>">
     <table style="width:auto;">
       <input type="hidden" name="sq_no" value="<?= $sq_no ?>">
       <tr style="height:10px; margin-top:20px"></tr>

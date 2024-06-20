@@ -183,9 +183,9 @@ blockquote footer {
   background-size: cover;
 }
 
-[role="dialog"] {
+/* [role="dialog"] {
   width: 450px;
-}
+} */
 
 [role="tooltip"]:not([id]) {
   margin: 2em 0;
@@ -221,9 +221,9 @@ blockquote footer {
     overflow-x: scroll;
   }
 
-  [role="dialog"] {
+  /* [role="dialog"] {
     width: 90%;
-  }
+  } */
 }
 
 /*             */
