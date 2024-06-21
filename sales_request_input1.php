@@ -73,6 +73,11 @@ $result = $_GET['result'] ?? '';
         <?php endforeach; ?>
         </tbody>
       </table>
+      <?php 
+        if (count($sq_datas) <= 0) {
+          echo "<div><h4 style='font-size: 12px;'>表示するデータがございません。</h4></div>";
+        }
+      ?>
     </form>
   </div>
 </main>
