@@ -126,10 +126,16 @@
 </table>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
     $("#updBtn").click(function() {
-      $("#input3").attr("action", "sq_detail_tr_engineering_update.php");
+      //確認メッセージを書く
+      var msg = "更新します。よろしいですか？";
+      //何の処理科を書く
+      var process = "update";
+      //確認Dialogを呼ぶ
+      openModal(msg, process);
     })
 
     //見積図面のアップロードボタンを押下する場合
@@ -143,6 +149,18 @@
       //sq_attach_upload1.phpへ移動する
       $("#input3").attr("action", "sq_attach_upload1.php?from=e2");
     })
+
+    //確認BOXにはいボタンを押下する場合
+    $("#okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+      //戻る処理の場合
+      if (process == "update") {
+        //submitしたいボタン名をセットする
+        $("#okBtn").attr("name", "submit_entrant1");
+        //sq_detail_tr_engineering_updateへ移動する
+        $("#input3").attr("action", "sq_detail_tr_engineering_update.php");
+      }
+    });
 
   });
 

@@ -14,35 +14,33 @@ function get_sq_datas($cust_name = "", $pf_name = "") {
           FROM sq_header_tr h
           LEFT JOIN customer c ON h.cust_no = c.cust_code
           LEFT JOIN public_office pf ON h.p_office_no = pf.pf_code
-          LEFT JOIN employee e ON h.client = e.employee_code ";
+          LEFT JOIN employee e ON h.client = e.employee_code 
+          WHERE ";
   //確認画面の場合、確認日がNULLのデータだけに表示させる
   if ($title1 == 'check') {
-    $sql .= "INNER JOIN (
-              SELECT DISTINCT (sq_no) 
-              FROM sq_detail_tr
-              WHERE confirm_date IS NULL
-            ) AS detail 
-            ON h.sq_no = detail.sq_no ";
+    $sql .= "EXISTS (
+            SELECT 1 
+            FROM sq_detail_tr d 
+            WHERE d.sq_no = h.sq_no 
+            AND d.confirm_date IS NULL) AND ";
   }
   //承認画面の場合、承認日がNULLかつ、確認日がNOT NULLのデータだけに表示させる
   if ($title1 == 'approve') {
-    $sql .= "INNER JOIN (
-              SELECT DISTINCT (sq_no) 
-              FROM sq_detail_tr
-              WHERE approve_date IS NULL AND confirm_date IS NOT NULL
-            ) AS detail 
-            ON h.sq_no = detail.sq_no ";
+    $sql .= "EXISTS (
+            SELECT 1 
+            FROM sq_detail_tr d 
+            WHERE d.sq_no = h.sq_no 
+            AND d.confirm_date IS NOT NULL AND d.approve_date IS NULL) AND ";
   }
   //ルート設定の場合、承認日がNOT NULLかつroute_patternがNULLのデータだけを取得する
   if ($title1 == 'set_route') {
-    $sql .= "INNER JOIN (
-              SELECT DISTINCT (sq_no) 
-              FROM sq_detail_tr
-              WHERE approve_date IS NOT NULL AND route_pattern IS NULL
-            ) AS detail 
-            ON h.sq_no = detail.sq_no ";
+    $sql .= "EXISTS (
+            SELECT 1 
+            FROM sq_detail_tr d 
+            WHERE d.sq_no = h.sq_no 
+            AND d.approve_date IS NOT NULL AND d.route_pattern IS NULL) AND ";
   }
-  $sql .= "WHERE c.cust_name LIKE :cust_name AND pf.pf_name LIKE :pf_name";
+  $sql .= "c.cust_name LIKE :cust_name AND pf.pf_name LIKE :pf_name";
   $stmt = $pdo->prepare($sql);
   $stmt->execute([
     ':cust_name' => '%' . $cust_name . '%',

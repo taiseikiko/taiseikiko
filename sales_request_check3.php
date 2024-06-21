@@ -62,7 +62,7 @@
       //確認メッセージを書く
       var msg = "営業依頼書 明細を作成．更新します。よろしいですか？";
       //何の処理科を書く
-      var process = "return";
+      var process = "update";
       //確認Dialogを呼ぶ
       openModal(msg, process);
     })

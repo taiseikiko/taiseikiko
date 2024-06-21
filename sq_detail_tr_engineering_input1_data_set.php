@@ -14,10 +14,10 @@ function get_sq_datas($title) {
           LEFT JOIN public_office pf ON h.p_office_no = pf.pf_code
           LEFT JOIN employee e ON h.client = e.employee_code";
   if ($title !== '') {
-    $sql .= " INNER JOIN (
-                SELECT DISTINCT(sq_no) 
-                FROM sq_route_tr 
-                WHERE route1_dept = '$dept_id' AND ";
+    $sql .= " WHERE EXISTS (
+                SELECT 1
+                FROM sq_route_tr r
+                WHERE h.sq_no = r.sq_no AND route1_dept = '$dept_id' AND ";
     switch ($title) {
       case 'td_receipt':
         $sql .= "route1_receipt_date IS NULL";
@@ -32,7 +32,7 @@ function get_sq_datas($title) {
         $sql .= "route1_approval_date IS NULL AND route1_confirm_date IS NOT NULL";
         break;
     }
-    $sql.=  ") AS dist_sq_route_tr ON h.sq_no = dist_sq_route_tr.sq_no";
+    $sql.=  ")";
   }
   $stmt = $pdo->prepare($sql);
   $stmt->execute();
