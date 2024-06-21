@@ -111,7 +111,7 @@
             <label class="common_label" for="size">　　サイズ </label>
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeA">mm　　✖
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeB">mm　
-            <button class="approveBtn" name="submit" style="margin-left: 3rem;" value="">詳細</button>
+            <button class="approveBtn" name="submit" id="detailBtn" style="margin-left: 3rem;" value="">詳細</button>
           </div>
         </td>
       </tr>
@@ -159,7 +159,7 @@
             <label class="common_label" for="size">　　サイズ </label>
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeA">mm　　✖
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeB">mm　
-            <button class="approveBtn" name="submit" style="margin-left: 3rem;" value="">詳細</button>
+            <button class="approveBtn" name="submit" id="detailBtn" style="margin-left: 3rem;" value="">詳細</button>
           </div>
         </td>
       </tr>
@@ -207,7 +207,7 @@
             <label class="common_label" for="size">　　サイズ </label>
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeA">mm　　✖
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeB">mm　
-            <button class="approveBtn" name="submit" style="margin-left: 3rem;" value="">詳細</button>
+            <button class="approveBtn" name="submit" id="detailBtn" style="margin-left: 3rem;" value="">詳細</button>
           </div>
         </td>
       </tr>
@@ -255,7 +255,7 @@
             <label class="common_label" for="size">　　サイズ </label>
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeA">mm　　✖
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeB">mm　
-            <button class="approveBtn" name="submit" style="margin-left: 3rem;" value="">詳細</button>
+            <button class="approveBtn" name="submit" id="detailBtn" style="margin-left: 3rem;" value="">詳細</button>
           </div>
         </td>
       </tr>

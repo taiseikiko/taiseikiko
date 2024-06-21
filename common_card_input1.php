@@ -25,7 +25,7 @@
         <tbody>
             <tr>
             <td colspan="15">
-                <button type="submit" name="new" value="new">新規登録</button>
+              <button type="button" class="createBtn" onclick="window.location.href='card_input2.php'">新規登録</button>
             </td>
             </tr>
           <tr>
