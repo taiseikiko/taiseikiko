@@ -23,7 +23,7 @@
     $data = $stmt->fetchAll();
 
     //新規作成の場合
-    if ($process == 'new') {
+    if ($process == 'new') {      
       //営業依頼書№（sq_no）自動採番
       try {
         $pdo->beginTransaction();
@@ -59,8 +59,7 @@
       }
     }
 
-    $datas = [          
-      'client' => $_POST['user_code'] ?? '',        //依頼者
+    $datas = [      
       'cust_no' => $_POST['cust_code'] ?? '',       //得意先コード
       'cust_dept' => $_POST['cust_dept'] ?? '',     //得意先担当部署
       'cust_pic' => $_POST['cust_pic'] ?? '',       //得意先担当者
@@ -98,7 +97,7 @@
       if ($process == 'new') {
         $datas['add_date'] = $today;
         $datas['sq_no'] = $sq_no;
-
+        $datas['client'] = $_POST['user_code'] ?? '';//依頼者
         $sql = 'INSERT INTO sq_header_tr(sq_no,client,cust_no,cust_dept,cust_pic,p_office_no,p_office_dept,p_office_pic,planned_order_date,planned_construction_date,
               degree_of_order,order_accuracy,case_div,related_sq_no,daily_report_url,note,prior_notice_div,prior_notice_date,';
         //確認画面の時だけ確認者をセットする
@@ -127,7 +126,7 @@
         $datas['upd_date'] = $today;
         $datas['sq_no'] = $_POST['sq_no'];
 
-        $sql = 'UPDATE sq_header_tr SET client=:client,cust_no=:cust_no,cust_dept=:cust_dept,cust_pic=:cust_pic,p_office_no=:p_office_no,p_office_dept=:p_office_dept,
+        $sql = 'UPDATE sq_header_tr SET cust_no=:cust_no,cust_dept=:cust_dept,cust_pic=:cust_pic,p_office_no=:p_office_no,p_office_dept=:p_office_dept,
               p_office_pic=:p_office_pic,planned_order_date=:planned_order_date,planned_construction_date=:planned_construction_date,
               degree_of_order=:degree_of_order,order_accuracy=:order_accuracy,case_div=:case_div,related_sq_no=:related_sq_no,daily_report_url=:daily_report_url,note=:note,
               prior_notice_div=:prior_notice_div,prior_notice_date=:prior_notice_date,item_name=:item_name, ';
@@ -156,9 +155,7 @@
       }
     }
 
-    if ($success) {
-      header('location:sales_request_input1.php?title='.$title);
-    }
+    header('location:sales_request_input1.php?title='.$title . '&result='.$success);
   }
 
 ?>

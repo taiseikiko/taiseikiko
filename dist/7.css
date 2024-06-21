@@ -6,7 +6,7 @@ body {
 }
 
 .surface {
-  background: #fff!important;
+  background: #fff !important;
 }
 
 h1 {
@@ -254,6 +254,84 @@ button {
 .approveBtn {
   background: #80dfff;
 }
+
+/* ----------------------------------------------------- 
+-------------------- OK AND Cancel Button ---------------------
+-------------------------------------------------------- */
+.okBtn {
+  background: #4d9bc1;
+  border-radius: 8px;
+  border: 1px solid #4d9bc1;
+  box-sizing: border-box;
+  color: #ffffff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial,
+    sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  height: 30px;
+  line-height: 20px;
+  list-style: none;
+  margin: 0;
+  outline: none;
+  padding-top: 2px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transition: color 100ms;
+  vertical-align: baseline;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.okBtn:before {
+  background: #85c1df;
+  border-radius: 8px;
+}
+
+.okBtn:after {
+  background: #85c1df;
+  border-radius: 8px;
+}
+
+.cancelBtn {
+  background: transparent;
+  border-radius: 8px;
+  border: 1px solid gray;
+  box-sizing: border-box;
+  color: black;
+  cursor: pointer;
+  display: inline-block;
+  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial,sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  height: 30px;
+  line-height: 20px;
+  list-style: none;
+  margin: 0;
+  outline: none;
+  padding-top: 2px;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  transition: color 100ms;
+  vertical-align: baseline;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.cancelBtn:after,
+.cancelBtn:before {
+  background: rgb(235, 233, 233);
+  border-radius: 8px;
+}
+
+/* ----------------------------------------------------- 
+-------------------- End OK Button ---------------------
+-------------------------------------------------------- */
 
 /* ----------------------------------------------------- 
 -------------------- Skip Button ---------------------

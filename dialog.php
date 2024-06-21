@@ -1,16 +1,36 @@
 <div class="container">
     <div class="modal fade" id="confirm" role="dialog">
         <div class="modal-dialog">
-        
             <!-- Modal content-->
             <div class="modal-content">
+                <div class="modal-header">
+                    <!-- <h4 class="modal-title">&#10068;</h4> -->
+                </div>
                 <div class="modal-body">
-                    <p id="modal-message"></p>
+                    <p id="confirm-message"></p>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="btnProcess" id="btnProcess">
-                    <button class="approveBtn okBtn" id="okBtn">はい</button>
-                    <button class="cancelBtn" id="cancelBtn" data-dismiss="modal">キャンセル</button>
+                    <button class="modal-btn okBtn" id="okBtn">はい</button>
+                    <button class="modal-btn cancelBtn" id="cancelBtn" data-dismiss="modal">キャンセル</button>
+                </div>
+            </div>
+        
+        </div>
+    </div>
+    <div class="modal fade" id="ok" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <!-- <h4 class="modal-title" style="color:white">&#10004;</h4> -->
+                </div>
+                <div class="modal-body">
+                    <p id="ok-message"></p>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="btnProcess" id="btnProcess">
+                    <button class="modal-btn okBtn" id="okBtn" data-dismiss="modal">はい</button>
                 </div>
             </div>
         
@@ -18,10 +38,9 @@
     </div>
 </div>
 <style>
-    .btn-default{color:#333;background-color:#fff;border-color:#ccc}.btn-default.focus,.btn-default:focus{color:#333;background-color:#e6e6e6;border-color:#8c8c8c}.btn-default:hover{color:#333;background-color:#e6e6e6;border-color:#adadad}.btn-default.active,.btn-default:active,.open>.dropdown-toggle.btn-default{color:#333;background-color:#e6e6e6;background-image:none;border-color:#adadad}.btn-default.active.focus,.btn-default.active:focus,.btn-default.active:hover,.btn-default:active.focus,.btn-default:active:focus,.btn-default:active:hover,.open>.dropdown-toggle.btn-default.focus,.open>.dropdown-toggle.btn-default:focus,.open>.dropdown-toggle.btn-default:hover{color:#333;background-color:#d4d4d4;border-color:#8c8c8c}.btn-default.disabled.focus,.btn-default.disabled:focus,.btn-default.disabled:hover,.btn-default[disabled].focus,.btn-default[disabled]:focus,.btn-default[disabled]:hover,fieldset[disabled] .btn-default.focus,fieldset[disabled] .btn-default:focus,fieldset[disabled] .btn-default:hover{background-color:#fff;border-color:#ccc}.btn-default .badge{color:#fff;background-color:#333}
-    .okBtn {
-        background-color: #80dfff;
-    }
+
+/* CSS */
+
     .modal{
         position:fixed;
         top:0;
@@ -57,8 +76,7 @@
     }
     .modal-dialog{
         position:relative;
-        width:auto;
-        margin:10px
+        width:400px;
     }.modal-content{
         width: 400px;
         height: auto;
@@ -90,24 +108,32 @@
         opacity:.5
     }
     .modal-header{
-        padding:15px;
-        border-bottom:1px solid #e5e5e5
+        background-color: #4d9bc1;
+        border-top-right-radius: 12px;
+        border-top-left-radius: 12px;
+        padding:5px;
+        border-bottom:1px solid #e5e5e5;
+        height: 20px;
     }
     .modal-header .close{
         margin-top:-2px
     }
     .modal-title{
-        margin:0;
-        line-height:1.42857143
+        text-align: center;
+        margin-top: -16px;
+        /* line-height:1.42857143 */
     }
     .modal-body{
         position:relative;
-        padding:15px
+        padding-left:10px;
+        height: 30px;
+        /* background-color:#e9edef; */
     }
     .modal-footer{
-        padding:15px;
+        padding:3px;
         text-align:right;
-        border-top:1px solid #e5e5e5
+        border-top:1px solid #e5e5e5;
+        height: 30px;
     }
     .modal-footer .btn+.btn{
         margin-bottom:0;
@@ -128,8 +154,8 @@
     }
     @media (min-width:768px){
         .modal-dialog{
-            width:600px;
-            margin:30px auto
+            width:400px;
+            margin:0 auto
         }
         .modal-content{
             -webkit-box-shadow:0 5px 15px rgba(0,0,0,.5);
@@ -167,20 +193,3 @@
         appearance:none
     }
 </style>
-<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"> -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> 
-<script>
-$(document).ready(function(){
-    $("#myBtn").click(function(){
-        $("#myModal").modal({backdrop: true});
-    });
-    $("#myBtn2").click(function(){
-        $("#myModal2").modal({backdrop: false});
-    });
-    $("#myBtn3").click(function(){
-        $("#myModal3").modal({backdrop: "static"});
-    });
-    
-});
-</script>

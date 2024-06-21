@@ -7,11 +7,16 @@ $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
 $dept_code = $_SESSION['department_code'];
 include("sales_request_input1_data_set.php");
 include("header1.php");
+include("dialog.php");
 $title = $_GET['title'] ?? '';
 $sq_datas = get_sq_datas("", ""); 
+$result = $_GET['result'] ?? '';
 ?>
 <main>
   <h3>【　営業依頼書：入力保守　】</h3>
+
+   <!-- PHP to display result if available -->
+
   <div class="container">
     <form id="searchForm" class="row g-3" action="sales_request_input2.php?title=<?= $title ?>" method="POST">
       <table style="width:auto;">
@@ -75,6 +80,7 @@ $sq_datas = get_sq_datas("", "");
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="assets/js/customer_ent.js"></script> 
 <script src="assets/js/public_office_ent.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
   
 $(document).ready(function(){
@@ -104,6 +110,12 @@ $(document).ready(function(){
     var selectedId = $(this).data('sq_no');
     $('.sq_no').val(selectedId);
   });
+
+  //登録更新処理にエラーがあった場合、エラーメッセージを表示する
+  var result = "<?= $result ?>";
+  if (result == '0') {
+    showErrorMsg();
+  }
 });
 
 function handleWindowClose() {
@@ -119,6 +131,14 @@ function handleWindowClose() {
     }
     
   });
+}
+
+function showErrorMsg() {
+  var message = "エラーが発生しました。係員にお知らせください。";
+  //確認メッセージをセットする
+  $("#ok-message").text(message);
+  //確認Dialogを呼ぶ
+  $("#ok").modal({backdrop: false});
 }
 
 // localStorage.removeItem('sales_request_form');

@@ -60,7 +60,7 @@
 
     $("#updBtn").click(function() {
       //確認メッセージを書く
-      var msg = "作成．更新します。よろしいですか？";
+      var msg = "営業依頼書 明細を作成．更新します。よろしいですか？";
       //何の処理科を書く
       var process = "update";
       //確認Dialogを呼ぶ
@@ -89,9 +89,9 @@
       //何の処理かをセットする
       $("#btnProcess").val(process);
       //確認メッセージをセットする
-      $("#modal-message").text(msg);
+      $("#confirm-message").text(msg);
       //確認Dialogを呼ぶ
-      $("#confirm").modal({backdrop: "static"});
+      $("#confirm").modal({backdrop: false});
     }
   });
 

@@ -104,9 +104,9 @@
       //何の処理かをセットする
       $("#btnProcess").val(process);
       //確認メッセージをセットする
-      $("#modal-message").text(msg);
+      $("#confirm-message").text(msg);
       //確認Dialogを呼ぶ
-      $("#confirm").modal({backdrop: "static"});
+      $("#confirm").modal({backdrop: false});
     }
   });
 
