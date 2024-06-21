@@ -49,5 +49,4 @@
       $("#input1").attr("action", "sq_detail_tr_const_management_input2.php?title=<?= $title ?>");
     }); 
   });
-  // localStorage.removeItem('detail_const_management');
 </script>

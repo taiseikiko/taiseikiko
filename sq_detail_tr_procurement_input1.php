@@ -10,16 +10,16 @@
   
   $title = isset($_GET['title']) ? $_GET['title'] : '';
   switch ($title) {
-    case 'sm_receipt':
+    case 'pc_receipt':
       $title_in_j = '受付';
       break;
-    case 'sm_entrant':
+    case 'pc_entrant':
       $title_in_j = '入力';
       break;
-    case 'sm_confirm':
+    case 'pc_confirm':
       $title_in_j = '確認';
       break;
-    case 'sm_approve':
+    case 'pc_approve':
       $title_in_j = '承認';
       break;
     default:
@@ -49,5 +49,4 @@
       $("#input1").attr("action", "sq_detail_tr_procurement_input2.php?title=<?= $title ?>");
     }); 
   });
-  // localStorage.removeItem('detail_procurement');
 </script>

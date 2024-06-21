@@ -25,6 +25,7 @@
 <script src="assets/js/inquiry_ent_check.js"></script>
 <script src="assets/js/sales_request_input3_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
     let class_code = $('#classList').val();
@@ -51,9 +52,33 @@
     })
 
     $("#returnBtn").click(function() {
-      $("#input3").attr("action", "sq_detail_tr_procurement_input2.php?sq_no="+<?= $sq_no ?>+"&process=detail&title=<?= $title ?>");
+      //確認メッセージを書く
+      var msg = "前の画面に戻します。よろしいですか？";
+      //何の処理科を書く
+      var process = "return";
+      //確認Dialogを呼ぶ
+      openModal(msg, process);
     })
+
+    //確認BOXにはいボタンを押下する場合
+    $("#okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+      //戻る処理の場合
+      if (process == "return") {
+        $("#input3").attr("action", "sq_detail_tr_procurement_input2.php?sq_no="+<?= $sq_no ?>+"&process=detail&title=<?= $title ?>");
+      }
+    });
   });
+
+  function openModal(msg, process) {
+    event.preventDefault();
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#confirm-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#confirm").modal({backdrop: false});
+  }
 
   function fetchData(class_code) {
     $('#zaikoumeiList option:not(:first-child)').remove();
@@ -177,7 +202,7 @@
 
   //Disabled button 
   var buttons = document.getElementsByTagName('button');
-  const excludeButtons = ['returnBtn', 'setEmp', 'update'];
+  const excludeButtons = ['returnBtn', 'setEmp', 'update', 'okBtn', 'cancelBtn'];
   for (var k = 0; k < buttons.length; k++) {
     if (!excludeButtons.includes(buttons[k].className)) {
       buttons[k].disabled = true;

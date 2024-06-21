@@ -25,10 +25,9 @@
 <script src="assets/js/public_office_ent.js"></script>
 <script src="assets/js/sales_request_input_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
-    //localStorageにフォームデータを保存する
-    // saveFormData();
     disableInput();
     //一覧画面から更新 or コピーボタンを押下する場合
     $(".updateBtn").click(function(){
@@ -41,31 +40,37 @@
 
     //戻るボタンを押下する場合
     $(".returnBtn").click(function(){
-      $("#input2").attr("action", "sq_detail_tr_const_management_input1.php?title=<?= $title ?>");
+      //確認メッセージを書く
+      var msg = "前の画面に戻します。よろしいですか？";
+      //何の処理科を書く
+      var process = "return";
+      //確認Dialogを呼ぶ
+      openModal(msg, process);      
     })
+
+    //確認BOXにはいボタンを押下する場合
+    $("#okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+      //戻る処理の場合
+      if (process == "return") {
+        $("#input2").attr("action", "sq_detail_tr_const_management_input1.php?title=<?= $title ?>");
+      }
+    });
   });
+
+  function openModal(msg, process) {
+    event.preventDefault();
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#confirm-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#confirm").modal({backdrop: false});
+  }
 
   function getById(id) {
     return document.getElementById(id);
   }
-
-  const myForm = getById("input2");
-  //localStorageにフォームデータを保存する
-  // function saveFormData() {
-  //   const formData = new FormData(myForm);
-  //   const jsonData = JSON.stringify(Object.fromEntries(formData));
-  //   localStorage.setItem('detail_const_management', jsonData);
-  // }
-
-  //localStorageからフォームデータをセットする
-  // const formData = JSON.parse(localStorage.getItem('detail_const_management'));
-  // if (formData) {
-  //   Object.keys(formData).forEach(key => {
-  //     if (key !== 'uploaded_file') {
-  //       myForm.elements[key].value = formData[key];
-  //     }
-  //   })
-  // }
 
   function disableInput() {
     //Disabled Input 
@@ -102,8 +107,9 @@
 
     //Disabled button 
     var buttons = document.getElementsByTagName('button');
+    const excludeButtons = ['returnBtn', 'updateBtn', 'okBtn', 'cancelBtn'];
     for (var k = 0; k < buttons.length; k++) {
-      if (buttons[k].className !== 'returnBtn' && buttons[k].className !== 'updateBtn') {
+      if (!excludeButtons.includes(buttons[k].className)) {
         buttons[k].disabled = true;
       }
     }

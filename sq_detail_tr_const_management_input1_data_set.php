@@ -16,7 +16,7 @@ function get_sq_datas($title) {
     $sql.= " WHERE EXISTS (
               SELECT 1
               FROM sq_route_tr r
-              WHERE h.sq_no = r.sq_no AND ";
+              WHERE h.sq_no = r.sq_no AND (";
 
       switch ($title) {
         case 'cm_receipt':
@@ -72,7 +72,7 @@ function get_sq_datas($title) {
                     )";
           break;
       }
-      $sql.=  ")";
+      $sql.=  "))";
   }
   $stmt = $pdo->prepare($sql);
   $params = array_fill(0, substr_count($sql, '?'), $dept_id);
