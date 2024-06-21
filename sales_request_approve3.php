@@ -23,6 +23,7 @@
 <script src="assets/js/inquiry_ent_check.js"></script>
 <script src="assets/js/sales_request_input3_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
     let class_code = $('#classList').val();
@@ -49,13 +50,39 @@
     })
 
     $("#returnBtn").click(function() {
-      $("#input3").attr("action", "sales_request_approve2.php?sq_no="+<?= $sq_no ?>+"&process=update&title=<?= $title ?>");
+      //確認メッセージを書く
+      var msg = "前の画面に戻します。よろしいですか？";
+      //何の処理科を書く
+      var process = "return";
+      //確認Dialogを呼ぶ
+      openModal(msg, process);      
     })
 
     $("#updBtn").click(function() {
-      checkValidation(event);
-      $("#input3").attr("action", "sales_request_update2.php?title=<?= $title ?>");
+      //確認メッセージを書く
+      var msg = "営業依頼書 明細を作成．更新します。よろしいですか？";
+      //何の処理科を書く
+      var process = "update";
+      //確認Dialogを呼ぶ
+      openModal(msg, process);      
     })
+
+    //確認BOXにはいボタンを押下する場合
+    $("#okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+      //戻る処理の場合
+      if (process == "return") {
+        $("#input3").attr("action", "sales_request_approve2.php?sq_no="+<?= $sq_no ?>+"&process=update&title=<?= $title ?>");
+      }
+      //ヘッダ更新処理の場合
+      else if (process == "update") {
+        checkValidation(event);
+        //submitしたいボタン名をセットする
+        $("#okBtn").attr("name", "submit");
+        //sales_request_update.phpへ移動する
+        $("#input3").attr("action", "sales_request_update2.php?title=<?= $title ?>");
+      }
+    });
   });
 
   function fetchData(class_code) {
@@ -105,6 +132,16 @@
       $('#c_div').val('');
       $('#c_div_code').val('');
     }
+  }
+
+  function openModal(msg, process) {
+    event.preventDefault();
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#confirm-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#confirm").modal({backdrop: false});
   }
 
   document.addEventListener("DOMContentLoaded", function() {

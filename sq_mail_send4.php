@@ -173,7 +173,7 @@
                 //確認画面の場合
                 if ($title == 'check') {
                     //clientへメール送信する
-                    $send_mail_datas[$i]['email'] = $sq_header_tr['client'];
+                    $send_mail_datas[$i]['email'] = $sq_header_tr['client_email'];
                     $send_mail_datas[$i]['url'] = $url;
                 } 
                 //承認画面の場合

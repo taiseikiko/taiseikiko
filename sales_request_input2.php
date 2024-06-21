@@ -55,17 +55,8 @@
 
     //確認ボタンを押下する場合
     $(".approveBtn").click(function(event){
-      var title = $('#title').val();
-      var name;
-      if (title == "input") {
-        name = '入力';
-      } else if (title == "check") {
-        name = '確認';
-      } else {
-        name = '承認';
-      }
       //確認メッセージを書く
-      var msg = "営業依頼書を"+name+"します？よろしいですか？";
+      var msg = "営業依頼書を入力します？よろしいですか？";
       //何の処理科を書く
       var process = "update";
       //確認Dialogを呼ぶ
