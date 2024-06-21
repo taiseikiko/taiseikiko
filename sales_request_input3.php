@@ -77,9 +77,10 @@
       //明細更新処理の場合
       else if (process == "update") {
         checkValidation(event);
-      
-        //sales_request_update.phpへ移動する
+        
+        //submitしたいボタン名をセットする
         $("#okBtn").attr("name", "submit");
+        //sales_request_update.phpへ移動する
         $("#input3").attr("action", "sales_request_update2.php?title=<?= $title ?>");
       }
     });

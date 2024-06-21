@@ -82,7 +82,7 @@
       openModal(msg, process);
     });
 
-    //はいボタンを押下する場合
+    //確認BOXにはいボタンを押下する場合
     $("#okBtn").click(function(event) {
       var process = $("#btnProcess").val();
       //戻る処理の場合
@@ -92,7 +92,7 @@
       //ヘッダ更新処理の場合
       else if (process == "update") {
         checkValidation(event);
-        
+        //submitしたいボタン名をセットする
         $("#okBtn").attr("name", "submit");
         //sales_request_update.phpへ移動する
         $("#input2").attr("action", "sales_request_update.php?title=<?= $title ?>");

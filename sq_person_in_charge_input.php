@@ -19,6 +19,7 @@
     </div>
     <div class="window-body has-space" style="min-height:150px; overflow:hidden;">
       <form method="POST" action="sq_detail_tr_engineering_update.php" id="setEmployee">
+        <?php include('dialog.php'); ?>
         <input type="hidden" name="sq_no" value="<?= $sq_no ?>">
         <input type="hidden" name="sq_line_no" value="<?= $sq_line_no ?>">
         <input type="hidden" name="record_div" value="<?= $record_div ?>">
@@ -77,6 +78,7 @@
 </body>
 </html>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
     $('#group').change(function() {
@@ -90,24 +92,41 @@
 
     //担当者設定を押下する場合
     $('#select').click(function() {
-      var title = $('#title').val();
-      //技術部の場合
-      if (title == 'td_receipt') {
-        $('#setEmployee').attr('action', 'sq_detail_tr_engineering_update.php');
-      } 
-      //営業管理部の場合
-      else if (title == 'sm_receipt') {
-        $('#setEmployee').attr('action', 'sq_detail_tr_sales_management_update.php');
-      }
-      //工事管理部の場合
-      else if (title == 'cm_receipt') {
-        $('#setEmployee').attr('action', 'sq_detail_tr_const_management_update.php');
-      }
-      //資材部の場合
-      else if (title == 'pc_receipt') {
-        $('#setEmployee').attr('action', 'sq_detail_tr_procurement_update.php');
-      }
+      //確認メッセージを書く
+      var msg = "担当者設定します。よろしいですか？";
+      //何の処理科を書く
+      var process = "setRoute";
+      //確認Dialogを呼ぶ
+      openModal(msg, process);
     })
+
+    //確認BOXにはいボタンを押下する場合
+    $("#okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+      //担当者設定処理の場合
+      if (process == "setRoute") {
+        //submitしたいボタン名をセットする
+        $("#okBtn").attr("name", "submit_receipt");
+
+        var title = $('#title').val();
+        //技術部の場合
+        if (title == 'td_receipt') {
+          $('#setEmployee').attr('action', 'sq_detail_tr_engineering_update.php');
+        } 
+        //営業管理部の場合
+        else if (title == 'sm_receipt') {
+          $('#setEmployee').attr('action', 'sq_detail_tr_sales_management_update.php');
+        }
+        //工事管理部の場合
+        else if (title == 'cm_receipt') {
+          $('#setEmployee').attr('action', 'sq_detail_tr_const_management_update.php');
+        }
+        //資材部の場合
+        else if (title == 'pc_receipt') {
+          $('#setEmployee').attr('action', 'sq_detail_tr_procurement_update.php');
+        }
+      }
+    });
   });
 
   function fetchData(group) {
@@ -137,4 +156,14 @@
       }
     });
   }
+
+  function openModal(msg, process) {
+    event.preventDefault();
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#confirm-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#confirm").modal({backdrop: false});
+  }  
 </script>

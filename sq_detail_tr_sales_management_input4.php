@@ -197,11 +197,28 @@
   </tr>          
 </table>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
     $("#updBtn").click(function() {
-      $("#input3").attr("action", "sq_detail_tr_sales_management_update.php");
+      //確認メッセージを書く
+      var msg = "更新します。よろしいですか？";
+      //何の処理科を書く
+      var process = "update";
+      //確認Dialogを呼ぶ
+      openModal(msg, process);      
     })
+
+    //確認BOXにはいボタンを押下する場合
+    $("#okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+      //戻る処理の場合
+      if (process == "update") {
+        //submitしたいボタン名をセットする
+        $("#okBtn").attr("name", "submit_entrant");
+        $("#input3").attr("action", "sq_detail_tr_sales_management_update.php");
+      }
+    });
 
     //見積原価のアップロードボタンを押下する場合
     $("#submit_upload1").click(function(){
@@ -215,5 +232,15 @@
     })
 
   });
+
+  function openModal(msg, process) {
+    event.preventDefault();
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#confirm-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#confirm").modal({backdrop: false});
+  } 
 
 </script>
