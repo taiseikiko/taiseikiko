@@ -32,7 +32,7 @@
           <div class="field-row">
             <label class="common_label" for="p_office_no">事業体 </label>
             <input type="text" style="margin-left: 1rem;" id="p_office_no" name="p_office_no" value="" class="readonlyText input-res">
-            <input type="hidden" name="p_office_no" id="p_office_no" value="<?= $p_office_no ?>">
+            <!-- <input type="hidden" name="p_office_no" id="p_office_no" value="<?= $p_office_no ?>"> -->
             <button class="search_btn" onclick="public_office_open(event)">事業体検索</button>
 
             <label class="common_label" for="preferred_date">　出図希望日</label>
