@@ -5,6 +5,7 @@
   require_once('function.php');
   $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
   include("header1.php");
+  include("card_input1_data_set.php");
 ?>
 <main>
   <div class="pagetitle">
