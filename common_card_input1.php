@@ -24,11 +24,11 @@
         <tbody>
           <tr>
             <td colspan="15">
-              <button type="button" class="createBtn" onclick="window.location.href='card_input2.php'">新規登録</button>
+              <button type="button" class="createBtn" value="new">新規登録</button>
             </td>
           </tr>
           <?php if (isset($cardData) && !empty($cardData)) : ?>
-            <?php foreach ($cardData as $row) :
+            <?php foreach ($cardData as $row) : 
               $procurement_nos = explode(',', $row['procurement_nos']);
               $procurement_statuses = explode(',', $row['procurement_statuses']);
             ?>
@@ -49,6 +49,7 @@
                 <td><?= isset($procurement_statuses[3]) ? htmlspecialchars($procurement_statuses[3]) : '' ?></td>
                 <td style="text-align:center">
                   <button type="submit" class="updateBtn" name="update" value="update">更新</button>
+                  <input type="hidden" name="card_no" id="card_no" value="<?= $row['card_no']?>">
                 </td>
               </tr>
             <?php endforeach; ?>
