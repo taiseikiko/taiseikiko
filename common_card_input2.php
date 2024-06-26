@@ -1,5 +1,5 @@
 <div class="container">
-  <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="input2">
+  <form class="row g-3" method="POST" enctype="multipart/form-data" id="card_input2">
     <table style="width:auto;">
       <tr style="height:10px; margin-top:20px"></tr>
       <tr style="height:10px;"></tr>
@@ -111,7 +111,12 @@
             <label class="common_label" for="size">　　サイズ </label>
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeA">mm　　✖
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeB">mm　
-            <button class="approveBtn" name="submit" id="detailBtn" style="margin-left: 3rem;" value="">詳細</button>
+            <button class="approveBtn" name="detail" id="detailBtn" style="margin-left: 3rem;" value="">詳細</button>
+            <!-- NEED TO ASSIGN WITH DB DATAS LATER -->
+            <input type="hidden" name="sq_card_no" id="sq_card_no" value="20240624">
+            <input type="hidden" name="sq_card_line_no" id="sq_card_line_no" value="1">
+            <input type="hidden" name="client" id="client" value="seven02">
+            <!-- NEED TO ASSIGN WITH DB DATAS LATER -->
           </div>
         </td>
       </tr>
@@ -159,7 +164,7 @@
             <label class="common_label" for="size">　　サイズ </label>
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeA">mm　　✖
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeB">mm　
-            <button class="approveBtn" name="submit" id="detailBtn" style="margin-left: 3rem;" value="">詳細</button>
+            <button class="approveBtn" name="detail" id="detailBtn" style="margin-left: 3rem;" value="">詳細</button>
           </div>
         </td>
       </tr>
@@ -207,7 +212,7 @@
             <label class="common_label" for="size">　　サイズ </label>
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeA">mm　　✖
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeB">mm　
-            <button class="approveBtn" name="submit" id="detailBtn" style="margin-left: 3rem;" value="">詳細</button>
+            <button class="approveBtn" name="detail" id="detailBtn" style="margin-left: 3rem;" value="">詳細</button>
           </div>
         </td>
       </tr>
@@ -255,7 +260,7 @@
             <label class="common_label" for="size">　　サイズ </label>
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeA">mm　　✖
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeB">mm　
-            <button class="approveBtn" name="submit" id="detailBtn" style="margin-left: 3rem;" value="">詳細</button>
+            <button class="approveBtn" name="detail" id="detailBtn" style="margin-left: 3rem;" value="">詳細</button>
           </div>
         </td>
       </tr>
@@ -306,7 +311,14 @@
     </table>        
   </form><!-- Vertical Form -->
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
+  $(document).ready(function (){
+    //詳細ボタンを押下場合
+    $("#detailBtn").click(function(){
+      $("#card_input2").attr("action", "card_input3.php");
+    });
+  });
 </script>
 <style>
   .clearfix:after {

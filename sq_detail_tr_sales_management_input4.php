@@ -210,12 +210,12 @@
     })
 
     //確認BOXにはいボタンを押下する場合
-    $("#okBtn").click(function(event) {
+    $("#confirm_okBtn").click(function(event) {
       var process = $("#btnProcess").val();
       //戻る処理の場合
       if (process == "update") {
         //submitしたいボタン名をセットする
-        $("#okBtn").attr("name", "submit_entrant");
+        $("#confirm_okBtn").attr("name", "submit_entrant");
         $("#input3").attr("action", "sq_detail_tr_sales_management_update.php");
       }
     });

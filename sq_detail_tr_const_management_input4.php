@@ -184,8 +184,8 @@
       $files = glob('document/const_management/*.*');
       foreach ($files as $key => $value) {
         $cut = str_replace('document/const_management/', '', $value);
-        $chk = substr($cut,0,8);
-        $type = mb_substr($cut,9,2);
+        $chk = substr($cut,0,strlen($sq_no));//get sq_no from file name
+        $type = mb_substr($cut,(strlen($sq_no)+1),2);
         if($sq_no == $chk && $type == '資料'){
           echo "<tr><td><a href=".$value." target='_blank'>".$value."</a></td></tr>";
         }
@@ -282,12 +282,12 @@
       $("#input3").attr("action", "sq_attach_upload1.php?from=cm2");
     })
     //確認BOXにはいボタンを押下する場合
-    $("#okBtn").click(function(event) {
+    $("#confirm_okBtn").click(function(event) {
       var process = $("#btnProcess").val();
       //ヘッダ更新処理の場合
       if (process == "update") {
         //submitしたいボタン名をセットする
-        $("#okBtn").attr("name", "submit_entrant");
+        $("#confirm_okBtn").attr("name", "submit_entrant");
         //sales_request_update.phpへ移動する
         $("#input3").attr("action", "sq_detail_tr_const_management_update.php");
       }

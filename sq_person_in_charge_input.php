@@ -101,12 +101,12 @@
     })
 
     //確認BOXにはいボタンを押下する場合
-    $("#okBtn").click(function(event) {
+    $("#confirm_okBtn").click(function(event) {
       var process = $("#btnProcess").val();
       //担当者設定処理の場合
       if (process == "setRoute") {
         //submitしたいボタン名をセットする
-        $("#okBtn").attr("name", "submit_receipt");
+        $("#confirm_okBtn").attr("name", "submit_receipt");
 
         var title = $('#title').val();
         //技術部の場合

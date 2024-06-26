@@ -51,7 +51,7 @@
     })
 
     //確認BOXにはいボタンを押下する場合
-    $("#okBtn").click(function(event) {
+    $("#confirm_okBtn").click(function(event) {
       var process = $("#btnProcess").val();
       //戻る処理の場合
       if (process == "return") {
@@ -98,7 +98,7 @@
     }
 
     //Disabled button 
-    const excludeButtons = ['returnBtn', 'okBtn', 'cancelBtn', 'updateBtn'];
+    const excludeButtons = ['returnBtn', 'confirm_okBtn', 'cancelBtn', 'updateBtn'];
     var buttons = document.getElementsByTagName('button');
     for (var k = 0; k < buttons.length; k++) {
       if (!excludeButtons.includes(buttons[k].className)) {

@@ -11,7 +11,7 @@
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="btnProcess" id="btnProcess">
-                    <button class="okBtn" id="okBtn">はい</button>
+                    <button class="okBtn" id="confirm_okBtn">はい</button>
                     <button class="cancelBtn" id="cancelBtn" data-dismiss="modal">キャンセル</button>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="btnProcess" id="btnProcess">
-                    <button class="okBtn" id="okBtn" data-dismiss="modal">はい</button>
+                    <button class="okBtn" id="ok_okBtn">はい</button>
                 </div>
             </div>
         

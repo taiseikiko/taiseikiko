@@ -68,7 +68,7 @@
     })
 
     //確認BOXにはいボタンを押下する場合
-    $("#okBtn").click(function(event) {
+    $("#confirm_okBtn").click(function(event) {
       var process = $("#btnProcess").val();
       //戻る処理の場合
       if (process == "return") {
@@ -78,7 +78,7 @@
       else if (process == "update") {
         checkValidation(event);
         //submitしたいボタン名をセットする
-        $("#okBtn").attr("name", "submit");
+        $("#confirm_okBtn").attr("name", "submit");
         //sales_request_update2.phpへ移動する
         $("#input3").attr("action", "sales_request_update2.php?title=<?= $title ?>");
       }
