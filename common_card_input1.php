@@ -1,6 +1,5 @@
 <div class="container">
-  <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="input1">
-    <input type="hidden" name="dept_id" value="<?= $dept_id ?>">
+  <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="input1" action="card_input2.php">
     <div class="scrollable-table-container">
       <table class="tab1">
         <thead>
@@ -23,31 +22,42 @@
           </tr>
         </thead>
         <tbody>
-            <tr>
-            <td colspan="15">
-              <button type="button" class="createBtn" onclick="window.location.href='card_input2.php'">新規登録</button>
-            </td>
-            </tr>
           <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td style="text-align:center">
-                <button type="submit" class="updateBtn" name="update" value="update">更新</button>
-            </td>             
+            <td colspan="15">
+              <button type="button" class="createBtn" value="new">新規登録</button>
+            </td>
           </tr>
-         
+          <?php if (isset($cardData) && !empty($cardData)) : ?>
+            <?php foreach ($cardData as $row) : 
+              $procurement_nos = explode(',', $row['procurement_nos']);
+              $procurement_statuses = explode(',', $row['procurement_statuses']);
+            ?>
+              <tr>
+                <td><?= htmlspecialchars($row['card_no']) ?></td>
+                <td><?= htmlspecialchars($row['card_status']) ?></td>
+                <td><?= htmlspecialchars($row['client']) ?></td>
+                <td><?= htmlspecialchars($row['add_date']) ?></td>
+                <td><?= htmlspecialchars($row['procurement_approver']) ?></td>
+                <td><?= htmlspecialchars($row['procurement_approver_date']) ?></td>
+                <td><?= isset($procurement_nos[0]) ? htmlspecialchars($procurement_nos[0]) : '' ?></td>
+                <td><?= isset($procurement_statuses[0]) ? htmlspecialchars($procurement_statuses[0]) : '' ?></td>
+                <td><?= isset($procurement_nos[1]) ? htmlspecialchars($procurement_nos[1]) : '' ?></td>
+                <td><?= isset($procurement_statuses[1]) ? htmlspecialchars($procurement_statuses[1]) : '' ?></td>
+                <td><?= isset($procurement_nos[2]) ? htmlspecialchars($procurement_nos[2]) : '' ?></td>
+                <td><?= isset($procurement_statuses[2]) ? htmlspecialchars($procurement_statuses[2]) : '' ?></td>
+                <td><?= isset($procurement_nos[3]) ? htmlspecialchars($procurement_nos[3]) : '' ?></td>
+                <td><?= isset($procurement_statuses[3]) ? htmlspecialchars($procurement_statuses[3]) : '' ?></td>
+                <td style="text-align:center">
+                  <button type="submit" class="updateBtn" name="update" value="update">更新</button>
+                  <input type="hidden" name="card_no" id="card_no" value="<?= $row['card_no']?>">
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          <?php else : ?>
+            <tr>
+              <td colspan="15"><b>表示するデータがございません。</b></td>
+            </tr>
+          <?php endif; ?>
         </tbody>
       </table>
     </div>
@@ -61,12 +71,13 @@ footer_set();
 <style>
   .scrollable-table-container {
     width: fit-content;
-    height:700px;
+    height: 700px;
     overflow: auto;
   }
+
   thead th {
     position: sticky;
-    top: 0; 
+    top: 0;
     z-index: 1;
   }
 
@@ -82,26 +93,35 @@ footer_set();
   }
 
   .flex-container {
-    display: flex;    
+    display: flex;
   }
 
-  .flex-container > div {
+  .flex-container>div {
     margin: 20px 5px;
   }
 
   @media only screen and (max-width:800px) {
-    .pagetitle, .container, .field-row {
+
+    .pagetitle,
+    .container,
+    .field-row {
       width: 80%;
       padding: 0;
     }
+
     .createBtn {
       width: 40px;
     }
   }
+
   @media only screen and (max-width:500px) {
-    .pagetitle, .container, .field-row {
+
+    .pagetitle,
+    .container,
+    .field-row {
       width: 100%;
     }
+
     .createBtn {
       width: 40px;
     }

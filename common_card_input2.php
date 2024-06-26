@@ -1,14 +1,16 @@
 <div class="container">
   <form class="row g-3" method="POST" enctype="multipart/form-data" id="card_input2">
+  <form class="row g-3" method="POST" name="inq_ent" action="card_input3.php" enctype="multipart/form-data" id="input2">
+    <input type="hidden" name="process" value="<?= $process ?>">
     <table style="width:auto;">
       <tr style="height:10px; margin-top:20px"></tr>
       <tr style="height:10px;"></tr>
       <tr>
         <td>
           <div class="field-row">
-            <label class="common_label" for="sq_no" >依頼書№</label>
-            <input type="text" style="margin-left: 1rem;" class="readonlyText input-res" name="sq_no" value="" readonly>
-            <input type="hidden" name="" value="">
+            <label class="common_label" for="card_no" >依頼書№</label>
+            <input type="text" style="margin-left: 1rem;" class="readonlyText input-res" name="card_no" value="<?= $card_no ?>" readonly>
+            <!-- <input type="hidden" name="card_no" value="<?= $card_no ?>"> -->
           </div>
         </td>
       </tr>
@@ -30,9 +32,9 @@
       <tr>
         <td>
           <div class="field-row">
-            <label class="common_label" for="p_office_no">事業体 </label>
-            <input type="text" style="margin-left: 1rem;" id="p_office_no" name="p_office_no" value="" class="readonlyText input-res">
-            <!-- <input type="hidden" name="p_office_no" id="p_office_no" value="<?= $p_office_no ?>"> -->
+          <label class="common_label" for="text26">事業体 </label>
+            <input type="text" style="margin-left: 1rem;" id="pf_name" name="pf_name" value="<?= $pf_name ?>" class="readonlyText input-res" readonly>
+            <input type="hidden" name="pf_code" id="pf_code" value="<?= $pf_code ?>">
             <button class="search_btn" onclick="public_office_open(event)">事業体検索</button>
 
             <label class="common_label" for="preferred_date">　出図希望日</label>
@@ -67,12 +69,12 @@
           <th> 添付された資料 </th>
         </tr>
         <?php        
-        if (!empty($sq_no)) {
+        if (!empty($card_no)) {
           $files = glob('document/sales_management/*.*');
           foreach ($files as $key => $value) {
             $cut = str_replace('document/sales_management/', '', $value);
-            $chk = substr($cut,0,strlen($sq_no));
-            if($sq_no == $chk){
+            $chk = substr($cut,0,strlen($card_no));
+            if($card_no == $chk){
               echo "<tr><td><a href=".$value." target='_blank'>".$value."</a></td></tr>";
             }
           }
@@ -90,7 +92,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="procurement_no" >資材部№</label>
-            <input type="text" style="margin-left: 1rem;" class="readonlyText input-res" name="procurement_no" value="">
+            <input type="text" style="margin-left: 1rem;" class="input-res" name="procurement_no" value="">
             <label class="common_label" for="maker">製造メーカー</label>
               <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="maker" id="" value="">
           </div>
@@ -100,13 +102,39 @@
       <tr>
         <td>
           <div class="field-row">
-            <label class="common_label" for="zkm_code" style="margin-left: 1rem;">　　材工名 </label>
-            <select name="zkm_code" class="input-res">
+            <label class="common_label" for="class">分類 </label>
+            <select class="dropdown-menu" id="classList" name="class">
               <option value="">選択して下さい。</option>
+              <?php 
+                if (isset($class_datas) && !empty($class_datas)) {
+                  foreach($class_datas as $item) {
+                    $code = $item['class_code'];
+                    $text = $item['class_name'];
+                    $selected = ($code == $class_code) ? 'selected' : '';
+                    echo "<option value='$code' $selected>$text</option>";
+                  }
+                }
+              ?>
             </select>
-            <label class="common_label" for="pipe">　　管種 </label>
-            <select name="pipe" class="input-res">
+            <label class="common_label" for="zaikoumei">　　材工名 </label>
+            <select class="dropdown-menu" id="zaikoumeiList" name="zaikoumei">
+              <option value="" class="">選択して下さい。</option>
+            </select>
+            <input type="hidden" name="zkm_code" id="zkm_code" value="<?= $zkm_code ?>">
+
+            <label class="common_label" for="pipe">管種 </label>
+            <select name="pipe" class="dropdown-menu">
               <option value="">選択して下さい。</option>
+              <?php 
+                if (isset($pipeList) && !empty($pipeList)) {
+                  foreach ($pipeList as $item) {
+                    $code = $item['zk_div_data'];
+                    $text = $item['zk_div_data'];
+                    $selected = ($code == $pipe) ? 'selected' : '';
+                    echo "<option value='$code' $selected>$text</option>";
+                  }
+                }
+              ?>
             </select>
             <label class="common_label" for="size">　　サイズ </label>
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeA">mm　　✖
@@ -117,6 +145,7 @@
             <input type="hidden" name="sq_card_line_no" id="sq_card_line_no" value="1">
             <input type="hidden" name="client" id="client" value="seven02">
             <!-- NEED TO ASSIGN WITH DB DATAS LATER -->
+            <button class="approveBtn" name="submit" id="detailBtn" value="">詳細</button>
           </div>
         </td>
       </tr>
@@ -126,7 +155,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="specification_no" >仕様書№</label>
-            <input type="text" style="margin-left: 1rem;" class="readonlyText input-res" name="specification_no" value="">
+            <input type="text" style="margin-left: 1rem;" class="input-res" name="specification_no" value="">
             <label class="common_label" for="special_note">特記事項</label>
               <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="special_note" id="" value="">
           </div>
@@ -143,7 +172,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="procurement_no" >資材部№</label>
-            <input type="text" style="margin-left: 1rem;" class="readonlyText input-res" name="procurement_no" value="">
+            <input type="text" style="margin-left: 1rem;" class="input-res" name="procurement_no" value="">
             <label class="common_label" for="maker">製造メーカー</label>
               <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="maker" id="" value="">
           </div>
@@ -153,18 +182,45 @@
       <tr>
         <td>
           <div class="field-row">
-            <label class="common_label" for="zkm_code" style="margin-left: 1rem;">　　材工名 </label>
-            <select name="zkm_code" class="input-res">
+            <label class="common_label" for="class">分類 </label>
+            <select class="dropdown-menu" id="classList" name="class">
               <option value="">選択して下さい。</option>
+              <?php 
+                if (isset($class_datas) && !empty($class_datas)) {
+                  foreach($class_datas as $item) {
+                    $code = $item['class_code'];
+                    $text = $item['class_name'];
+                    $selected = ($code == $class_code) ? 'selected' : '';
+                    echo "<option value='$code' $selected>$text</option>";
+                  }
+                }
+              ?>
             </select>
-            <label class="common_label" for="pipe">　　管種 </label>
-            <select name="pipe" class="input-res">
+            <label class="common_label" for="zaikoumei">　　材工名 </label>
+            <select class="dropdown-menu" id="zaikoumeiList" name="zaikoumei">
+              <option value="" class="">選択して下さい。</option>
+            </select>
+            <input type="hidden" name="zkm_code" id="zkm_code" value="<?= $zkm_code ?>">
+
+            <label class="common_label" for="pipe">管種 </label>
+            <select name="pipe" class="dropdown-menu">
               <option value="">選択して下さい。</option>
+              <?php 
+                if (isset($pipeList) && !empty($pipeList)) {
+                  foreach ($pipeList as $item) {
+                    $code = $item['zk_div_data'];
+                    $text = $item['zk_div_data'];
+                    $selected = ($code == $pipe) ? 'selected' : '';
+                    echo "<option value='$code' $selected>$text</option>";
+                  }
+                }
+              ?>
             </select>
             <label class="common_label" for="size">　　サイズ </label>
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeA">mm　　✖
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeB">mm　
             <button class="approveBtn" name="detail" id="detailBtn" style="margin-left: 3rem;" value="">詳細</button>
+            <button class="approveBtn" name="submit" id="detailBtn" value="">詳細</button>
           </div>
         </td>
       </tr>
@@ -174,7 +230,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="specification_no" >仕様書№</label>
-            <input type="text" style="margin-left: 1rem;" class="readonlyText input-res" name="specification_no" value="">
+            <input type="text" style="margin-left: 1rem;" class="input-res" name="specification_no" value="">
             <label class="common_label" for="special_note">特記事項</label>
               <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="special_note" id="" value="">
           </div>
@@ -191,7 +247,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="procurement_no" >資材部№</label>
-            <input type="text" style="margin-left: 1rem;" class="readonlyText input-res" name="procurement_no" value="">
+            <input type="text" style="margin-left: 1rem;" class="input-res" name="procurement_no" value="">
             <label class="common_label" for="maker">製造メーカー</label>
               <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="maker" id="" value="">
           </div>
@@ -201,18 +257,45 @@
       <tr>
         <td>
           <div class="field-row">
-            <label class="common_label" for="zkm_code" style="margin-left: 1rem;">　　材工名 </label>
-            <select name="zkm_code" class="input-res">
+            <label class="common_label" for="class">分類 </label>
+            <select class="dropdown-menu" id="classList" name="class">
               <option value="">選択して下さい。</option>
+              <?php 
+                if (isset($class_datas) && !empty($class_datas)) {
+                  foreach($class_datas as $item) {
+                    $code = $item['class_code'];
+                    $text = $item['class_name'];
+                    $selected = ($code == $class_code) ? 'selected' : '';
+                    echo "<option value='$code' $selected>$text</option>";
+                  }
+                }
+              ?>
             </select>
-            <label class="common_label" for="pipe">　　管種 </label>
-            <select name="pipe" class="input-res">
+            <label class="common_label" for="zaikoumei">　　材工名 </label>
+            <select class="dropdown-menu" id="zaikoumeiList" name="zaikoumei">
+              <option value="" class="">選択して下さい。</option>
+            </select>
+            <input type="hidden" name="zkm_code" id="zkm_code" value="<?= $zkm_code ?>">
+
+            <label class="common_label" for="pipe">管種 </label>
+            <select name="pipe" class="dropdown-menu">
               <option value="">選択して下さい。</option>
+              <?php 
+                if (isset($pipeList) && !empty($pipeList)) {
+                  foreach ($pipeList as $item) {
+                    $code = $item['zk_div_data'];
+                    $text = $item['zk_div_data'];
+                    $selected = ($code == $pipe) ? 'selected' : '';
+                    echo "<option value='$code' $selected>$text</option>";
+                  }
+                }
+              ?>
             </select>
             <label class="common_label" for="size">　　サイズ </label>
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeA">mm　　✖
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeB">mm　
             <button class="approveBtn" name="detail" id="detailBtn" style="margin-left: 3rem;" value="">詳細</button>
+            <button class="approveBtn" name="submit" id="detailBtn" value="">詳細</button>
           </div>
         </td>
       </tr>
@@ -222,7 +305,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="specification_no" >仕様書№</label>
-            <input type="text" style="margin-left: 1rem;" class="readonlyText input-res" name="specification_no" value="">
+            <input type="text" style="margin-left: 1rem;" class="input-res" name="specification_no" value="">
             <label class="common_label" for="special_note">特記事項</label>
               <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="special_note" id="" value="">
           </div>
@@ -239,7 +322,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="procurement_no" >資材部№</label>
-            <input type="text" style="margin-left: 1rem;" class="readonlyText input-res" name="procurement_no" value="">
+            <input type="text" style="margin-left: 1rem;" class="input-res" name="procurement_no" value="">
             <label class="common_label" for="maker">製造メーカー</label>
               <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="maker" id="" value="">
           </div>
@@ -249,18 +332,45 @@
       <tr>
         <td>
           <div class="field-row">
-            <label class="common_label" for="zkm_code" style="margin-left: 1rem;">　　材工名 </label>
-            <select name="zkm_code" class="input-res">
+            <label class="common_label" for="class">分類 </label>
+            <select class="dropdown-menu" id="classList" name="class">
               <option value="">選択して下さい。</option>
+              <?php 
+                if (isset($class_datas) && !empty($class_datas)) {
+                  foreach($class_datas as $item) {
+                    $code = $item['class_code'];
+                    $text = $item['class_name'];
+                    $selected = ($code == $class_code) ? 'selected' : '';
+                    echo "<option value='$code' $selected>$text</option>";
+                  }
+                }
+              ?>
             </select>
-            <label class="common_label" for="pipe">　　管種 </label>
-            <select name="pipe" class="input-res">
+            <label class="common_label" for="zaikoumei">　　材工名 </label>
+            <select class="dropdown-menu" id="zaikoumeiList" name="zaikoumei">
+              <option value="" class="">選択して下さい。</option>
+            </select>
+            <input type="hidden" name="zkm_code" id="zkm_code" value="<?= $zkm_code ?>">
+
+            <label class="common_label" for="pipe">管種 </label>
+            <select name="pipe" class="dropdown-menu">
               <option value="">選択して下さい。</option>
+              <?php 
+                if (isset($pipeList) && !empty($pipeList)) {
+                  foreach ($pipeList as $item) {
+                    $code = $item['zk_div_data'];
+                    $text = $item['zk_div_data'];
+                    $selected = ($code == $pipe) ? 'selected' : '';
+                    echo "<option value='$code' $selected>$text</option>";
+                  }
+                }
+              ?>
             </select>
             <label class="common_label" for="size">　　サイズ </label>
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeA">mm　　✖
             <input type="text" style="margin-left: 1rem; width:40px;" name="sizeB">mm　
             <button class="approveBtn" name="detail" id="detailBtn" style="margin-left: 3rem;" value="">詳細</button>
+            <button class="approveBtn" name="submit" id="detailBtn" value="">詳細</button>
           </div>
         </td>
       </tr>
@@ -270,7 +380,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="specification_no" >仕様書№</label>
-            <input type="text" style="margin-left: 1rem;" class="readonlyText input-res" name="specification_no" value="">
+            <input type="text" style="margin-left: 1rem;" class="input-res" name="specification_no" value="">
             <label class="common_label" for="special_note">特記事項</label>
               <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="special_note" id="" value="">
           </div>
@@ -303,7 +413,7 @@
             </div>            
             <div>            
               <button id="remandBtn" class="remandBtn" style="margin-left: 50rem;">差し戻し </button>
-              <button class="cancelBtn" name="submit" value="cancel">中止</button>
+              <button class="" name="submit" value="cancel">中止</button>
             </div>            
           </div>
         </td>
