@@ -1,5 +1,5 @@
 <div class="container">
-  <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="input1" action="card_input2.php">
+  <form class="row g-3" method="POST" action="card_input2.php" name="inq_ent" enctype="multipart/form-data" id="card_input1">
     <div class="scrollable-table-container">
       <table class="tab1">
         <thead>
@@ -24,7 +24,7 @@
         <tbody>
           <tr>
             <td colspan="15">
-              <button type="button" class="createBtn" value="new">新規登録</button>
+              <button type="submit" name="process" id="createBtn" class="createBtn" value="new">新規登録</button>
             </td>
           </tr>
           <?php if (isset($cardData) && !empty($cardData)) : ?>
@@ -48,9 +48,8 @@
                 <td><?= isset($procurement_nos[3]) ? htmlspecialchars($procurement_nos[3]) : '' ?></td>
                 <td><?= isset($procurement_statuses[3]) ? htmlspecialchars($procurement_statuses[3]) : '' ?></td>
                 <td style="text-align:center">
-                  <button type="submit" class="updateBtn" name="update" value="update">更新</button>
-                  <input type="hidden" name="card_no" id="card_no" value="<?= $row['card_no']?>">
-                </td>
+                  <button type="submit" class="updateBtn" id="updateBtn" name="process" value="update" data-card_no="<?= htmlspecialchars($row['card_no']) ?>">更新</button>
+                </td>                
               </tr>
             <?php endforeach; ?>
           <?php else : ?>
@@ -58,6 +57,7 @@
               <td colspan="15"><b>表示するデータがございません。</b></td>
             </tr>
           <?php endif; ?>
+          <input type="hidden" id="card_no" name="card_no">
         </tbody>
       </table>
     </div>
