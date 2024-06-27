@@ -1,39 +1,68 @@
 <?php
   // 初期処理
   require_once('function.php');
+
   // DB接続
   $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
-  include('card_update.php');
-  
   
   // 初期設定 & データセット
-  
-  $class_code = '';             //分類
-  $zkm_code = '';               //材工名
-  $pipe = '';                   //管種
-  $sizeA = '';                   //サイズA
-  $sizeB = '';                   //サイズB
   $pf_code = '';                //事業体名
   $pf_name = '';                //事業体コード
-  // $card_no = '';                //依頼書№
+  $card_no = '';                //依頼書№
   $preferred_date = '';         //出図希望日
   $deadline = '';               //納期
-  $procurement_no = '';         //資材部No
-  $maker = '';                  //製造メーカー
-  $specification_no = '';       //仕様書No
-  $special_note = '';           //特記事項
   $approver = '';               //承認者
-  
-  
-  
-  $class_datas = get_class_datas();                     //分類プルダウンにセットするデータを取得する
-  $pipeList = getDropdownData('pipe');                  //管種
+  $btn_name = '登録';
+  for ($i = 1; $i <= 4; $i++) {
+    ${'procurement_no' . $i} = '';         //資材部No
+    ${'maker' . $i} = '';                  //製造メーカー
+    ${'class_code' . $i} = '';             //分類
+    ${'zkm_code' . $i} = '';               //材工名
+    ${'pipe' . $i} = '';                   //管種
+    ${'sizeA' . $i} = '';                   //サイズA
+    ${'sizeB' . $i} = '';                   //サイズB
+    ${'specification_no' . $i} = '';       //仕様書No
+    ${'special_note' . $i} = '';           //特記事項
+    ${'disabled_detail_btn' . $i} = 'disabled';
+  }
+  $err = $_GET['err'] ?? '';
 
-  //事業体名を取得する
-  if ($pf_code !== '') {
-    $pf_name = get_pf_name($pf_code);
-  } 
+  //一覧画面から移動した場合　あるいは　戻りボタンが押された場合
+  if (isset($_POST['process']) || isset($_GET['card_no'])) {
+    $process = $_POST['process'] ?? $_GET['process'];
+    //ボタン名
+    if ($process == 'update') {
+      $btn_name = '更新';
+    }
+    //ログインユーザーの部署ID
+    $department_code = getDeptId($dept_code);  
+    $card_no = $_POST['card_no'] ?? $_GET['card_no']; //依頼書No
 
+    $class_datas = get_class_datas();                     //分類プルダウンにセットするデータを取得する
+    $pipeList = getDropdownData('pipe');                  //管種
+    $approverList = getApproverList($department_code);    //承認者
+
+    //card_detail_trテーブルから取得する
+    $detail_datas = get_card_detail_datas($card_no);
+    if (!empty($detail_datas)) {
+      foreach ($detail_datas as $detail_data) {
+        $i = $detail_data['sq_card_line_no'];
+        ${'procurement_no' . $i} = $detail_data['procurement_no'];          //資材部No
+        ${'maker' . $i} = $detail_data['maker'];                            //製造メーカー
+        ${'class_code' . $i} = $detail_data['class_code'];                  //分類
+        ${'zkm_code' . $i} = $detail_data['zkm_code'];                      //材工名
+        ${'pipe' . $i} = $detail_data['pipe'];                              //管種
+        ${'sizeA' . $i} = $detail_data['sizeA'];                            //サイズA
+        ${'sizeB' . $i} = $detail_data['sizeB'];                            //サイズB
+        ${'specification_no' . $i} = $detail_data['specification_no'];      //仕様書No
+        ${'special_note' . $i} = $detail_data['special_note'];              //特記事項
+        //データがある詳細だけ詳細ボタンを押せるようにする
+        ${'disabled_detail_btn' . $i} = '';
+      }
+    }
+  }
+
+  //分類プルダウンがCHANGEした場合
   if (isset($_POST['function_name'])) {
    $result = get_zaikoumei_datas();
    echo json_encode($result);
@@ -41,7 +70,42 @@
 
 
 /*----------------------------------------------------------------FUNCTIONS---------------------------------------------------------------------*/
-    
+  /**
+   * card_detail_trテーブルから取得する
+   */
+  function get_card_detail_datas($card_no) {
+    global $pdo;
+    $datas = [];
+
+    $sql = "SELECT * FROM card_detail_tr WHERE sq_card_no = :sq_card_no";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':sq_card_no', $card_no);
+    $stmt->execute();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $datas[] = $row;
+    }
+    return $datas;
+  }
+  /**
+   * 承認者リストを取得する
+   */
+  function getApproverList($department_code) {
+    global $pdo;
+    $datas = [];
+
+    $sql = "SELECT e.employee_code, e.employee_name 
+            FROM card_route_in_dept r
+            LEFT JOIN employee e 
+            ON r.employee_code = e.employee_code 
+            WHERE r.department_code = '$department_code' 
+            AND r.role = '3'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $datas[] = $row;
+    }
+    return $datas;
+  }
 
   function get_class_datas() {
     global $pdo;
@@ -87,18 +151,4 @@
     $stmt->execute();
     $datas = $stmt->fetchAll();
     return $datas;
-  }
-
-  function get_pf_name($pf_code) {
-    global $pdo;
-    $pf_name = '';
-    $sql = "SELECT pf_name FROM public_office WHERE pf_code = '$pf_code'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-    $datas = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (isset($datas) && !empty($datas)) {
-      $pf_name = $datas['pf_name'];
-    }
-    return $pf_name;
   }

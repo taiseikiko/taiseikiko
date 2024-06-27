@@ -10,6 +10,7 @@
   $card_no = $_POST['card_no'] ?? '';
   $_SESSION['card_no'] = $card_no;
   // print_r($_POST);
+  $user_code = $_SESSION["login"];
   // ヘッダーセット
   include("card_input2_data_set.php");
 ?>
@@ -29,38 +30,109 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
-    let class_code = $('#classList').val();
-    if (class_code != '') {
-      fetchData(class_code);
+    // 4つの部署のCHANGEを扱う関数
+    function handleClassListChange(selector, index) {
+      $(selector).change(function() {
+        let class_code = $(this).val();
+        $('#zkm_code' + index).val('');
+        fetchData(class_code, index);
+      })
+    }
+    
+    // Using async/await to handle fetchData asynchronously
+    async function processClassCodes() {
+      // Loop through each class list and set up change handlers
+      for (let i = 1; i <= 4; i++) {
+        let selector = `#classList${i}`;
+        let class_code = $(selector).val();
+        
+        if (class_code !== '') {
+          await fetchData(class_code, i.toString());
+        }
+        
+        handleClassListChange(selector, i);
+      }
     }
 
-    $("#classList").change(function() {
-      let class_code = $(this).val();
-      $('#zkm_code').val('');
-      fetchData(class_code);
-    });
+    processClassCodes();
+
+    /*----------------------------------------------------------------------------------------------- */
 
     $("#returnBtn").click(function() {
-      openModal("前の画面に戻します。よろしいですか？", "return");
+      //確認メッセージを書く
+      var msg = "前の画面に戻します。よろしいですか？";
+      //何の処理科を書く
+      var process = "return";
+      //確認Dialogを呼ぶ
+      openConfirmModal(msg, process);
     });
 
-    $("#updBtn").click(function() {
-      openModal("営業依頼書 明細を作成．更新します。よろしいですか？", "update");
+    /*----------------------------------------------------------------------------------------------- */
+
+    //登録／承認ボタンが押された場合
+    $('#reg_updBtn').click(function() {
+      //確認メッセージを書く
+      var msg = $(this).text() + "します。よろしいですか？";
+      //何の処理科を書く
+      var process = "new";
+      //確認Dialogを呼ぶ
+      openConfirmModal(msg, process);
     });
 
-    function openModal(msg, process) {
-      event.preventDefault();
-      $("#btnProcess").val(process);
-      $("#confirm-message").text(msg);
-      $("#confirm").modal({backdrop: false});
+    /*----------------------------------------------------------------------------------------------- */
+
+    //確認BOXに"はい"ボタンを押下する場合
+    $("#confirm_okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+      //戻る処理の場合
+      if (process == "return") {
+        $('#card_input2').attr('action', 'card_input1.php');
+      }
+      //ヘッダ更新処理の場合
+      else if (process == "new") {
+        //submitしたいボタン名をセットする
+        $("#confirm_okBtn").attr("name", "submit");
+        //sales_request_update.phpへ移動する
+        $('#card_input2').attr('action', 'card_update.php');
+      }
+    });
+
+    /*----------------------------------------------------------------------------------------------- */
+
+    //ALERT BOXに"はい"ボタンを押下する場合
+    $("#ok_okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+      //エラーがある場合
+      if (process == "error") {
+        //card_input1へ移動
+        $('#card_input2').attr('action', 'card_input1.php');
+      } else {
+        //画面上変更なし
+        $('#ok_okBtn').attr('data-dismiss', 'modal');
+      }
+    });
+
+    /*----------------------------------------------------------------------------------------------- */
+
+    //エラーがあるかどうか確認する
+    var err = '<?= $err ?>';
+    //エラーがある場合
+    if (err !== '') {
+      //OKメッセージを書く
+      var msg = "登録処理にエラーがありました。係員にお知らせください。";
+      //OKDialogを呼ぶ
+      openOkModal(msg, 'error');
     }
+
+    /*----------------------------------------------------------------------------------------------- */
+    
   });
 
-  function fetchData(class_code) {
-    $('#zaikoumeiList option:not(:first-child)').remove();
+  function fetchData(class_code, no) {
+    $('#zaikoumeiList' + no + 'option:not(:first-child)').remove();
+
     $.ajax({
       url: "card_input2_data_set.php",
-      // url: "sales_request_input3_data_set.php",
       type: "POST",
       data: {
         function_name: "get_zaikoumei_datas",
@@ -68,17 +140,16 @@
       },
       success: function(response){
         var zaikoumeiList = JSON.parse(response);
-        var selected = $('#zkm_code').val();
+        var selected = $('#zkm_code' + no).val();
         let i = 1;
         $.each(zaikoumeiList, function(index, item) {
-          $('#zaikoumeiList').append($('<option>', {
+          $('#zaikoumeiList' + no).append($('<option>', {
             value: item.zkm_code,
             text: item.zkm_name,
-            id: 'val'+i,
-            class: item.code_no+','+item.text1
+            id: 'val_' + no + '_' + i,
           }));
           if (item.zkm_code == selected) {
-            $('#val'+i).prop('selected', true);
+            $('#val_' + no + '_' + i).prop('selected', true);
           }
           i++;
         });
@@ -88,4 +159,28 @@
       }
     });
   }
+
+  function openConfirmModal(msg, process) {
+    event.preventDefault();
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#confirm-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#confirm").modal({backdrop: false});
+  }
+
+  function openOkModal(msg, process) {
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#ok-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#ok").modal({backdrop: false});
+  }
 </script>
+<style>
+  .dropdown-menu {
+    width: 180px;
+  }
+</style>

@@ -11,7 +11,7 @@ $entrant = $entrant_set_date = $entrant_set_comments =
 $entrant_date = $entrant_comments = $confirmer_comments = $approver_comments = '';//detail
 $client_name = $dept_name = $role_name = $p_office_code = $p_office_name = '';  //登録者の情報
 $entrant_dept_name = $entrant_role_name = '';  //担当者の情報
-$sizeDisabled = $zaikoumeiDisabled = $pipeDisabled = $comments = '';
+$sizeDisabled = $zaikoumeiDisabled = $pipeDisabled = $comments = $process = '';
 
 
 $pipeList = getDropdownData('pipe');                  //管種
@@ -25,9 +25,10 @@ $entrantList = get_entrant_datas();
 
 //card_input2画面から詳細ボタンを押下場合
 if (isset($_POST['detail'])) {
-  $sq_card_no = $_POST['sq_card_no'];           //依頼書No
-  $sq_card_line_no = $_POST['sq_card_line_no']; //依頼書行No
-  $client = $_POST['client']; //client
+  $process = $_POST['process']; //処理
+  $sq_card_no = $_POST['card_no'];              //依頼書No
+  $sq_card_line_no = $_POST['detail'];          //依頼書行No
+  $client = $_POST['user_code'];                //登録者
 
   //どの画面を表示するかを確認する（受付、入力、確認、承認）
   /************************************************開始***************************************************************/

@@ -15,9 +15,13 @@
 </main><!-- End #main -->
 </body>
 </html>
-<script src="assets/js/inquiry_ent.js"></script>
-<script src="assets/js/inquiry_ent_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
-  
+  $(document).ready(function() {
+    //更新ボタンが押された場合、
+    $(document).on('click', '#updateBtn', function() {
+      var selectedId = $(this).data('card_no');      
+      $('#card_no').val(selectedId);
+    });
+  });
 </script>

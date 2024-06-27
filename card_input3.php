@@ -245,7 +245,7 @@
                     }
                   ?>
                 </select>
-                <input type="hidden" name="entrant" value="<?= $entrant ?>">
+                <input type="hidden" name="hid_entrant" value="<?= $entrant ?>">
 
                 <label class="common_label" for="office_name">部署</label>
                 <input type="text" style="width:370px;margin-left: 1rem;" name="entrant_dept_name" id="entrant_dept_name" class="input-res" value="<?= $entrant_dept_name ?>">
@@ -496,6 +496,8 @@
       })
     });
 
+    /*----------------------------------------------------------------------------------------------- */
+
     //更新ボタンを押下場合
     $('#updateBtn').click(function() {
       //確認メッセージを書く
@@ -579,7 +581,7 @@
       var process = $("#btnProcess").val();
       //戻る処理の場合
       if (process == "return") {
-        $('#card_input3').attr('action', 'card_input2.php');
+        $('#card_input3').attr('action', 'card_input2.php?card_no=<?= $sq_card_no ?>&process=<?= $process ?>');
       }
       //ヘッダ更新処理の場合
       else if (process == "update") {
