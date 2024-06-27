@@ -18,14 +18,14 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="user_name" >登録者</label>
-            <input type="text" style="margin-left: 1rem;" class="readonlyText input-res" name="user_name" value="<?= $_SESSION['user_name'] ?>" readonly>
+            <input type="text" style="margin-left: 1rem;" class="readonlyText input-res" name="user_name" value="<?= $user_name ?>" readonly>
             <input type="hidden" name="user_code" value="<?= $_SESSION["login"] ?>">
             
             <label class="common_label" for="office_name">　　部署</label>
-            <input type="text" style="width:370px;" name="office_name" class="readonlyText input-res" value="<?= $_SESSION['office_name'] ?>" readonly>
+            <input type="text" style="width:370px;" name="office_name" class="readonlyText input-res" value="<?= $office_name ?>" readonly>
 
             <label class="common_label" for="office_position_name" >　　役職</label>
-            <input type="text" style="width:100px;" class="readonlyText input-res" name="office_position_name" value="<?= $_SESSION['office_position_name'] ?>" readonly>
+            <input type="text" style="width:100px;" class="readonlyText input-res" name="office_position_name" value="<?= $office_position_name ?>" readonly>
           </div>
         </td>      
       </tr>
@@ -33,8 +33,8 @@
         <td>
           <div class="field-row">
           <label class="common_label" for="text26">事業体 </label>
-            <input type="text" style="margin-left: 1rem;" id="pf_name" name="pf_name" value="<?= $pf_name ?>" class="readonlyText input-res" readonly>
-            <input type="hidden" name="pf_code" id="pf_code" value="<?= $pf_code ?>">
+            <input type="text" style="margin-left: 1rem;" id="pf_name" name="pf_name" value="<?= $p_office_name ?>" class="readonlyText input-res" readonly>
+            <input type="hidden" name="pf_code" id="pf_code" value="<?= $p_office_no ?>">
             <button class="search_btn" onclick="public_office_open(event)">事業体検索</button>
 
             <label class="common_label" for="preferred_date"> 出図希望日</label>
@@ -389,7 +389,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="approver" style="margin-left: 1rem;">　　承認者 </label>
-            <select name="approver" class="input-res">
+            <select name="approver" class="input-res" <?php echo ($process !== 'new') ? 'disabled' : ''; ?>>
               <option value="">選択して下さい。</option>
               <?php 
                 if (isset($approverList) && !empty($approverList)) {
@@ -402,6 +402,11 @@
                 }
               ?>
             </select>
+            <!-- 承認画面の場合だけ表示する -->
+            <?php if ($process !== 'new') { ?>
+            <label class="common_label" for="approver_comments">コメント</label>
+            <textarea id="approver_comments" style="margin-left: 1rem;" name="approver_comments" rows="3" cols="120" class="textarea-res" ><?= $approver_comments ?></textarea>
+            <?php } ?>
           </div>
         </td>
       </tr>

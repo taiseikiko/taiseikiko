@@ -5,12 +5,15 @@
   require_once('function.php');
   $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
   include("header1.php");
-  $title = $_GET['title'] ?? '';
+
   $dept_code = $_SESSION['department_code'];
   $card_no = $_POST['card_no'] ?? '';
   $_SESSION['card_no'] = $card_no;
-  // print_r($_POST);
   $user_code = $_SESSION["login"];
+  $user_name = $_SESSION['user_name'];      //登録者
+  $office_name = $_SESSION['office_name'];  //部署
+  $office_position_name = $_SESSION['office_position_name'];  //役職
+  
   // ヘッダーセット
   include("card_input2_data_set.php");
 ?>
