@@ -42,6 +42,20 @@
     $pipeList = getDropdownData('pipe');                  //管種
     $approverList = getApproverList($department_code);    //承認者
 
+    //card_header_trテーブルから取得する
+    $header_datas = get_card_header_datas($card_no); 
+    // print_r($header_datas);
+    if(!empty($header_datas)){
+      foreach ($header_datas as $header_data) {
+          $pf_code = $header_data['p_office_no'];                  //事業体コード
+          $pf_name = get_pf_name($pf_code);                        //事業体名
+          $preferred_date = $header_data['preferred_date'];        //出図希望日
+          $deadline = $header_data['deadline'];                    //納期
+        //   $approver = $header_data['approver'];                    //承認者
+        //   $approver_name = $header_data['approver_name'];          //承認者名
+        //   $approver_dept = $header_data['approver_dept'];          //承認者部署
+      }
+    }
     //card_detail_trテーブルから取得する
     $detail_datas = get_card_detail_datas($card_no);
     if (!empty($detail_datas)) {
@@ -62,6 +76,52 @@
     }
   }
 
+  // 新規作成の場合
+if ($process == 'new') {
+  // 依頼書№ 自動採番
+  $today = date('Y/m/d');
+  $ym = substr(str_replace('/', '', $today), 0, 6);
+  $code_id = 'card_request_no';
+
+  $sql = "SELECT code_no FROM sq_code WHERE code_id = '$code_id' AND text1 = '$ym'";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute();
+  $data = $stmt->fetchAll();
+
+  try {
+    $pdo->beginTransaction();
+    if (isset($data) && !empty($data)) {
+      $code_no = $data[0]['code_no'];
+      $no = $code_no + 1;
+      $card_no = $ym . $no;
+      // テーブルsq_codeへ更新する
+      $sql = "UPDATE sq_code SET code_no=:code_no WHERE code_id=:code_id AND text1=:text1";
+    } else {
+      $no = '1';
+      $card_no = $ym . $no;
+      // テーブルsq_codeへ登録する
+      $sql = "INSERT INTO sq_code(code_id, code_no, text1) VALUES (:code_id, :code_no, :text1)";
+    }
+    $data = [
+      'code_id' => $code_id,
+      'code_no' => $no,
+      'text1' => $ym
+    ];
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($data);
+    $pdo->commit();
+  } catch (PDOException $e) {
+    if (strpos($e->getMessage(), 'SQLSTATE[42000]') !== false) {
+      error_log("SQL Syntax Error or Access Violation: " . $e->getMessage(), 3, 'error_log.txt');
+    } else {
+      $pdo->rollback();
+      throw ($e);
+      error_log("PDO Exception: " . $e->getMessage(), 3, 'error_log.txt');
+    }
+  }
+}
+
   //分類プルダウンがCHANGEした場合
   if (isset($_POST['function_name'])) {
    $result = get_zaikoumei_datas();
@@ -69,7 +129,26 @@
  }
 
 
+
+
+
 /*----------------------------------------------------------------FUNCTIONS---------------------------------------------------------------------*/
+  /**
+   * card_detail_trテーブルから取得する
+   */
+  function get_card_header_datas($card_no) {
+    global $pdo;
+    $datas = [];
+
+    $sql = "SELECT * FROM card_header_tr WHERE card_no = :card_no";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':card_no', $card_no);
+    $stmt->execute();
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+      $datas[] = $row;
+    }
+    return $datas;
+  }
   /**
    * card_detail_trテーブルから取得する
    */
@@ -151,4 +230,14 @@
     $stmt->execute();
     $datas = $stmt->fetchAll();
     return $datas;
+  }
+  function get_pf_name($pf_code){
+    global $pdo;
+
+    $sql = "SELECT pf_name FROM public_office WHERE pf_code = '$pf_code'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $pf_name = $stmt->fetchColumn();
+
+    return $pf_name;
   }
