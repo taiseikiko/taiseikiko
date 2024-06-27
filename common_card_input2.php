@@ -1,7 +1,6 @@
 <div class="container">
   <form class="row g-3" method="POST" enctype="multipart/form-data" id="card_input2">
-  <form class="row g-3" method="POST" name="inq_ent" action="card_input3.php" enctype="multipart/form-data" id="input2">
-    <input type="hidden" name="process" value="<?= $process ?>">
+    <input type="hidden" name="card_no" id="card_no" value="<?= $card_no ?>">
     <table style="width:auto;">
       <tr style="height:10px; margin-top:20px"></tr>
       <tr style="height:10px;"></tr>
@@ -10,7 +9,6 @@
           <div class="field-row">
             <label class="common_label" for="card_no" >依頼書№</label>
             <input type="text" style="margin-left: 1rem;" class="readonlyText input-res" name="card_no" value="<?= $card_no ?>" readonly>
-            <!-- <input type="hidden" name="card_no" value="<?= $card_no ?>"> -->
           </div>
         </td>
       </tr>
@@ -37,11 +35,11 @@
             <input type="hidden" name="pf_code" id="pf_code" value="<?= $pf_code ?>">
             <button class="search_btn" onclick="public_office_open(event)">事業体検索</button>
 
-            <label class="common_label" for="preferred_date">　出図希望日</label>
-            <input type="date" style="margin-left: 1rem;" min="2023-01-01" max="2028-12-31" name="preferred_date" value="" class="input-res"/>
+            <label class="common_label" for="preferred_date"> 出図希望日</label>
+            <input type="date" style="margin-left: 1rem;" min="2023-01-01" max="2028-12-31" name="preferred_date" id="preferred_date" value="<?= $preferred_date ?>" class="input-res"/>
 
-            <label class="common_label" for="deadline">　納期</label>
-            <input type="date" style="margin-left: 1rem;" min="2023-01-01" max="2028-12-31" name="deadline" value="" class="input-res"/>
+            <label class="common_label" for="deadline"> 納期</label>
+            <input type="date" style="margin-left: 1rem;" min="2023-01-01" max="2028-12-31" name="deadline" id="deadline" value="<?= $deadline ?>" class="input-res"/>
           </div>
         </td>
       </tr>
@@ -409,7 +407,7 @@
           <div class="flex-container">
             <div>            
               <button id="returnBtn" class="returnBtn">前の画面に戻る </button>
-              <button class="approveBtn" name="submit" value="update">登録</button>
+              <button class="approveBtn" name="new" value="new">登録</button>
             </div>            
             <div>            
               <button id="remandBtn" class="remandBtn" style="margin-left: 50rem;">差し戻し </button>

@@ -4,10 +4,13 @@
   header('Content-type: text/html; charset=utf-8');
   require_once('function.php');
   $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
+  include("header1.php");
   $title = $_GET['title'] ?? '';
   $dept_code = $_SESSION['department_code'];
+  $card_no = $_POST['card_no'] ?? '';
+  $_SESSION['card_no'] = $card_no;
+  // print_r($_POST);
   // ヘッダーセット
-  include("header1.php");
   include("card_input2_data_set.php");
 ?>
 

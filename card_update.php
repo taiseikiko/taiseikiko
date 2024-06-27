@@ -81,68 +81,41 @@
       $pdo->commit();
     } catch (PDOException $e) {
       $success = false;
-  // DB接続
-  $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
-
-  // 初期設定 & データセット
-  
-  $card_no = '';                    //依頼書№
-  $process = '';                    //処理
-  $today = date('Y/m/d');
-  $success = true;
-
-//   システム日付の年月を採取
-  $ym = substr(str_replace('/', '', $today), 0, 6);
-  $code_id = 'card_request_no';
-//   $card_no = $_GET['card_no'];
-  $sql = "SELECT code_no FROM sq_code WHERE code_id = '$code_id' AND text1 = '$ym'";
-  $stmt = $pdo->prepare($sql);
-  $stmt->execute();
-  $data = $stmt->fetchAll();
-
-//新規作成の場合
-//   if ($process == 'new') {  
-//     echo "came here";    
-    //依頼書№（card_no）自動採番
+    }
+  }
+  if (isset($_POST['new'])){
+    $card_no = $_POST['card_no'] ?? '';
+    $user_name = $_SESSION['user_name'] ?? '';
+    $user_code = $_SESSION["login"] ?? '';
+    $office_name = $_SESSION['office_name'] ?? '';
+    $office_position_name = $_SESSION['office_position_name'] ?? '';
+    $pf_code = $_POST['pf_code'] ?? '';
+    $preferred_date = $_POST['preferred_date'] ?? '';
+    $deadline = $_POST['deadline'] ?? '';
+    
     try {
       $pdo->beginTransaction();
-      if (isset ($data) && !empty($data)) {
-        $code_no = $data[0]['code_no'];
-        $no = $code_no+1;
-        $card_no = $ym.$no;
-        //テーブルsq_codeへ更新する
-        $sql = "UPDATE sq_code SET code_no=:code_no WHERE code_id=:code_id AND text1=:text1";
-      } else {
-        $no = '1';
-        $card_no = $ym.$no;
-        //テーブルsq_codeへ登録する
-        $sql = "INSERT INTO sq_code(code_id, code_no, text1) VALUES (:code_id, :code_no, :text1)";
-      }
-      $data = [
-        'code_id' => $code_id,
-        'code_no' => $no,
-        'text1' => $ym
-      ];
+
+      // Insert data into card_header_tr table
+      $sql = "INSERT INTO card_header_tr 
+              (card_no, client, p_office_no, preferred_date, deadline, add_date) 
+              VALUES 
+              (:card_no, :client, :p_office_no, :preferred_date, :deadline, :add_date)";
+               
       $stmt = $pdo->prepare($sql);
-      $stmt->execute($data);
+      $stmt->execute([
+          'card_no' => $card_no,
+          'client' => $user_code,
+          'p_office_no' => $pf_code,
+          'preferred_date' => $preferred_date,
+          'deadline' => $deadline,
+          'add_date' => $today
+      ]);
+
       $pdo->commit();
     } catch (PDOException $e) {
-      if (strpos($e->getMessage(), 'SQLSTATE[42000]') !== false) {
-        error_log("SQL Syntax Error or Access Violation: " . $e->getMessage(),3,'error_log.txt');
-      } else {
-        $pdo->rollback();
-        throw($e);
-        error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
-      }
+        $pdo->rollBack();
+        echo "Error: " . $e->getMessage();
     }
-
-    //登録更新処理にエラーがなければ、メール送信する
-    if ($success) {
-      include('card_mail_send2.php');
-    }    
-    // header('location:card_input1.php');
   }
-
-  echo "did not success";
-  } 
 ?>    

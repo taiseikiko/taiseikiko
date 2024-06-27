@@ -24,7 +24,7 @@
         <tbody>
           <tr>
             <td colspan="15">
-              <button type="button" class="createBtn" value="new">新規登録</button>
+              <button type="submit" class="createBtn" value="new">新規登録</button>
             </td>
           </tr>
           <?php if (isset($cardData) && !empty($cardData)) : ?>
@@ -35,9 +35,9 @@
               <tr>
                 <td><?= htmlspecialchars($row['card_no']) ?></td>
                 <td><?= htmlspecialchars($row['card_status']) ?></td>
-                <td><?= htmlspecialchars($row['client']) ?></td>
+                <td><?= htmlspecialchars($row['client_name']) ?></td>
                 <td><?= htmlspecialchars($row['add_date']) ?></td>
-                <td><?= htmlspecialchars($row['procurement_approver']) ?></td>
+                <td><?= htmlspecialchars($row['procurement_approver_name']) ?></td>
                 <td><?= htmlspecialchars($row['procurement_approver_date']) ?></td>
                 <td><?= isset($procurement_nos[0]) ? htmlspecialchars($procurement_nos[0]) : '' ?></td>
                 <td><?= isset($procurement_statuses[0]) ? htmlspecialchars($procurement_statuses[0]) : '' ?></td>

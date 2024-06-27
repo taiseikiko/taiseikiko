@@ -7,6 +7,7 @@
   
   
   // 初期設定 & データセット
+  
   $class_code = '';             //分類
   $zkm_code = '';               //材工名
   $pipe = '';                   //管種
@@ -14,7 +15,7 @@
   $sizeB = '';                   //サイズB
   $pf_code = '';                //事業体名
   $pf_name = '';                //事業体コード
-  $card_no = '';                //依頼書№
+  // $card_no = '';                //依頼書№
   $preferred_date = '';         //出図希望日
   $deadline = '';               //納期
   $procurement_no = '';         //資材部No
@@ -22,11 +23,6 @@
   $specification_no = '';       //仕様書No
   $special_note = '';           //特記事項
   $approver = '';               //承認者
-  
-  
-  
-  $process = isset($_GET['process']) ? $_GET['process'] : '';
-  $card_no = isset($_GET['card_no']) ? $_GET['card_no'] : '';
   
   
   
