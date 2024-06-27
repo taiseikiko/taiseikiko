@@ -11,24 +11,25 @@
 
   //card_input2の登録ボタンを押下場合
   if (isset($_POST['submit'])) {
-    $card_no = $_POST['card_no'] ?? '';
-    $user_name = $_SESSION['user_name'] ?? '';
-    $user_code = $_SESSION["login"] ?? '';
-    $office_name = $_SESSION['office_name'] ?? '';
-    $office_position_name = $_SESSION['office_position_name'] ?? '';
-    $pf_code = $_POST['pf_code'] ?? '';
-    $preferred_date = $_POST['preferred_date'] ?? '';
-    $deadline = $_POST['deadline'] ?? '';
-    $sq_card_no = $_POST['card_no']; //依頼書No
-    $process = $_POST['process'];       //処理
+    $card_no = $_POST['card_no'] ?? '';                               //依頼書No  
+    $user_code = $_SESSION["login"] ?? '';                            //申請者
+    $pf_code = $_POST['pf_code'] ?? '';                               //事業体コード
+    $preferred_date = $_POST['preferred_date'] ?? '';                 //出図希望日
+    $deadline = $_POST['deadline'] ?? '';                             //納期
+    $sq_card_no = $_POST['card_no'] ?? '';                            //依頼書No
+    $process = $_POST['process'] ?? '';                               //処理
+    $approver = $_POST['approver'] ?? '';                             //承認者
+    $approver_comments = $_POST['approver_comments'] ?? '';//承認者
     $detail_datas = [];
 
     $header_datas = [
-      'card_no' => $card_no,
-      'client' => $user_code,
-      'p_office_no' => $pf_code,
-      'preferred_date' => $preferred_date,
-      'deadline' => $deadline,
+      'card_no' => $card_no,                //依頼書No    
+      'client' => $user_code,               //登録者
+      'p_office_no' => $pf_code,            //事業体コード
+      'preferred_date' => $preferred_date,  //出図希望日
+      'deadline' => $deadline,              //納期
+      'procurement_approver' => $approver,  //資材部承認者
+      'approver_comments' => $approver_comments,  //資材部承認者コメント
       'process' => $process
     ];
     
@@ -138,7 +139,20 @@
       $pdo->commit();
     } catch (PDOException $e) {
       $success = false;
+      if (strpos($e->getMessage(), 'SQLSTATE[42000]') !== false) {
+        error_log("SQL Syntax Error or Access Violation: " . $e->getMessage(),3,'error_log.txt');
+      } else {
+        $pdo->rollback();
+        throw($e);
+        error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
+      }
     }
+
+    //登録更新処理にエラーがなければ、メール送信する
+    if ($success) {
+      include('card_mail_send2.php');
+    }    
+    // header('location:card_input1.php');
   }
 
   /**
@@ -149,13 +163,22 @@
     global $today;
 
     if ($header_datas['process'] == 'new') {
+      $card_status = '1'; //状況
+      $procurement_approver_date = NULL;  //資材部承認日
+      $procurement_approver_comments = NULL;  //資材部承認者コメント
       $sql = "INSERT INTO card_header_tr 
-            (card_no, client, p_office_no, preferred_date, deadline, add_date) 
+            (card_no, client, card_status, p_office_no, preferred_date, deadline, procurement_approver, procurement_approver_date, procurement_approver_comments, add_date) 
             VALUES 
-            (:card_no, :client, :p_office_no, :preferred_date, :deadline, :add_upd_date)";
+            (:card_no, :client, :card_status, :p_office_no, :preferred_date, :deadline, :procurement_approver, :procurement_approver_date, 
+            :procurement_approver_comments, :add_upd_date)";
     } else {
+      $card_status = '2'; //状況
+      $procurement_approver_date = $today;  //資材部承認日
+      $procurement_approver_comments = $header_datas['approver_comments'];  //資材部承認者コメント
+      
       // Update data into card_header_tr table
-      $sql = "UPDATE card_header_tr SET client=:client, p_office_no=:p_office_no, preferred_date=:preferred_date, deadline=:deadline,
+      $sql = "UPDATE card_header_tr SET client=:client, card_status=:card_status, p_office_no=:p_office_no, preferred_date=:preferred_date, deadline=:deadline,
+             procurement_approver=:procurement_approver, procurement_approver_date=:procurement_approver_date, procurement_approver_comments=:procurement_approver_comments,
              upd_date=:add_upd_date
              WHERE card_no=:card_no";
     }
@@ -164,9 +187,13 @@
     $stmt->execute([
       'card_no' => $header_datas['card_no'],
       'client' => $header_datas['client'],
+      'card_status'=> $card_status,
       'p_office_no' => $header_datas['p_office_no'],
       'preferred_date' => $header_datas['preferred_date'],
       'deadline' => $header_datas['deadline'],
+      'procurement_approver' => $header_datas['procurement_approver'],
+      'procurement_approver_date' => $procurement_approver_date,
+      'procurement_approver_comments' => $procurement_approver_comments,
       'add_upd_date' => $today
     ]);
   }

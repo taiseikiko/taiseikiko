@@ -6,13 +6,15 @@
   $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
   
   // 初期設定 & データセット
-  $pf_code = '';                //事業体名
-  $pf_name = '';                //事業体コード
+  $p_office_name = '';          //事業体名
+  $p_office_no = '';            //事業体コード
   $card_no = '';                //依頼書№
   $preferred_date = '';         //出図希望日
   $deadline = '';               //納期
   $approver = '';               //承認者
+  $approver_comments = '';      //承認者コメント
   $btn_name = '登録';
+
   for ($i = 1; $i <= 4; $i++) {
     ${'procurement_no' . $i} = '';         //資材部No
     ${'maker' . $i} = '';                  //製造メーカー
@@ -30,10 +32,12 @@
   //一覧画面から移動した場合　あるいは　戻りボタンが押された場合
   if (isset($_POST['process']) || isset($_GET['card_no'])) {
     $process = $_POST['process'] ?? $_GET['process'];
+
     //ボタン名
     if ($process == 'update') {
-      $btn_name = '更新';
+      $btn_name = '承認';
     }
+
     //ログインユーザーの部署ID
     $department_code = getDeptId($dept_code);  
     $card_no = $_POST['card_no'] ?? $_GET['card_no']; //依頼書No
@@ -43,19 +47,25 @@
     $approverList = getApproverList($department_code);    //承認者
 
     //card_header_trテーブルから取得する
-    $header_datas = get_card_header_datas($card_no); 
-    // print_r($header_datas);
-    if(!empty($header_datas)){
+    $header_datas = get_card_header_datas($card_no);
+    if (!empty($header_datas)) {
       foreach ($header_datas as $header_data) {
-          $pf_code = $header_data['p_office_no'];                  //事業体コード
-          $pf_name = get_pf_name($pf_code);                        //事業体名
-          $preferred_date = $header_data['preferred_date'];        //出図希望日
-          $deadline = $header_data['deadline'];                    //納期
-        //   $approver = $header_data['approver'];                    //承認者
-        //   $approver_name = $header_data['approver_name'];          //承認者名
-        //   $approver_dept = $header_data['approver_dept'];          //承認者部署
+        $client = $header_data['client'];                   //申請者
+        $approver = $header_data['procurement_approver'];   //資材部承認者
+        $p_office_no = $header_data['p_office_no'];         //事業体コード
+        $p_office_name = $header_data['pf_name'];           //事業体名
+        $preferred_date = $header_data['preferred_date'];   //出図希望日
+        $deadline = $header_data['deadline'];               //納期
+      }
+      //申請者のデータを取得する
+      $client_datas = get_client_infos($client);
+      if (isset($client_datas) && !empty($client_datas)) {
+        $user_name = $client_datas['employee_name'];  //登録者名  
+        $office_name = $client_datas['dept_name'];        //部署名
+        $office_position_name = $client_datas['role_name'];        //役職
       }
     }
+
     //card_detail_trテーブルから取得する
     $detail_datas = get_card_detail_datas($card_no);
     if (!empty($detail_datas)) {
@@ -134,13 +144,16 @@ if ($process == 'new') {
 
 /*----------------------------------------------------------------FUNCTIONS---------------------------------------------------------------------*/
   /**
-   * card_detail_trテーブルから取得する
+   * card_header_trテーブルから取得する
    */
   function get_card_header_datas($card_no) {
     global $pdo;
     $datas = [];
-
-    $sql = "SELECT * FROM card_header_tr WHERE card_no = :card_no";
+    $sql = "SELECT h.client, h.procurement_approver, h.p_office_no, o.pf_name, h.preferred_date, h.deadline 
+            FROM card_header_tr h
+            LEFT JOIN public_office o
+            ON h.p_office_no = o.pf_code
+            WHERE h.card_no = :card_no";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':card_no', $card_no);
     $stmt->execute();
@@ -149,6 +162,7 @@ if ($process == 'new') {
     }
     return $datas;
   }
+  
   /**
    * card_detail_trテーブルから取得する
    */
@@ -231,13 +245,28 @@ if ($process == 'new') {
     $datas = $stmt->fetchAll();
     return $datas;
   }
-  function get_pf_name($pf_code){
+
+  /**
+ * client産の情報を取得する
+ */
+  function get_client_infos($client) {
     global $pdo;
 
-    $sql = "SELECT pf_name FROM public_office WHERE pf_code = '$pf_code'";
+    $sql = "SELECT e.employee_name, cmd.text2 AS dept_name, cmp.text1 AS role_name, pf.pf_code AS p_office_code, pf.pf_name AS p_office_name 
+    FROM card_header_tr h
+    LEFT JOIN employee e
+    ON e.employee_code = h.client
+    LEFT JOIN code_master cmd
+    ON e.department_code = cmd.text1
+    AND cmd.code_id = 'department'
+    LEFT JOIN code_master cmp
+    ON e.office_position_code = cmp.code_no
+    AND cmp.code_id = 'office_position'
+    LEFT JOIN public_office pf
+    ON pf.pf_code = h.p_office_no
+    WHERE h.client = :client";
     $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':client', $client);
     $stmt->execute();
-    $pf_name = $stmt->fetchColumn();
-
-    return $pf_name;
+    return $stmt->fetch(PDO::FETCH_ASSOC);
   }
