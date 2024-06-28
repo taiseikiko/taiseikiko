@@ -1,5 +1,6 @@
 <?php
   $from = $_GET['from'] ?? '';
+  $card_no = $_POST['card_no'] ?? '';
   $sq_card_no = $_POST['sq_card_no']?? '';            //依頼書No  
   $sq_card_line_no = $_POST['sq_card_line_no'] ?? ''; //依頼書行No
 
@@ -22,6 +23,10 @@
       $uploadDir = "document/card_engineering/";
       $include_file = "card_file.php";
       break;
+    case 'input2':
+      $uploadDir = "document/card_procurement/";///
+      $include_file = "card_file.php";
+      break;
   }
 
   switch ($from) {
@@ -37,6 +42,12 @@
       $file_comments = $_POST['upload_comments2'];
       $save_file_name = $sq_card_no."_資料_";
       break;
+    case 'input2':
+      $tmp_file_name = $_FILES["uploaded_file"]["tmp_name"];
+      $file_name = $_FILES["uploaded_file"]["name"];
+      $save_file_name = $card_no."_資料_";
+      break;
+    
   }
 
 
@@ -48,7 +59,9 @@
     $destination = $uploadDir . $save_file_name . $file_name;
   
     if (move_uploaded_file($tmp_file_name, $destination)) {
-      include($include_file);
+      if ($include_file !== '') {
+        include($include_file);
+      }
       chmod($destination, 0644);
       echo "ファイル「".$destination."」　をアップロードしました。";
       

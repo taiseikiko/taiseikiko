@@ -84,6 +84,19 @@
 
     /*----------------------------------------------------------------------------------------------- */
 
+    //アプロードボタンを押下場合
+    $('#upload').click(function(event) {     
+          //何の処理かを書く
+          var process = "upload";
+          //エラーメッセージを書く
+          var msg = "アプロードします。よろしいですか？";
+          //確認Dialogを呼ぶ
+          openConfirmModal(msg, process);
+       
+    });
+
+    /*----------------------------------------------------------------------------------------------- */
+
     //確認BOXに"はい"ボタンを押下する場合
     $("#confirm_okBtn").click(function(event) {
       var process = $("#btnProcess").val();
@@ -98,6 +111,13 @@
         //sales_request_update.phpへ移動する
         $('#card_input2').attr('action', 'card_update.php');
       }
+      //アプロード処理の場合
+      else if (process == "upload"){
+        //submitしたいボタン名をセットする
+        $("#confirm_okBtn").attr("name", "submit");
+        //sales_request_update.phpへ移動する
+        $('#card_input2').attr('action', 'card_attach_upload1.php?from=input2');
+      }
     });
 
     /*----------------------------------------------------------------------------------------------- */
@@ -109,6 +129,8 @@
       if (process == "error") {
         //card_input1へ移動
         $('#card_input2').attr('action', 'card_input1.php');
+        //選択したファイルをクリアする
+        $('#uploaded_file').val('');
       } else {
         //画面上変更なし
         $('#ok_okBtn').attr('data-dismiss', 'modal');
