@@ -4,7 +4,6 @@
 
   // DB接続
   $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
-  
   // 初期設定 & データセット
   $p_office_name = '';          //事業体名
   $p_office_no = '';            //事業体コード

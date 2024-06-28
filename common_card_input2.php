@@ -2,6 +2,7 @@
   <form class="row g-3" method="POST" enctype="multipart/form-data" id="card_input2">
     <input type="hidden" name="card_no" id="card_no" value="<?= $card_no ?>">
     <?php include("dialog.php") ?>
+    
     <input type="hidden" name="process" value="<?= $process ?>">
     <table style="width:auto;">
       <tr style="height:10px; margin-top:20px"></tr>
@@ -91,8 +92,8 @@
       <tr>
         <td>
           <div class="field-row">
-            <label class="common_label" for="procurement_no1" >資材部№</label>
-            <input type="text" style="margin-left: 1rem;" class="input-res" name="procurement_no1" value="<?= $procurement_no1 ?>">
+            <label class="common_label" for="procurement_no1">資材部№</label>
+            <input type="text" style="margin-left: 1rem;" maxlength="10" class="input-res" name="procurement_no1" value="<?= $procurement_no1 ?>">
             <label class="common_label" for="maker1">製造メーカー</label>
               <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="maker1" id="" value="<?= $maker1 ?>">
           </div>
@@ -149,7 +150,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="specification_no1" >仕様書№</label>
-            <input type="text" style="margin-left: 1rem;" class="input-res" name="specification_no1" value="<?= $specification_no1 ?>">
+            <input type="text" style="margin-left: 1rem;" class="input-res" maxlength="10" name="specification_no1" value="<?= $specification_no1 ?>">
             <label class="common_label" for="special_note1">特記事項</label>
               <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="special_note1" id="" value="<?= $special_note1 ?>">
           </div>
@@ -166,7 +167,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="procurement_no2" >資材部№</label>
-            <input type="text" style="margin-left: 1rem;" class="input-res" name="procurement_no2" value="<?= $procurement_no2 ?>">
+            <input type="text" style="margin-left: 1rem;" class="input-res" maxlength="10" name="procurement_no2" value="<?= $procurement_no2 ?>">
             <label class="common_label" for="maker">製造メーカー</label>
               <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="maker2" id="" value="<?= $maker2 ?>">
           </div>
@@ -223,7 +224,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="specification_no2" >仕様書№</label>
-            <input type="text" style="margin-left: 1rem;" class="input-res" name="specification_no2" value="<?= $specification_no2 ?>">
+            <input type="text" style="margin-left: 1rem;" class="input-res" maxlength="10" name="specification_no2" value="<?= $specification_no2 ?>">
             <label class="common_label" for="special_note2">特記事項</label>
               <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="special_note2" id="" value="<?= $special_note2 ?>">
           </div>
@@ -240,7 +241,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="procurement_no3" >資材部№</label>
-            <input type="text" style="margin-left: 1rem;" class="input-res" name="procurement_no3" value="<?= $procurement_no3 ?>">
+            <input type="text" style="margin-left: 1rem;" class="input-res" maxlength="10" name="procurement_no3" value="<?= $procurement_no3 ?>">
             <label class="common_label" for="maker">製造メーカー</label>
               <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="maker3" id="" value="<?= $maker3 ?>">
           </div>
@@ -297,7 +298,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="specification_no3" >仕様書№</label>
-            <input type="text" style="margin-left: 1rem;" class="input-res" name="specification_no3" value="<?= $specification_no3 ?>">
+            <input type="text" style="margin-left: 1rem;" class="input-res" maxlength="10" name="specification_no3" value="<?= $specification_no3 ?>">
             <label class="common_label" for="special_note3">特記事項</label>
               <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="special_note3" id="" value="<?= $special_note3 ?>">
           </div>
@@ -314,7 +315,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="procurement_no4" >資材部№</label>
-            <input type="text" style="margin-left: 1rem;" class="input-res" name="procurement_no4" value="<?= $procurement_no4 ?>">
+            <input type="text" style="margin-left: 1rem;" class="input-res" maxlength="10" name="procurement_no4" value="<?= $procurement_no4 ?>">
             <label class="common_label" for="maker">製造メーカー</label>
               <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="maker4" id="" value="<?= $maker4 ?>">
           </div>
@@ -371,7 +372,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="specification_no4" >仕様書№</label>
-            <input type="text" style="margin-left: 1rem;" class="input-res" name="specification_no4" value="<?= $specification_no4 ?>">
+            <input type="text" style="margin-left: 1rem;" class="input-res" maxlength="10" name="specification_no4" value="<?= $specification_no4 ?>">
             <label class="common_label" for="special_note4">特記事項</label>
               <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="special_note4" id="" value="<?= $special_note4 ?>">
           </div>
@@ -389,7 +390,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="approver" style="margin-left: 1rem;">　　承認者 </label>
-            <select name="approver" class="input-res" <?php echo ($process !== 'new') ? 'disabled' : ''; ?>>
+            <select name="approver" class="input-res" <?php echo ($process == 'new') ? 'disabled' : ''; ?>>
               <option value="">選択して下さい。</option>
               <?php 
                 if (isset($approverList) && !empty($approverList)) {
