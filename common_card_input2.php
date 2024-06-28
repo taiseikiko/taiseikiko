@@ -71,9 +71,9 @@
         </tr>
         <?php
         if (!empty($card_no)) {
-          $files = glob('document/sales_management/*.*');
+          $files = glob('document/card_procurement/*.*');
           foreach ($files as $key => $value) {
-            $cut = str_replace('document/sales_management/', '', $value);
+            $cut = str_replace('document/card_procurement/', '', $value);
             $chk = substr($cut, 0, strlen($card_no));
             if ($card_no == $chk) {
               echo "<tr><td><a href=" . $value . " target='_blank'>" . $value . "</a></td></tr>";

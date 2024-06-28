@@ -45,7 +45,7 @@
     case 'input2':
       $tmp_file_name = $_FILES["uploaded_file"]["tmp_name"];
       $file_name = $_FILES["uploaded_file"]["name"];
-      $save_file_name = $card_no."_資料_";
+      $save_file_name = $card_no."_電子カード_";
       break;
     
   }
