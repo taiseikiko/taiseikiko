@@ -3,7 +3,6 @@ require_once('function.php');
 $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 //ログインユーザーの部署ID
 // $dept_cd = $_POST['dept_code'] ?? $dept_code;
-// $dept_id = getDeptId($dept_cd);
 // $title1 = $_POST['title'] ?? $_GET['title'];
 $sq_card_no = $client = $size = ''; //header
 $sq_card_line_no = $procurement_no = $maker = $zkm_code = $pipe = $size = $specification_no = $special_note =  
@@ -12,7 +11,7 @@ $entrant_date = $entrant_comments = $confirmer_comments = $approver_comments = '
 $client_name = $dept_name = $role_name = $p_office_code = $p_office_name = '';  //登録者の情報
 $entrant_dept_name = $entrant_role_name = '';  //担当者の情報
 $sizeDisabled = $zaikoumeiDisabled = $pipeDisabled = $comments = $process = '';
-
+$err = $_GET['err'] ?? '';//エラーを取得する
 
 $pipeList = getDropdownData('pipe');                  //管種
 $sizeList = getDropdownData('size');                  //サイズ
@@ -169,15 +168,17 @@ function get_card_detail_datas($sq_card_no, $sq_card_line_no) {
  */
 function get_entrant_datas() {
   global $pdo;
+  global $department_code;
   $datas = [];
   $role = '1'; //入力者
 
   $sql = "SELECT e.employee_code, e.employee_name
           FROM card_route_in_dept c
           LEFT JOIN employee e ON e.employee_code = c.employee_code
-          WHERE c.role =:role";
+          WHERE c.role =:role AND c.department_code =:department_code";
   $stmt = $pdo->prepare($sql);
   $stmt->bindParam(':role', $role);
+  $stmt->bindParam(':department_code', $department_code);
   $stmt->execute();
   while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $datas[] = $row;

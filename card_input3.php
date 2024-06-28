@@ -5,6 +5,7 @@
   require_once('function.php');
   $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
   $dept_code = $_SESSION['department_code'];
+  $department_code = getDeptId($dept_code);
   // ヘッダーセット
   include("header1.php");
   include("card_input3_data_set.php");
@@ -25,8 +26,8 @@
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="sq_no">依頼書№</label>
-                <input type="text" style="margin-left: 1rem;" class="input-res" name="sq_no" value="<?= $sq_card_no ?>">
+                <label class="common_label" for="sq_card_no">依頼書№</label>
+                <input type="text" style="margin-left: 1rem;" class="input-res" name="sq_card_no" value="<?= $sq_card_no ?>">
                 <input type="hidden" name="" value="">
               </div>
             </td>
@@ -431,7 +432,7 @@
             <td>
               <?php
               if ($page == '確認' || $page == '承認') { ?>
-              <div class="flex-container" style="margin-left:435px">
+              <div class="flex-container" style="margin-left:50rem">
                 <div>
                   <button id="returnProcessBtn" class="returnProcessBtn">差し出し </button>
                   <button class="cancelProcessBtn" id="cancelProcessBtn" name="update" value="update">中止</button>
@@ -498,7 +499,7 @@
 
     /*----------------------------------------------------------------------------------------------- */
 
-    //更新ボタンを押下場合
+    //更新ボタンを押下する場合
     $('#updateBtn').click(function() {
       //確認メッセージを書く
       var msg = "更新します。よろしいですか？";
@@ -522,7 +523,7 @@
 
     /*----------------------------------------------------------------------------------------------- */
 
-    //アプロードボタンを押下場合
+    //アプロードボタンを押下する場合
     $('#upload1').click(function(event) {
       //重複エラーチェック
       checkDuplicate('uploaded_file1').then(function(isExist) {
@@ -549,7 +550,7 @@
 
     /*----------------------------------------------------------------------------------------------- */
 
-    //アプロードボタンを押下場合
+    //アプロードボタンを押下する場合
     $('#upload2').click(function () {
       //重複エラーチェック
       checkDuplicate('uploaded_file2').then(function(isExist) {
@@ -573,6 +574,33 @@
         console.error("Error checking duplicate:", error);
       })      
     })
+
+    /*----------------------------------------------------------------------------------------------- */
+
+    //差し戻しボタンを押下する場合
+    $('#returnProcessBtn').click(function () {
+      event.preventDefault();
+      var sq_card_no = document.getElementById('sq_card_no').value;
+      var sq_card_line_no = document.getElementById('sq_card_line_no').value;
+      var from = 'other_dept';
+
+      var url = "card_send_back.php" + "?sq_card_no=" + sq_card_no + 
+      "&sq_card_line_no=" + sq_card_line_no +
+      "&from=" + from;
+      window.open(url, "popupWindow", "width=900,height=260,left=100,top=50");
+    })
+
+    /*----------------------------------------------------------------------------------------------- */
+
+    //エラーがあるかどうか確認する
+    var err = '<?= $err ?>';
+    //エラーがある場合
+    if (err !== '') {
+      //OKメッセージを書く
+      var msg = "処理にエラーがありました。係員にお知らせください。";
+      //OKDialogを呼ぶ
+      openOkModal(msg, 'error');
+    }
 
     /*----------------------------------------------------------------------------------------------- */
 
@@ -712,6 +740,15 @@
     }
   }
 </script>
+<style>
+  .flex-container {
+    display: flex;    
+  }
+
+  .flex-container > div {
+    margin: 20px 5px;
+  }
+</style>
 <?php
   // フッターセット
   footer_set();

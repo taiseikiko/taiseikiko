@@ -58,12 +58,11 @@
       $success = 'false';
       $pdo->rollback();
       error_log("PDOException: " . $e->getMessage(), 3, 'error_log.txt');
-      throw($e);
     }
 
     // エラーがある場合
     if ($success !== true) {
-      echo "<script>window.location.href='card_input2.php?err=yes'</script>";
+      echo "<script>window.location.href='card_input2.php?err=exceErr'</script>";
     } else {
       echo "<script>window.location.href='card_input1.php'</script>";
     }
@@ -139,20 +138,16 @@
       $pdo->commit();
     } catch (PDOException $e) {
       $success = false;
-      if (strpos($e->getMessage(), 'SQLSTATE[42000]') !== false) {
-        error_log("SQL Syntax Error or Access Violation: " . $e->getMessage(),3,'error_log.txt');
-      } else {
-        $pdo->rollback();
-        throw($e);
-        error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
-      }
+      $pdo->rollback();
+      error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
     }
 
     //登録更新処理にエラーがなければ、メール送信する
     if ($success) {
       include('card_mail_send2.php');
-    }    
-    // header('location:card_input1.php');
+    } else {
+      echo "<script>window.location.href='card_input2.php?err=exceErr'</script>";
+    }
   }
 
   /**

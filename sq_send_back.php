@@ -14,12 +14,12 @@
 <body>
   <div class="window active">
     <div class="title-bar">
-      <div class="title-bar-text">スキップ処理マスター</div>
+      <div class="title-bar-text">差し戻し</div>
       <div class="title-bar-controls">
       </div>
     </div>
     <div class="window-body has-space" style="min-height:150px; overflow:hidden;">
-      <form method="POST" action="sq_detail_tr_engineering_update.php" id="return_back_form">
+      <form method="POST" action="sq_detail_tr_engineering_update.php" id="return_back_form">        
         <input type="hidden" name="sq_no" id="sq_no" value="<?= $sq_no ?>">
         <input type="hidden" name="sq_line_no" id="sq_line_no" value="<?= $sq_line_no ?>">
         <input type="hidden" name="dept_id" id="dept_id" value="<?=$dept_id?>">

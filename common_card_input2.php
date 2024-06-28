@@ -411,25 +411,28 @@
         </td>
       </tr>
       <tr style="height:10px;"></tr>
-      <tr>
-        <td>
-          <div class="flex-container">
-            <div>            
-              <button id="returnBtn" class="returnBtn">前の画面に戻る </button>
-              <button type="submit" class="approveBtn" id="reg_updBtn" name="submit" value="update"><?= $btn_name ?></button>
-            </div>     
-          </div>
-        </td>
-        <td>
-          <div class="flex-container">
-            <div>            
-              <button id="remandBtn" class="returnProcessBtn" style="margin-left: 50rem;">差し戻し </button>
-              <button class="cancelProcessBtn" name="submit" value="cancel">中止</button>
-            </div> 
-          </div>
-        </td>
-      </tr>          
-    </table>        
+      </table>
+
+      <table  style="margin-top:13px;">
+        <tr>
+          <td>
+            <div class="flex-container">
+              <div>            
+                <button id="returnBtn" class="returnBtn">前の画面に戻る </button>
+                <button type="submit" class="approveBtn" id="reg_updBtn" name="submit" value="update"><?= $btn_name ?></button>
+              </div>     
+            </div>
+          </td>
+          <td>
+            <div class="flex-container" style="margin-left: 50rem;">
+              <div>            
+                <button id="returnProcessBtn" class="returnProcessBtn" >差し戻し </button>
+                <button class="cancelProcessBtn" name="submit" value="cancel">中止</button>
+              </div> 
+            </div>
+          </td>
+        </tr>          
+      </table>    
   </form><!-- Vertical Form -->
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -442,13 +445,13 @@
   });
 </script>
 <style>
-  /* .flex-container {
+  .flex-container {
     display: flex;    
   }
 
   .flex-container > div {
     margin: 20px 5px;
-  } */
+  }
 </style>
 <?php
 // フッターセット

@@ -84,6 +84,19 @@
 
     /*----------------------------------------------------------------------------------------------- */
 
+    //差し戻しボタンを押下する場合
+    $('#returnProcessBtn').click(function () {
+      event.preventDefault();
+      var sq_card_no = document.getElementById('card_no').value;
+      var from = 'procurement';
+
+      var url = "card_send_back.php" + "?sq_card_no=" + sq_card_no + 
+      "&from=" + from;
+      window.open(url, "popupWindow", "width=900,height=260,left=100,top=50");
+    })
+
+    /*----------------------------------------------------------------------------------------------- */
+
     //確認BOXに"はい"ボタンを押下する場合
     $("#confirm_okBtn").click(function(event) {
       var process = $("#btnProcess").val();
@@ -122,7 +135,7 @@
     //エラーがある場合
     if (err !== '') {
       //OKメッセージを書く
-      var msg = "登録処理にエラーがありました。係員にお知らせください。";
+      var msg = "処理にエラーがありました。係員にお知らせください。";
       //OKDialogを呼ぶ
       openOkModal(msg, 'error');
     }

@@ -27,7 +27,7 @@
     ${'special_note' . $i} = '';           //特記事項
     ${'disabled_detail_btn' . $i} = 'disabled';
   }
-  $err = $_GET['err'] ?? '';
+  $err = $_GET['err'] ?? '';//エラーを取得する
 
   //一覧画面から移動した場合　あるいは　戻りボタンが押された場合
   if (isset($_POST['process']) || isset($_GET['card_no'])) {
