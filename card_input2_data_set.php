@@ -34,7 +34,7 @@ if (isset($_POST['process']) || isset($_GET['card_no'])) {
 
   //ボタン名
   if ($process == 'update') {
-    $btn_name = '承認';
+    $btn_name = '更新';
   }
 
   //ログインユーザーの部署ID
