@@ -432,6 +432,12 @@
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
+  $(document).ready(function (){
+    //詳細ボタンを押下場合
+    $("#detailBtn1, #detailBtn2").click(function(){
+      $("#card_input2").attr("action", "card_input3.php");
+    });
+  });
   document.addEventListener('DOMContentLoaded', function() {
     var approverList = document.getElementById('approverList');
     var submitButton = document.getElementById('reg_updBtn');
