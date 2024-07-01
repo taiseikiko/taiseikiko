@@ -58,6 +58,8 @@ function get_card_header_datas() {
     employee e_client ON ch.client = e_client.employee_code
   LEFT JOIN 
     employee e_approver ON ch.procurement_approver = e_approver.employee_code
+  WHERE 
+    ch.card_status != 5
   GROUP BY 
     ch.card_no, 
     ch.card_status, 
