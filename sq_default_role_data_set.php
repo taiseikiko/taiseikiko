@@ -60,7 +60,7 @@ function getGroupDatas($dept_id) {
     return $stmt->fetchAll();
 }
 
-function getEmployeeDatas($dept_id, $group_id = '', $role) {
+function getEmployeeDatas($dept_id, $group_id, $role) {
     global $pdo;
 
     $sql = "SELECT r.employee_code, e.employee_name
