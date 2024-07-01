@@ -59,7 +59,7 @@
         <div class="field-row">
           <td>
             アップロードするファイル ⇒
-            <input type="file" name="uploaded_file">
+            <input type="file" name="uploaded_file" id="uploaded_file">
             <input type="submit" name="submit" id="upload" value="アップロード">
           </td>
         </div>

@@ -5,23 +5,14 @@
   $today = date('Y/m/d');
   $success = false;
 
-  if (isset($_POST['upload'])) {
-    try {
-      $pdo->beginTransaction();
-      //card_file_trテーブルに更新する
-      cu_card_file_tr();
-      $pdo->commit();
-    } catch (PDOException $e) {
-      if (strpos($e->getMessage(), 'SQLSTATE[42000]') !== false) {
-        error_log("SQL Syntax Error or Access Violation: " . $e->getMessage(),3,'error_log.txt');
-      } else {
-        $pdo->rollback();
-        throw($e);
-        error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
-      }
-    }
-
-    header('location:card_input1.php');
+  try {
+    $pdo->beginTransaction();
+    //card_file_trテーブルに更新する
+    cu_card_file_tr();
+    $pdo->commit();
+  } catch (PDOException $e) {
+    $pdo->rollback();
+    error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
   }
 
   //重複エラーチェック

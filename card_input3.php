@@ -622,14 +622,14 @@
         //submitしたいボタン名をセットする
         $("#confirm_okBtn").attr("name", "upload");
         //sales_request_update.phpへ移動する
-        $('#card_input3').attr('action', 'card_attach_upload1.php?from=input3_1');
+        uploadFile("card_attach_upload1.php?from=input3_1", "1", "_制作図面_");
       }
       //アプロード２処理の場合
       else if (process == "upload2") {
         //submitしたいボタン名をセットする
         $("#confirm_okBtn").attr("name", "upload");
         //sales_request_update.phpへ移動する
-        $('#card_input3').attr('action', 'card_attach_upload1.php?from=input3_2');
+        uploadFile("card_attach_upload1.php?from=input3_2", "2", "_資料_");
       }
     });
 
@@ -697,6 +697,8 @@
     });
   }
 
+  /*----------------------------------------------------------------------------------------------- */
+
   function openOkModal(msg, process) {
     //何の処理かをセットする
     $("#btnProcess").val(process);
@@ -704,6 +706,38 @@
     $("#ok-message").text(msg);
     //確認Dialogを呼ぶ
     $("#ok").modal({backdrop: false});
+  }
+
+  /*----------------------------------------------------------------------------------------------- */
+
+  function uploadFile(url, index, filename) {
+    event.preventDefault();
+    var sq_card_no = document.getElementById('sq_card_no').value;
+    var sq_card_line_no = document.getElementById('sq_card_line_no').value;
+    var uploaded_file = document.getElementById('uploaded_file' + index).files[0];
+    var upload_comments = document.getElementById('upload_comments' + index).value;
+    var save_file_name = sq_card_no + filename;
+
+    var formData = new FormData();
+    formData.append('sq_card_no', sq_card_no);
+    formData.append('sq_card_line_no', sq_card_line_no);
+    formData.append('uploaded_file', uploaded_file);
+    formData.append('upload_comments', upload_comments);
+    formData.append('save_file_name', save_file_name);
+
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: formData,
+      processData: false, // Important: prevent jQuery from processing the data
+      contentType: false, // Important: ensure jQuery does not add a content-type header
+      success: function(response) {
+        location.reload();
+      },
+      error: function(xhr, status, error) {
+      }
+    })
+
   }
 
   /*----------------------------------------------------------------------------------------------- */

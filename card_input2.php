@@ -129,7 +129,7 @@
         //submitしたいボタン名をセットする
         $("#confirm_okBtn").attr("name", "submit");
         //sales_request_update.phpへ移動する
-        $('#card_input2').attr('action', 'card_attach_upload1.php?from=input2');
+        uploadFile("card_attach_upload1.php?from=input2", "_電子カード_");
       }
     });
 
@@ -196,6 +196,32 @@
         console.log('error');
       }
     });
+  }
+
+  function uploadFile(url, filename) {
+    event.preventDefault();
+    var sq_card_no = document.getElementById('card_no').value;
+    var uploaded_file = document.getElementById('uploaded_file').files[0];
+    var save_file_name = sq_card_no + filename;
+
+    var formData = new FormData();
+    formData.append('sq_card_no', sq_card_no);
+    formData.append('uploaded_file', uploaded_file);
+    formData.append('save_file_name', save_file_name);
+
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: formData,
+      processData: false, // Important: prevent jQuery from processing the data
+      contentType: false, // Important: ensure jQuery does not add a content-type header
+      success: function(response) {
+        location.reload();
+      },
+      error: function(xhr, status, error) {
+      }
+    })
+
   }
 
   function openConfirmModal(msg, process) {
