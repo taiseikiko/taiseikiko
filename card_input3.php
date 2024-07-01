@@ -120,6 +120,21 @@
           <tr>
             <td>
               <div class="field-row">
+                <label class="common_label" for="class4">分類 </label>
+                <select style="margin-left: 1rem;" class="dropdown-menu" id="classList4" name="class_code4">
+                  <option value="">選択して下さい。</option>
+                  <?php
+                  if (isset($class_datas) && !empty($class_datas)) {
+                    foreach ($class_datas as $item) {
+                      $code = $item['class_code'];
+                      $text = $item['class_name'];
+                      $selected = ($code == $class_code) ? 'selected' : '';
+                      echo "<option value='$code' $selected>$text</option>";
+                    }
+                  }
+                  ?>
+                </select>
+
                 <label class="common_label" for="zkm_code">材工名 </label>
                 <?php 
                   if (!isset($zaikoumeiList) || empty($zaikoumeiList)) {
@@ -161,25 +176,9 @@
                   ?>
                 </select>   
                 
-                <label class="common_label" for="size">　　サイズ </label>
-                <?php 
-                  if (!isset($sizeList) || empty($sizeList)) {
-                    $sizeDisabled = 'disabled';
-                  }
-                ?>
-                <select class="dropdown-menu" style="margin-left: 1rem;" name="size" <?= $sizeDisabled ?>>
-                  <option value="">選択して下さい。</option>
-                  <?php 
-                    if (isset($sizeList) && !empty($sizeList)) {
-                      foreach($sizeList as $item) {
-                        $code = $item['zk_div_data'];
-                        $text = $item['zk_div_data'];
-                        $selected = ($code == $size) ? 'selected' : '';
-                        echo "<option value='$code' $selected>$text</option>";
-                      }
-                    }
-                  ?>
-                </select>
+                <label class="common_label" for="size4">　　サイズ </label>
+                <input type="text" style="margin-left: 1rem; width:80px;" name="sizeA4" value="<?= $sizeA ?>">mm　　✖
+                <input type="text" style="margin-left: 1rem; width:80px;" name="sizeB4" value="<?= $sizeB ?>">mm　
               </div>
             </td>
           </tr>

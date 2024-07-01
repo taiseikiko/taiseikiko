@@ -5,7 +5,7 @@ $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 // $dept_cd = $_POST['dept_code'] ?? $dept_code;
 // $title1 = $_POST['title'] ?? $_GET['title'];
 $sq_card_no = $client = $size = ''; //header
-$sq_card_line_no = $procurement_no = $maker = $zkm_code = $pipe = $size = $specification_no = $special_note =  
+$sq_card_line_no = $procurement_no = $maker = $zkm_code = $pipe = $sizeA = $sizeB = $class_code = $specification_no = $special_note =  
 $entrant = $entrant_set_date = $entrant_set_comments = 
 $entrant_date = $entrant_comments = $confirmer_comments = $approver_comments = '';//detail
 $client_name = $dept_name = $role_name = $p_office_code = $p_office_name = '';  //登録者の情報
@@ -16,8 +16,7 @@ $err = $_GET['err'] ?? '';//エラーを取得する
 $pipeList = getDropdownData('pipe');                  //管種
 $sizeList = getDropdownData('size');                  //サイズ
 
-//材工名データを取得する
-$zaikoumeiList = get_zaikoumei_datas();
+$class_datas = get_class_datas();                     //分類プルダウンにセットするデータを取得する
 
 //担当者リストを取得する
 $entrantList = get_entrant_datas();
@@ -77,11 +76,16 @@ if (isset($_POST['detail'])) {
   $card_detail_list = get_card_detail_datas($sq_card_no, $sq_card_line_no);
   if (isset($card_detail_list) && !empty($card_detail_list)) {
     //資材部No、製造メーカー、材工名、管種、仕様書No、特記事項、担当者、担当指定日、担当指定コメント
-    $variable_names = ['procurement_no', 'maker', 'zkm_code', 'pipe', 'specification_no', 'special_note', 'entrant', 'entrant_set_date', 'entrant_set_comments',
+    $variable_names = ['procurement_no', 'maker', 'zkm_code', 'pipe', 'sizeA', 'sizeB', 'class_code', 'specification_no', 'special_note', 'entrant', 'entrant_set_date', 'entrant_set_comments',
                         'entrant_comments', 'entrant_date', 'confirmer_comments', 'approver_comments'];
     foreach ($variable_names as $variable_name) {
       ${$variable_name} = $card_detail_list[$variable_name];
     }
+
+    //材工名データを取得する
+    if ($class_code !== '') {
+      $zaikoumeiList = get_zaikoumei_datas($class_code);
+    }    
     
     if ($entrant !== '') {    
       //担当者の情報を取得する  
@@ -124,18 +128,30 @@ function getDropdownData($code_id) {
   return $datas;
 }
 
+function get_class_datas()
+{
+  global $pdo;
+  $sql = "SELECT * FROM sq_class";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute();
+  $datas = $stmt->fetchAll();
+
+  return $datas;
+}
+
 /**
  * 材工名データを取得する
  */
-function get_zaikoumei_datas() {
+function get_zaikoumei_datas($class_code) {
   global $pdo;
   $datas = [];
 
   $sql = "SELECT z.zkm_code, z.zkm_name, c.text1 ,c.code_no
-  FROM sq_zaikoumei z
-  LEFT JOIN sq_code c
-  ON z.c_div = c.code_no
-  AND c.code_id = 'c_div'";
+    FROM sq_zaikoumei z
+    LEFT JOIN sq_code c
+    ON z.c_div = c.code_no
+    AND c.code_id = 'c_div'
+    WHERE z.class_code = '$class_code'";
 
   $stmt = $pdo->prepare($sql);
   $stmt->execute();
