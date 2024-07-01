@@ -759,6 +759,14 @@ input[type="checkbox"]:disabled + label {
   opacity: 0.6;
 }
 
+input:disabled {
+  color: inherit;
+}
+
+select:disabled {
+  color: black!important; /* or specify the color you want */
+}
+
 details {
   margin-top: 0;
 }
