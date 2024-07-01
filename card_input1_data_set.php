@@ -7,13 +7,13 @@ function map_procurement_status($status) {
     case 1:
       return '技術部入力待ち';
     case 2:
-      return '技術部承認済み';
+      return '技術部確認待ち';
     case 3:
-      return '完了';
+      return '技術部承認待ち';
     case 4:
-      return '差し戻し';
+      return '完了';
     case 5:
-      return '中止';
+      return '差し戻し';
     default:
       return '';
   }
