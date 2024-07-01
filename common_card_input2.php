@@ -390,7 +390,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="approver" style="margin-left: 1rem;">　　承認者 </label>
-            <select name="approver" id="approverList" class="input-res" <?php echo ($process == 'new') ? 'disabled' : ''; ?>>
+            <select name="approver" id="approverList" class="input-res">
               <option value="">選択して下さい。</option>
               <?php
               if (isset($approverList) && !empty($approverList)) {
@@ -449,7 +449,7 @@
     var submitButton = document.getElementById('reg_updBtn');
     var approverComments = document.getElementById('approver_comments');
     
-    approverComments.disabled = true;
+    // approverComments.disabled = true;
 
     approverList.addEventListener('change', function() {
       var selectedValue = this.value;
@@ -457,11 +457,11 @@
       if (selectedValue) {
         submitButton.innerText = '承認';
         submitButton.classList.add('approveBtn');
-        approverComments.disabled = false;
+        // approverComments.disabled = false;
       } else {
         submitButton.innerText = '<?= $btn_name ?>';
         submitButton.classList.remove('approveBtn');
-        approverComments.disabled = true;
+        // approverComments.disabled = true;
       }
     });
   });

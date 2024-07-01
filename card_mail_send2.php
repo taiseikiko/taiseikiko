@@ -6,7 +6,7 @@
 
     $redirect = './card_input1.php';
 
-    // try {
+    try {
         // DB接続
         $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
         $from_name = $from_email = $to_name = $to_email = '';
@@ -62,14 +62,17 @@
             $success = sendMail($email_datas);
             if ($success) {
                 echo "<script>window.location.href='$redirect'  </script>";
+            } else {
+                echo "<script>window.location.href='card_input2.php?err=exceErr'</script>";
             }
         } else {
             echo "<script>window.location.href='$redirect'  </script>";
         }
 
-    // } catch(PDOException $e) {
-    //     error_log("Error: " . $e->getMessage(), 3, "error_log.txt");
-    // }
+    } catch(PDOException $e) {
+        error_log("Error: " . $e->getMessage(), 3, "error_log.txt");
+        echo "<script>window.location.href='card_input2.php?err=exceErr'</script>";
+    }
 
     /***
      * Employeeデータを取得する

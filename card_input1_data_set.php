@@ -4,25 +4,25 @@ $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 
 function map_procurement_status($status) {
   switch ($status) {
-    // case 1:
-    //   return '技術部承認待ち';
-    case 2:
-      return '技術部承認済み';
-    case 3:
-      return '完了';
-    case 4:
-      return '差し戻し';
-    case 5:
-      return '中止';
-    default:
+    case 1:
       return '技術部入力待ち';
+    case 2:
+      return '技術部確認待ち';
+    case 3:
+      return '技術部承認待ち';
+    case 4:
+      return '完了';
+    case 5:
+      return '差し戻し';
+    default:
+      return '';
   }
 }
 
 function map_card_status($status) {
   switch ($status) {
-    // case 1:
-    //   return '資材部承認待ち';
+    case 1:
+      return '資材部承認待ち';
     case 2:
       return '資材部承認済み';
     case 3:
@@ -32,7 +32,7 @@ function map_card_status($status) {
     case 5:
       return '中止';
     default:
-      return '資材部承認待ち';
+      return '';
   }
 }
 
@@ -72,14 +72,14 @@ function get_card_header_datas() {
   $stmt = $pdo->prepare($sql);
   $stmt->execute();
   $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
   foreach ($results as &$row) {
-    $statuses = explode(',', $row['procurement_statuses']);
-    foreach ($statuses as &$status) {
-      $status = map_procurement_status((int)$status);
+    if (isset($row['procurement_statuses'])) {
+      $statuses = explode(',', $row['procurement_statuses']);
+      foreach ($statuses as &$status) {
+        $status = map_procurement_status((int)$status);
+      }
+      $row['procurement_statuses'] = implode(',', $statuses);
     }
-    $row['procurement_statuses'] = implode(',', $statuses);
-
     $row['card_status'] = map_card_status((int)$row['card_status']);
   }
 

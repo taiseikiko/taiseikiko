@@ -69,13 +69,13 @@ function sendMail($email_datas) {
             } else {
                 $success = false;
                 // エラーの場合
-                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+                error_log("There is no mail address to sent: {$mail->ErrorInfo}", 3, 'error_log.txt');
             }
         }
-    } catch (Exception $e) {
+    } catch (Exception) {
         $success = false;
         // エラーの場合
-        echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+        error_log("Message could not be sent. Mailer Error: {$mail->ErrorInfo}", 3, 'error_log.txt');
     }
     return $success;
 }

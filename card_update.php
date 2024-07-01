@@ -10,7 +10,6 @@ $user_code = $_SESSION["login"];
 
 $success = true;
 
-
 //card_input2の登録ボタンを押下場合
 if (isset($_POST['submit'])) {
   $card_no = $_POST['card_no'] ?? '';                               //依頼書No  
@@ -46,27 +45,27 @@ if (isset($_POST['submit'])) {
         $detail_datas[$i][$column_name] = $_POST[$column_name . $i] ?? '';
       }
     }
+  }
 
-    try {
-      $pdo->beginTransaction();
-      //card_header_trに登録する
-      cu_card_header_tr($header_datas);
-      //card_detail_trに登録する
-      cu_card_detail_tr($sq_card_no, $detail_datas);
+  try {
+    $pdo->beginTransaction();
+    //card_header_trに登録する
+    cu_card_header_tr($header_datas);
+    //card_detail_trに登録する
+    cu_card_detail_tr($sq_card_no, $detail_datas);
 
-      $pdo->commit();
-    } catch (PDOException $e) {
-      $success = 'false';
-      $pdo->rollback();
-      error_log("PDOException: " . $e->getMessage(), 3, 'error_log.txt');
-    }
+    $pdo->commit();
+  } catch (PDOException $e) {
+    $success = false;
+    $pdo->rollback();
+    error_log("PDOException: " . $e->getMessage(), 3, 'error_log.txt');
+  }  
 
-    // エラーがある場合
-    if ($success !== true) {
-      echo "<script>window.location.href='card_input2.php?err=exceErr'</script>";
-    } else {
-      echo "<script>window.location.href='card_input1.php'</script>";
-    }
+  //エラーがない場合
+  if ($success == true) {
+    include('card_mail_send1.php');
+  } else {
+    echo "<script>window.location.href='card_input2.php?err=exceErr'</script>";
   }
 }
 

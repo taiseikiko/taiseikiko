@@ -33,9 +33,7 @@
       cu_card_header_tr();
 
       //テーブルID : card_detail_tr
-      if ($from == 'other_dept') {
-        cu_card_detail_tr();
-      }
+      cu_card_detail_tr();
       $pdo->commit();
     } catch (PDOException $e) {
       $success = false;
@@ -50,11 +48,11 @@
     } else {
       echo "<script>window.close();window.opener.location.href='$err_redirect';</script>";
     }
-    // if ($success && $success_mail) {
-    //   echo "<script>window.close();window.opener.location.href='$redirect';</script>";
-    // } else {
-    //   
-    // }
+    if ($success && $success_mail) {
+      echo "<script>window.close();window.opener.location.href='$redirect';</script>";
+    } else {
+      
+    }
   }
 
   //テーブルID : card_header_tr
@@ -88,15 +86,16 @@
     global $card_no;
     global $sq_card_line_no;
     global $type;
+    global $from;
     global $today;
 
     $data = [
       'sq_card_no' => $card_no,
-      'sq_card_line_no' => $sq_card_line_no,
     ];
       
     //同部署内
     if ($type == 'entrant') {
+      $data['sq_card_line_no'] = $sq_card_line_no;
       $data['procurement_status'] = '5';//資材部Noステータス
       $data['upd_date'] = $today;
 
@@ -104,8 +103,14 @@
       $sql = 'UPDATE card_detail_tr SET procurement_status=:procurement_status, upd_date=:upd_date
             WHERE sq_card_no=:sq_card_no AND sq_card_line_no=:sq_card_line_no';
     } else {
-      //資材部以外の部署の場合、headerのclientに差し戻したらdetailテーブルから、該当のレコードを削除する
-      $sql = 'DELETE FROM card_detail_tr WHERE sq_card_no=:sq_card_no AND sq_card_line_no=:sq_card_line_no';
+      if ($from == 'procurement') {
+        //資材部以外の部署の場合、headerのclientに差し戻したらdetailテーブルから、該当のレコードを削除する
+        $sql = 'DELETE FROM card_detail_tr WHERE sq_card_no=:sq_card_no';
+      } else {
+        $data['sq_card_line_no'] = $sq_card_line_no;
+        //資材部以外の部署の場合、headerのclientに差し戻したらdetailテーブルから、該当のレコードを削除する
+        $sql = 'DELETE FROM card_detail_tr WHERE sq_card_no=:sq_card_no AND sq_card_line_no=:sq_card_line_no';
+      }
     }   
 
     $stmt = $pdo->prepare($sql);
