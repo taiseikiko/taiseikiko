@@ -41,7 +41,7 @@ try {
         foreach ($datas as $item) {
             //データベースからもらったテキストにclientとsq_noをセットする
             $search = array("client", "card_no");
-            $replace = array($from_name, $sq_card_no);
+            $replace = array($from_name, $card_no);
             $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
             $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
             $to_email = $item['email'];
@@ -54,7 +54,8 @@ try {
                 'from_name' => $from_name,       //送信者name
                 'subject' => $subject,
                 'body' => $body,
-                'sq_card_no' => $sq_card_no,
+                // 'sq_card_no' => $sq_card_no,
+                'card_no' => $card_no,
                 'url' => $url
             ];
         }
@@ -201,37 +202,3 @@ function get_mail_receiver_from_sq_default_role($column)
     return $datas;
 }
 
-/***
- * 今まで経由した全員のメールをcard_detail_trテーブルから取得する
- */
-function get_all_user()
-{
-    global $pdo;
-    global $sq_card_no;
-    global $sq_card_line_no;
-    $emailList = [];
-
-    $sql = "SELECT e1.email AS client_email, e2.email AS email_procurement_approver_email, e3.email AS entrant_email, e4.email AS confirmer_email, e5.email AS approver_email
-            FROM card_header_tr h
-            LEFT JOIN card_detail_tr d ON h.card_no = d.sq_card_no AND d.sq_card_line_no = '$sq_card_line_no'
-            LEFT JOIN employee e1 ON e1.employee_code = h.client
-            LEFT JOIN employee e2 ON e2.employee_code = h.procurement_approver
-            LEFT JOIN employee e3 ON e3.employee_code = d.entrant
-            LEFT JOIN employee e4 ON e4.employee_code = d.confirmer
-            LEFT JOIN employee e5 ON e5.employee_code = d.approver
-            WHERE d.sq_card_no = '$sq_card_no' AND d.sq_card_line_no = '$sq_card_line_no'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-
-    if (!empty($row)) {
-        $emails = ['client_email', 'email_procurement_approver_email', 'entrant_email', 'confirmer_email', 'approver_email'];
-        $i = 0;
-        foreach ($emails as $email) {
-            $emailList[$i]['email'] = $row[$email];
-            $i++;
-        }
-    }
-
-    return $emailList;
-}

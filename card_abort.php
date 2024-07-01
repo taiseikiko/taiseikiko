@@ -35,8 +35,7 @@ include('card_abort_data_set.php');
           <textarea name="abort_comments" id="comments" rows="3" cols="120" class="textarea-res"><?= $abort_comments ?></textarea>
         </div>
         <div class="field-row" style="margin-top: 20px; margin-left: 400px;">
-          <button class="returnBtn" id="returnBtn">戻る </button>
-          <button class="cancelProcessBtn" name="abort" id="abort">中止 </button>
+          <button class="cancelProcessBtn" name="abort" id="abort">中止処理実行 </button>
         </div>
         <br>
       </form>
