@@ -45,21 +45,21 @@ if (isset($_POST['submit'])) {
         $detail_datas[$i][$column_name] = $_POST[$column_name . $i] ?? '';
       }
     }
-
-    try {
-      $pdo->beginTransaction();
-      //card_header_trに登録する
-      cu_card_header_tr($header_datas);
-      //card_detail_trに登録する
-      cu_card_detail_tr($sq_card_no, $detail_datas);
-
-      $pdo->commit();
-    } catch (PDOException $e) {
-      $success = false;
-      $pdo->rollback();
-      error_log("PDOException: " . $e->getMessage(), 3, 'error_log.txt');
-    }
   }
+
+  try {
+    $pdo->beginTransaction();
+    //card_header_trに登録する
+    cu_card_header_tr($header_datas);
+    //card_detail_trに登録する
+    cu_card_detail_tr($sq_card_no, $detail_datas);
+
+    $pdo->commit();
+  } catch (PDOException $e) {
+    $success = false;
+    $pdo->rollback();
+    error_log("PDOException: " . $e->getMessage(), 3, 'error_log.txt');
+  }  
 
   //エラーがない場合
   if ($success == true) {
