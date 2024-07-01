@@ -33,12 +33,12 @@
               $procurement_statuses = explode(',', $row['procurement_statuses']);
             ?>
               <tr>
-                <td><?= htmlspecialchars($row['card_no']) ?></td>
-                <td><?= htmlspecialchars($row['card_status']) ?></td>
-                <td><?= htmlspecialchars($row['client_name']) ?></td>
-                <td><?= htmlspecialchars($row['add_date']) ?></td>
-                <td><?= htmlspecialchars($row['procurement_approver_name']) ?></td>
-                <td><?= htmlspecialchars($row['procurement_approver_date']) ?></td>
+                <td><?= htmlspecialchars($row['card_no']??'') ?></td>
+                <td><?= htmlspecialchars($row['card_status']??'') ?></td>
+                <td><?= htmlspecialchars($row['client_name']??'') ?></td>
+                <td><?= htmlspecialchars($row['add_date']??'') ?></td>
+                <td><?= htmlspecialchars($row['procurement_approver_name']??'') ?></td>
+                <td><?= htmlspecialchars($row['procurement_approver_date']??'') ?></td>
                 <td><?= isset($procurement_nos[0]) ? htmlspecialchars($procurement_nos[0]) : '' ?></td>
                 <td><?= isset($procurement_statuses[0]) ? htmlspecialchars($procurement_statuses[0]) : '' ?></td>
                 <td><?= isset($procurement_nos[1]) ? htmlspecialchars($procurement_nos[1]) : '' ?></td>

@@ -10,7 +10,6 @@ $user_code = $_SESSION["login"];
 
 $success = true;
 
-
 //card_input2の登録ボタンを押下場合
 if (isset($_POST['submit'])) {
   $card_no = $_POST['card_no'] ?? '';                               //依頼書No  
@@ -56,17 +55,17 @@ if (isset($_POST['submit'])) {
 
       $pdo->commit();
     } catch (PDOException $e) {
-      $success = 'false';
+      $success = false;
       $pdo->rollback();
       error_log("PDOException: " . $e->getMessage(), 3, 'error_log.txt');
     }
+  }
 
-    // エラーがある場合
-    if ($success !== true) {
-      echo "<script>window.location.href='card_input2.php?err=exceErr'</script>";
-    } else {
-      echo "<script>window.location.href='card_input1.php'</script>";
-    }
+  //エラーがない場合
+  if ($success == true) {
+    include('card_mail_send1.php');
+  } else {
+    echo "<script>window.location.href='card_input2.php?err=exceErr'</script>";
   }
 }
 
