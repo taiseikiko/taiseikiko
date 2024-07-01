@@ -29,8 +29,8 @@
           </tr>
           <?php if (isset($cardData) && !empty($cardData)) : ?>
             <?php foreach ($cardData as $row) : 
-              $procurement_nos = explode(',', $row['procurement_nos']);
-              $procurement_statuses = explode(',', $row['procurement_statuses']);
+              $procurement_nos = $row['procurement_nos'] ? explode(',', $row['procurement_nos']) : '';
+              $procurement_statuses = $row['procurement_statuses'] ? explode(',', $row['procurement_statuses']) : '';
             ?>
               <tr>
                 <td><?= htmlspecialchars($row['card_no']??'') ?></td>

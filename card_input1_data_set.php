@@ -72,13 +72,14 @@ function get_card_header_datas() {
   $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
   foreach ($results as &$row) {
-    $statuses = explode(',', $row['procurement_statuses']);
-    foreach ($statuses as &$status) {
-      $status = map_procurement_status((int)$status);
+    if (isset($row['procurement_statuses'])) {
+      $statuses = explode(',', $row['procurement_statuses']);
+      foreach ($statuses as &$status) {
+        $status = map_procurement_status((int)$status);
+      }
+      $row['procurement_statuses'] = implode(',', $statuses);
+      $row['card_status'] = map_card_status((int)$row['card_status']);
     }
-    $row['procurement_statuses'] = implode(',', $statuses);
-
-    $row['card_status'] = map_card_status((int)$row['card_status']);
   }
 
   return $results;
