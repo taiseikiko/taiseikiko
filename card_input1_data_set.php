@@ -1,6 +1,8 @@
 <?php
 require_once('function.php');
 $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
+$client_disabled = 'disabled'; //更新ボタン
+$approve_disabled = 'disabled'; //承認ボタン
 
 function map_procurement_status($status) {
   switch ($status) {
@@ -37,14 +39,16 @@ function map_card_status($status) {
 }
 
 function get_card_header_datas() {
-  global $pdo;
+  global $pdo, $user_code;
 
   $sql = "
   SELECT 
     ch.card_no, 
     ch.card_status, 
+    ch.client,
     e_client.employee_name AS client_name, 
     ch.add_date, 
+    ch.procurement_approver,
     e_approver.employee_name AS procurement_approver_name, 
     ch.procurement_approver_date,
     GROUP_CONCAT(cd.sq_card_line_no ORDER BY cd.sq_card_line_no ASC) AS sq_card_line_nos,
@@ -60,6 +64,7 @@ function get_card_header_datas() {
     employee e_approver ON ch.procurement_approver = e_approver.employee_code
   WHERE 
     ch.card_status != 5
+  AND (ch.client = '$user_code' || ch.procurement_approver = '$user_code')
   GROUP BY 
     ch.card_no, 
     ch.card_status, 

@@ -48,7 +48,27 @@
                 <td><?= isset($procurement_nos[3]) ? htmlspecialchars($procurement_nos[3]) : '' ?></td>
                 <td><?= isset($procurement_statuses[3]) ? htmlspecialchars($procurement_statuses[3]) : '' ?></td>
                 <td style="text-align:center">
-                  <button type="submit" class="updateBtn" id="updateBtn" name="process" value="update" data-card_no="<?= htmlspecialchars($row['card_no']) ?>">更新</button>
+                <?php 
+                  //ログインユーザーがclientか承認者かを見てボタンの処理を変える
+                  $approver = $row['procurement_approver'];
+                  if (isset($approver)) {
+                    $approve_disabled = 'disabled';
+                    if ($approver == $_SESSION["login"]) {
+                      $approve_disabled = '';
+                    }
+                  }
+
+                  $client = $row['client'];
+                  if (isset($client)) {
+                    $client_disabled = 'disabled';
+                    if ($client == $_SESSION["login"]) {
+                      $client_disabled = '';
+                    }
+                  }                
+                ?>
+                  <button type="submit" class="updateBtn" id="updateBtn" name="process" value="update" data-card_no="<?= htmlspecialchars($row['card_no']) ?>" <?= $client_disabled ?>>更新</button>
+                
+                  <button type="submit" class="approveBtn" id="updateBtn" name="process" value="approve" data-card_no="<?= htmlspecialchars($row['card_no']) ?>" <?= $approve_disabled ?>>承認</button>
                 </td>                
               </tr>
             <?php endforeach; ?>

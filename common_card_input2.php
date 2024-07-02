@@ -404,7 +404,7 @@
               ?>
             </select>
             <!-- 承認画面の場合だけ表示する -->
-            <?php if ($process !== 'new') { ?>
+            <?php if ($process == 'approve') { ?>
               <label class="common_label" for="approver_comments">コメント</label>
               <textarea id="approver_comments" style="margin-left: 1rem;" name="approver_comments" rows="3" cols="120" class="textarea-res"><?= $approver_comments ?></textarea>
             <?php } ?>
@@ -444,27 +444,27 @@
       $("#card_input2").attr("action", "card_input3.php");
     });
   });
-  document.addEventListener('DOMContentLoaded', function() {
-    var approverList = document.getElementById('approverList');
-    var submitButton = document.getElementById('reg_updBtn');
-    var approverComments = document.getElementById('approver_comments');
+  // document.addEventListener('DOMContentLoaded', function() {
+  //   var approverList = document.getElementById('approverList');
+  //   var submitButton = document.getElementById('reg_updBtn');
+  //   var approverComments = document.getElementById('approver_comments');
     
-    // approverComments.disabled = true;
+  //   // approverComments.disabled = true;
 
-    approverList.addEventListener('change', function() {
-      var selectedValue = this.value;
+  //   approverList.addEventListener('change', function() {
+  //     var selectedValue = this.value;
 
-      if (selectedValue) {
-        submitButton.innerText = '承認';
-        submitButton.classList.add('approveBtn');
-        // approverComments.disabled = false;
-      } else {
-        submitButton.innerText = '<?= $btn_name ?>';
-        submitButton.classList.remove('approveBtn');
-        // approverComments.disabled = true;
-      }
-    });
-  });
+  //     if (selectedValue) {
+  //       submitButton.innerText = '承認';
+  //       submitButton.classList.add('approveBtn');
+  //       // approverComments.disabled = false;
+  //     } else {
+  //       submitButton.innerText = '<?= $btn_name ?>';
+  //       submitButton.classList.remove('approveBtn');
+  //       // approverComments.disabled = true;
+  //     }
+  //   });
+  // });
 </script>
 <style>
   .flex-container {

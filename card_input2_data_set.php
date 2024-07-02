@@ -34,6 +34,8 @@ if (isset($_POST['process']) || isset($_GET['card_no'])) {
 
   //ボタン名
   if ($process == 'update') {
+    $btn_name = '更新';
+  } else if ($process == 'approve') {
     $btn_name = '承認';
   }
   $err = $_GET['err'] ?? '';//エラーを取得する

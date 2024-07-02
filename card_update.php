@@ -63,7 +63,11 @@ if (isset($_POST['submit'])) {
 
   //エラーがない場合
   if ($success == true) {
-    include('card_mail_send1.php');
+    if ($process == 'approve') {
+      include('card_mail_send1.php');
+    } else {
+      echo "<script>window.location.href='card_input1.php'</script>";
+    }
   } else {
     echo "<script>window.location.href='card_input2.php?err=exceErr'</script>";
   }
@@ -169,6 +173,7 @@ function cu_card_header_tr($header_datas)
     'add_upd_date' => $today
   ];
 
+  //新規登録の場合、
   if ($header_datas['process'] == 'new') {
     // 依頼書№ 自動採番
     /**-------------------------------------------------------------------------------- */
@@ -210,13 +215,20 @@ function cu_card_header_tr($header_datas)
             (:card_no, :client, :card_status, :p_office_no, :preferred_date, :deadline, :procurement_approver, :procurement_approver_date, 
             :procurement_approver_comments, :add_upd_date)";
   } else {
-    $datas['card_status'] = '2'; //状況
-    $datas['procurement_approver_date'] = $today;  //資材部承認日
-    $datas['procurement_approver_comments'] = $header_datas['approver_comments'];  //資材部承認者コメント
+    //更新の場合
+    if ($header_datas['process'] == 'update') {
+      $column = "";
+    } else {
+      //承認の場合
+      $column = "card_status=:card_status , procurement_approver_date=:procurement_approver_date, procurement_approver_comments=:procurement_approver_comments,";
+      $datas['card_status'] = '2'; //状況
+      $datas['procurement_approver_date'] = $today;  //資材部承認日
+      $datas['procurement_approver_comments'] = $header_datas['approver_comments'];  //資材部承認者コメント
+    }    
 
     // Update data into card_header_tr table
-    $sql = "UPDATE card_header_tr SET card_status=:card_status, p_office_no=:p_office_no, preferred_date=:preferred_date, deadline=:deadline,
-             procurement_approver=:procurement_approver, procurement_approver_date=:procurement_approver_date, procurement_approver_comments=:procurement_approver_comments,
+    $sql = "UPDATE card_header_tr SET $column p_office_no=:p_office_no, preferred_date=:preferred_date, deadline=:deadline,
+             procurement_approver=:procurement_approver, 
              upd_date=:add_upd_date
              WHERE card_no=:card_no";
   }

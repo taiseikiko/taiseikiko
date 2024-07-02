@@ -79,7 +79,11 @@ if (isset($_POST['detail']) || isset($_GET['sq_card_no'])) {
     $variable_names = ['procurement_no', 'maker', 'zkm_code', 'pipe', 'sizeA', 'sizeB', 'class_code', 'specification_no', 'special_note', 'entrant', 'entrant_set_date', 'entrant_set_comments',
                         'entrant_comments', 'entrant_date', 'confirmer_comments', 'approver_comments'];
     foreach ($variable_names as $variable_name) {
-      ${$variable_name} = $card_detail_list[$variable_name];
+      if ($variable_name == 'entrant_date') {
+        $entrant_date = date('Y-m-d');  //登録日
+      } else {
+        ${$variable_name} = $card_detail_list[$variable_name];
+      }
     }
 
     //材工名データを取得する
