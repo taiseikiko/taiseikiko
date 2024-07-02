@@ -59,11 +59,12 @@ try {
                 'url' => $url
             ];
         }
+        // print_r($email_datas);
         // メール送信処理を行う
         $success = sendMail($email_datas);
-        if ($success) {
-            echo "<script>window.close();window.opener.location.href='$redirect'  </script>";
-        }
+        // if ($success) {
+        //     echo "<script>window.close();window.opener.location.href='$redirect'  </script>";
+        // }
     } else {
         echo "<script>window.location.href='$redirect'  </script>";
     }
