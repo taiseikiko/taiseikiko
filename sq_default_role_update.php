@@ -12,12 +12,19 @@ $confirmer = $_POST['confirmer'];
 $approver = $_POST['approver'];
 $current_date = date('Y/m/d');
 
-
-$sql = "UPDATE sq_default_role SET entrant = ?, confirmer = ?, approver = ?, upd_date = ? WHERE dept_id = ? AND group_id = ?";
+// ON DUPLICATE KEY UPDATE
+$sql = "INSERT INTO sq_default_role (dept_id, group_id, entrant, confirmer, approver, upd_date) 
+      VALUES (?, ?, ?, ?, ?, ?)
+      ON DUPLICATE KEY UPDATE
+      entrant = VALUES(entrant), confirmer = VALUES(confirmer), approver = VALUES(approver), upd_date = VALUES(upd_date)";
 $stmt = $pdo->prepare($sql);
-$stmt->execute([$entrant, $confirmer, $approver, $current_date, $dept_id, $group_id]);
 
-// 更新が成功したら sq_default_role.php にリダイレクトします
-header('Location: sq_default_role.php');
-exit();
-?>
+try {
+  $stmt->execute([$dept_id, $group_id, $entrant, $confirmer, $approver, $current_date]);
+  // 更新が成功したら sq_default_role.php にリダイレクトします
+  header('Location: sq_default_role.php');
+  exit();
+} catch (PDOException $e) {
+  echo "Error: " . $e->getMessage();
+  exit();
+}

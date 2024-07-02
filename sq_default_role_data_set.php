@@ -1,6 +1,6 @@
 <?php
 if (session_status() == PHP_SESSION_NONE) {
-    session_start();
+  session_start();
 }
 require_once('function.php');
 
@@ -14,17 +14,29 @@ $employee_datas = [];
 $department_code = isset($_SESSION['department_code']) ? $_SESSION['department_code'] : '';
 
 if (!empty($department_code)) {
-    // dept_id を取得
-    $sql = "SELECT dept_id FROM sq_dept WHERE sq_dept_code = ?";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$department_code]);
-    $dept_id = $stmt->fetchColumn();
+  // dept_id を取得
+  $sql = "SELECT dept_id FROM sq_dept WHERE sq_dept_code = ?";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute([$department_code]);
+  $dept_id = $stmt->fetchColumn();
 
-    // グループプルダウンのデータを取得する
-    $group_datas = getGroupDatas($dept_id);
+  // グループプルダウンのデータを取得する
+  $group_datas = getGroupDatas($dept_id);
 }
 
-if (isset($_POST['functionName']) && $_POST['functionName'] === "getDropdownData") {
+if (isset($_POST['functionName'])) {
+  if ($_POST['functionName'] === "getInitialData") {
+    $group_id = isset($_POST['group_id']) ? $_POST['group_id'] : '';
+    $dept_id = isset($_POST['dept_id']) ? $_POST['dept_id'] : '';
+
+    $sql = "SELECT entrant, confirmer, approver FROM sq_default_role WHERE dept_id = ? AND group_id = ?";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$dept_id, $group_id]);
+    $existingRoleData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    echo json_encode($existingRoleData);
+    exit;
+  } elseif ($_POST['functionName'] === "getDropdownData") {
     $group_id = isset($_POST['group_id']) ? $_POST['group_id'] : '';
     $dept_id = isset($_POST['dept_id']) ? $_POST['dept_id'] : '';
 
@@ -32,50 +44,58 @@ if (isset($_POST['functionName']) && $_POST['functionName'] === "getDropdownData
     $confirmerData = getEmployeeDatas($dept_id, $group_id, 2);
     $approverData = getEmployeeDatas($dept_id, $group_id, 3);
 
-    // ロールデータを取得する
-    $sql = "SELECT entrant, confirmer, approver FROM sq_default_role WHERE dept_id = ? AND group_id = ?";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute([$dept_id, $group_id]);
-    $existingRoleData = $stmt->fetch(PDO::FETCH_ASSOC);
-
     $response = [
-        'entrant' => $entrantData,
-        'confirmer' => $confirmerData,
-        'approver' => $approverData,
-        'existingRoleData' => $existingRoleData
+      'entrant' => $entrantData,
+      'confirmer' => $confirmerData,
+      'approver' => $approverData
     ];
 
     echo json_encode($response);
     exit;
-}
+  } elseif ($_POST['functionName'] === "checkExistingData") {
+    $dept_id = isset($_POST['dept_id']) ? $_POST['dept_id'] : '';
+    $group_id = isset($_POST['group_id']) ? $_POST['group_id'] : '';
+    $entrant = isset($_POST['entrant']) ? $_POST['entrant'] : '';
 
-function getGroupDatas($dept_id) {
-    global $pdo;
-
-    $sql = "SELECT text1, text2, text3 
-            FROM sq_code
-            WHERE code_id='dept_group' AND text1 = ?";
+    $sql = "SELECT confirmer, approver FROM sq_default_role WHERE dept_id = ? AND group_id = ? AND entrant = ?";
     $stmt = $pdo->prepare($sql);
-    $stmt->execute([$dept_id]);
-    return $stmt->fetchAll();
+    $stmt->execute([$dept_id, $group_id, $entrant]);
+    $existingRoleData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    echo json_encode($existingRoleData);
+    exit;
+  }
 }
 
-function getEmployeeDatas($dept_id, $group_id, $role) {
-    global $pdo;
 
-    $sql = "SELECT r.employee_code, e.employee_name
-            FROM sq_route_in_dept r
-            LEFT JOIN employee e ON r.employee_code = e.employee_code
-            WHERE dept_id = ? AND role = ?";
-    $params = [$dept_id, $role];
+function getGroupDatas($dept_id)
+{
+  global $pdo;
 
-    if (!empty($group_id)) {
-        $sql .= " AND group_id = ?";
-        $params[] = $group_id;
-    }
-
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  $sql = "SELECT text1, text2, text3 
+          FROM sq_code
+          WHERE code_id='dept_group' AND text1 = ?";
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute([$dept_id]);
+  return $stmt->fetchAll();
 }
-?>
+
+function getEmployeeDatas($dept_id, $group_id, $role)
+{
+  global $pdo;
+
+  $sql = "SELECT r.employee_code, e.employee_name
+          FROM sq_route_in_dept r
+          LEFT JOIN employee e ON r.employee_code = e.employee_code
+          WHERE dept_id = ? AND role = ?";
+  $params = [$dept_id, $role];
+
+  if (!empty($group_id)) {
+    $sql .= " AND group_id = ?";
+    $params[] = $group_id;
+  }
+
+  $stmt = $pdo->prepare($sql);
+  $stmt->execute($params);
+  return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
