@@ -5,16 +5,6 @@
   $today = date('Y/m/d');
   $success = false;
 
-  try {
-    $pdo->beginTransaction();
-    //card_file_trテーブルに更新する
-    cu_card_file_tr();
-    $pdo->commit();
-  } catch (PDOException $e) {
-    $pdo->rollback();
-    error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
-  }
-
   //重複エラーチェック
   if (isset($_POST['checkDuplicate'])) {
     $sq_card_no = $_POST['sq_card_no'];
@@ -32,6 +22,16 @@
     echo json_encode([
       "isExist" => $isExist
     ]);
+  } else {
+    try {
+      $pdo->beginTransaction();
+      //card_file_trテーブルに更新する
+      cu_card_file_tr();
+      $pdo->commit();
+    } catch (PDOException $e) {
+      $pdo->rollback();
+      error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
+    }
   }
 
   /**

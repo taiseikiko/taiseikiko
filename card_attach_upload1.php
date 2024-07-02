@@ -25,10 +25,6 @@
       break;
   }
 
-  if ($include_file !== '') {
-    include('card_file.php');
-  }
-
   if (!empty($tmp_file_name)) {
     if (!file_exists($uploadDir)) {
       mkdir($uploadDir, 0777, true);
@@ -39,12 +35,16 @@
     if (move_uploaded_file($tmp_file_name, $destination)) {
       chmod($destination, 0644);
       echo "ファイル「".$destination."」　をアップロードしました。";
+      if ($include_file !== '') {
+        include($include_file);
+      }
       exit();
     } else {
       echo "<b><font color='red'>ファイルをアップロードできません。</font></b>";
       exit();
     }
   } else {
+    echo json_encode("アップロードしました2。");
     exit();
   }
 
