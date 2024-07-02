@@ -98,7 +98,7 @@
     }
 
     //Disabled button 
-    const excludeButtons = ['returnBtn', 'confirm_okBtn', 'cancelBtn', 'updateBtn'];
+    const excludeButtons = ['returnBtn', 'okBtn', 'cancelBtn', 'updateBtn'];
     var buttons = document.getElementsByTagName('button');
     for (var k = 0; k < buttons.length; k++) {
       if (!excludeButtons.includes(buttons[k].className)) {
