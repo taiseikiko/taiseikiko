@@ -598,7 +598,7 @@
       //OKメッセージを書く
       var msg = "処理にエラーがありました。係員にお知らせください。";
       //OKDialogを呼ぶ
-      openOkModal(msg, 'error');
+      openOkModal(msg, 'exceErr');
     }
 
     /*----------------------------------------------------------------------------------------------- */
@@ -649,8 +649,13 @@
         $('#uploaded_file2').val('');
         $('#upload_comments2').val('');
       }
-      //画面上変更なし
-      $('#ok_okBtn').attr('data-dismiss', 'modal');
+      else if (process == "exceErr") {
+        //card_input1へ移動
+        $('#card_input3').attr('action', 'card_input1.php');
+      } else {
+        //画面上変更なし
+        $('#ok_okBtn').attr('data-dismiss', 'modal');
+      }
     });
   });
 

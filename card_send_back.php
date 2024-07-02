@@ -63,14 +63,15 @@
   $(document).ready(function(){
 
     //差し戻し先担当者がCHANGEした場合
-    $('#send_back_to_person').change(function() {
+    var send_back = $('#send_back_to_person').val();
+    if (send_back.length > 0) {
       //選択されたOPTIONを検索する
-      var selected = $(this).find('option:selected');
+      var selected = $('#send_back_to_person').find('option:selected');
       //選択されたOPTIONのIDを取得する
       var type = selected.attr('id');
       //選択されたユーザーがclientかentrantかを確認するためtypeにセットする
       $('#type').val(type);
-    })
+    }
 
     /*----------------------------------------------------------------------------------------------- */
     

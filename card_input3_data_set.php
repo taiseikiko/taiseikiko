@@ -22,11 +22,11 @@ $class_datas = get_class_datas();                     //分類プルダウンに
 $entrantList = get_entrant_datas();
 
 //card_input2画面から詳細ボタンを押下場合
-if (isset($_POST['detail'])) {
-  $process = $_POST['process']; //処理
-  $sq_card_no = $_POST['card_no'];              //依頼書No
-  $sq_card_line_no = $_POST['detail'];          //依頼書行No
-  $client = $_POST['user_code'];                //登録者
+if (isset($_POST['detail']) || isset($_GET['sq_card_no'])) {
+  $process = $_POST['process']?? ''; //処理
+  $sq_card_no = $_POST['card_no']?? $_GET['sq_card_no'];              //依頼書No
+  $sq_card_line_no = $_POST['detail']?? $_GET['sq_card_line_no'];          //依頼書行No
+  $client = $_POST['user_code']?? '';                //登録者
 
   //どの画面を表示するかを確認する（受付、入力、確認、承認）
   /************************************************開始***************************************************************/

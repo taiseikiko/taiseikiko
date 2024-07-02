@@ -139,11 +139,9 @@
     $("#ok_okBtn").click(function(event) {
       var process = $("#btnProcess").val();
       //エラーがある場合
-      if (process == "error") {
+      if (process == "errExec") {
         //card_input1へ移動
         $('#card_input2').attr('action', 'card_input1.php');
-        //選択したファイルをクリアする
-        $('#uploaded_file').val('');
       } else {
         //画面上変更なし
         $('#ok_okBtn').attr('data-dismiss', 'modal');
@@ -159,7 +157,7 @@
       //OKメッセージを書く
       var msg = "処理にエラーがありました。係員にお知らせください。";
       //OKDialogを呼ぶ
-      openOkModal(msg, 'error');
+      openOkModal(msg, 'errExec');
     }
 
     /*----------------------------------------------------------------------------------------------- */
