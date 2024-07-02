@@ -98,15 +98,31 @@
     /*----------------------------------------------------------------------------------------------- */
     
     //アプロードボタンを押下場合
-    $('#upload').click(function(event) {     
-          //何の処理かを書く
-          var process = "upload";
-          //エラーメッセージを書く
-          var msg = "アプロードします。よろしいですか？";
-          //確認Dialogを呼ぶ
-          openConfirmModal(msg, process);
-       
+    $('#upload').click(function(event) {
+      //何の処理かを書く
+      var process = "upload";
+      //エラーメッセージを書く
+      var msg = "アプロードします。よろしいですか？";
+      //確認Dialogを呼ぶ
+      openConfirmModal(msg, process);
     });
+
+    /*----------------------------------------------------------------------------------------------- */
+
+    //localStorageからフォームデータをセットする
+    const formData = JSON.parse(localStorage.getItem('card_input2'));
+    if (formData) {
+      var myForm = document.getElementById('card_input2');
+      console.log(formData);
+      Object.keys(formData).forEach(key => {
+        if (key !== 'uploaded_file') {
+          myForm.elements[key].value = formData[key];
+        }
+      })
+
+      //フォームにセット後、クリアする
+      localStorage.removeItem('card_input2');
+    }
 
     /*----------------------------------------------------------------------------------------------- */
 
@@ -214,6 +230,9 @@
       processData: false, // Important: prevent jQuery from processing the data
       contentType: false, // Important: ensure jQuery does not add a content-type header
       success: function(response) {
+        //フォームデータを保存する
+        saveFormData();
+        //reload page
         location.reload();
       },
       error: function(xhr, status, error) {
@@ -239,6 +258,13 @@
     $("#ok-message").text(msg);
     //確認Dialogを呼ぶ
     $("#ok").modal({backdrop: false});
+  }
+
+  function saveFormData() {
+    var myForm = document.getElementById('card_input2');
+    const formData = new FormData(myForm);
+    const jsonData = JSON.stringify(Object.fromEntries(formData));
+    localStorage.setItem('card_input2', jsonData);
   }
 </script>
 <style>

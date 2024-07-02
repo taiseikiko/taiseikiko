@@ -591,6 +591,24 @@
 
     /*----------------------------------------------------------------------------------------------- */
 
+    //localStorageからフォームデータをセットする
+    const formData = JSON.parse(localStorage.getItem('card_input3'));
+    if (formData) {
+      var myForm = document.getElementById('card_input3');
+      console.log(formData);
+      Object.keys(formData).forEach(key => {
+        const exceptId = ['upload_comments1', 'upload_comments2', 'uploaded_file1', 'uploaded_file2'];
+        if (!exceptId.includes(key)) {
+          myForm.elements[key].value = formData[key];
+        }
+      })
+
+      //フォームにセット後、クリアする
+      localStorage.removeItem('card_input3');
+    }
+
+    /*----------------------------------------------------------------------------------------------- */
+
     //エラーがあるかどうか確認する
     var err = '<?= $err ?>';
     //エラーがある場合
@@ -737,12 +755,24 @@
       processData: false, // Important: prevent jQuery from processing the data
       contentType: false, // Important: ensure jQuery does not add a content-type header
       success: function(response) {
+        //フォームデータを保存する
+        saveFormData();
+        //reload page
         location.reload();
       },
       error: function(xhr, status, error) {
       }
     })
 
+  }
+
+  /*----------------------------------------------------------------------------------------------- */
+
+  function saveFormData() {
+    var myForm = document.getElementById('card_input3');
+    const formData = new FormData(myForm);
+    const jsonData = JSON.stringify(Object.fromEntries(formData));
+    localStorage.setItem('card_input3', jsonData);
   }
 
   /*----------------------------------------------------------------------------------------------- */
