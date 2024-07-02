@@ -17,12 +17,6 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute([$department_code]);
 $dept_id = $stmt->fetchColumn();
 
-// ロールデータを取得する
-$sql = "SELECT entrant, confirmer, approver, group_id FROM sq_default_role WHERE dept_id = ?";
-$stmt = $pdo->prepare($sql);
-$stmt->execute([$dept_id]);
-$existingRoleData = $stmt->fetch(PDO::FETCH_ASSOC);
-print_r($existingRoleData);
 $button_text = '更新';
 ?>
 
@@ -96,39 +90,41 @@ $button_text = '更新';
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
-    var initialRoleData = <?= json_encode($existingRoleData) ?>;
-
-    if (initialRoleData) {
-      loadExistingRoleData(initialRoleData);
-    }
-
     $('#group').change(function() {
       var group = $(this).val();
+      var dept_id = $('#dept_id').val();
+
       $('#secondRow').show();
       $('#thirdRow').show();
       $(this).prop('disabled', true);
-      fetchData(group);
+
+      fetchInitialData(dept_id, group);
+      fetchData(group); // Load the dropdown data as before
     });
 
-    $('#sq_default_role_form').submit(function(e) {
-      $('#group_id').val($('#group').val());
-      if (!$('#entrant').val() && !$('#confirmor').val() && !$('#approver').val()) {
-        alert('入力項目に不備があります。');
-        e.preventDefault();
-      } else {
-        let buttonText = $('#updateBtn').text();
-        if (!confirm(buttonText + 'します、よろしいでしょうか？')) {
-          e.preventDefault();
+    function fetchInitialData(dept_id, group_id) {
+      $.ajax({
+        url: "sq_default_role_data_set.php",
+        type: "POST",
+        data: {
+          dept_id: dept_id,
+          group_id: group_id,
+          functionName: "getInitialData"
+        },
+        success: function(response) {
+          try {
+            var data = JSON.parse(response);
+            if (data) {
+              loadExistingRoleData(data);
+            }
+          } catch (e) {
+            console.error("Invalid JSON response: ", response);
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error("AJAX Error: ", error);
         }
-      }
-    });
-
-    function loadExistingRoleData(data) {
-      if (data) {
-        $('#entrant').val(data.entrant);
-        $('#confirmer').val(data.confirmer);
-        $('#approver').val(data.approver);
-      }
+      });
     }
 
     function fetchData(group) {
@@ -175,11 +171,6 @@ $button_text = '更新';
                   }));
                 });
               }
-
-              var existingRoleData = dropdownData.existingRoleData;
-              if (existingRoleData) {
-                loadExistingRoleData(existingRoleData);
-              }
             }
           } catch (e) {
             console.error("Invalid JSON response: ", response);
@@ -190,6 +181,64 @@ $button_text = '更新';
         }
       });
     }
+
+    $('#entrant').change(function() {
+      var entrant = $(this).val();
+      var dept_id = $('#dept_id').val();
+      var group_id = $('#group').val();
+
+      checkExistingData(dept_id, group_id, entrant);
+    });
+
+    function checkExistingData(dept_id, group_id, entrant) {
+      $.ajax({
+        url: "sq_default_role_data_set.php",
+        type: "POST",
+        data: {
+          dept_id: dept_id,
+          group_id: group_id,
+          entrant: entrant,
+          functionName: "checkExistingData"
+        },
+        success: function(response) {
+          try {
+            var data = JSON.parse(response);
+            if (data) {
+              $('#confirmer').val(data.confirmer);
+              $('#approver').val(data.approver);
+            } else {
+              $('#confirmer').val('');
+              $('#approver').val('');
+            }
+          } catch (e) {
+            console.error("Invalid JSON response: ", response);
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error("AJAX Error: ", error);
+        }
+      });
+    }
+
+    function loadExistingRoleData(data) {
+      if (data) {
+        $('#entrant').val(data.entrant);
+        $('#confirmer').val(data.confirmer);
+        $('#approver').val(data.approver);
+      }
+    }
+    $('#sq_default_role_form').submit(function(e) {
+      $('#group_id').val($('#group').val());
+      if (!$('#entrant').val() && !$('#confirmer').val() && !$('#approver').val()) {
+        alert('入力項目に不備があります。');
+        e.preventDefault();
+      } else {
+        let buttonText = $('#updateBtn').text();
+        if (!confirm(buttonText + 'します、よろしいでしょうか？')) {
+          e.preventDefault();
+        }
+      }
+    });
   });
 </script>
 
