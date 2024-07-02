@@ -27,7 +27,7 @@
         <div class="field-row">
           <label class="common_label" for="other">差し戻し先担当者</label>
           <select class="dropdown-menu" id="send_back_to_person" name="send_back_to_person">
-            <option value="" class="">選択して下さい。</option>
+            <!-- <option value="" class="">選択して下さい。</option> -->
             <?php 
               if (isset($employee_datas) && !empty($employee_datas)) {
                 foreach ($employee_datas as $item) {

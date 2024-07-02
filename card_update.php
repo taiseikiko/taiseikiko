@@ -159,8 +159,19 @@ function cu_card_header_tr($header_datas)
   global $pdo;
   global $today;
 
+  //登録更新する用のデータ
+  $datas = [
+    'card_no' => $header_datas['card_no'],    
+    'p_office_no' => $header_datas['p_office_no'],
+    'preferred_date' => $header_datas['preferred_date'],
+    'deadline' => $header_datas['deadline'],
+    'procurement_approver' => $header_datas['procurement_approver'],
+    'add_upd_date' => $today
+  ];
+
   if ($header_datas['process'] == 'new') {
     // 依頼書№ 自動採番
+    /**-------------------------------------------------------------------------------- */
     $today = date('Y/m/d');
     $ym = substr(str_replace('/', '', $today), 0, 6);
     $code_id = 'card_request_no';
@@ -186,40 +197,32 @@ function cu_card_header_tr($header_datas)
     ];
     $stmt = $pdo->prepare($sql);
     $stmt->execute($data);
+    /**----------------------------------------------------------------------------------- */
 
-    $card_status = '1'; //状況
-    $procurement_approver_date = NULL;  //資材部承認日
-    $procurement_approver_comments = NULL;  //資材部承認者コメント
+    $datas['card_status'] = '1'; //状況
+    $datas['client'] = $header_datas['client'];
+    $datas['procurement_approver_date'] = NULL;  //資材部承認日
+    $datas['procurement_approver_comments'] = NULL;  //資材部承認者コメント
+
     $sql = "INSERT INTO card_header_tr 
             (card_no, client, card_status, p_office_no, preferred_date, deadline, procurement_approver, procurement_approver_date, procurement_approver_comments, add_date) 
             VALUES 
             (:card_no, :client, :card_status, :p_office_no, :preferred_date, :deadline, :procurement_approver, :procurement_approver_date, 
             :procurement_approver_comments, :add_upd_date)";
   } else {
-    $card_status = '2'; //状況
-    $procurement_approver_date = $today;  //資材部承認日
-    $procurement_approver_comments = $header_datas['approver_comments'];  //資材部承認者コメント
+    $datas['card_status'] = '2'; //状況
+    $datas['procurement_approver_date'] = $today;  //資材部承認日
+    $datas['procurement_approver_comments'] = $header_datas['approver_comments'];  //資材部承認者コメント
 
     // Update data into card_header_tr table
-    $sql = "UPDATE card_header_tr SET client=:client, card_status=:card_status, p_office_no=:p_office_no, preferred_date=:preferred_date, deadline=:deadline,
+    $sql = "UPDATE card_header_tr SET card_status=:card_status, p_office_no=:p_office_no, preferred_date=:preferred_date, deadline=:deadline,
              procurement_approver=:procurement_approver, procurement_approver_date=:procurement_approver_date, procurement_approver_comments=:procurement_approver_comments,
              upd_date=:add_upd_date
              WHERE card_no=:card_no";
   }
 
   $stmt = $pdo->prepare($sql);
-  $stmt->execute([
-    'card_no' => $header_datas['card_no'],
-    'client' => $header_datas['client'],
-    'card_status' => $card_status,
-    'p_office_no' => $header_datas['p_office_no'],
-    'preferred_date' => $header_datas['preferred_date'],
-    'deadline' => $header_datas['deadline'],
-    'procurement_approver' => $header_datas['procurement_approver'],
-    'procurement_approver_date' => $procurement_approver_date,
-    'procurement_approver_comments' => $procurement_approver_comments,
-    'add_upd_date' => $today
-  ]);
+  $stmt->execute($datas);
 }
 
 /**
