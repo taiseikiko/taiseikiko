@@ -428,7 +428,7 @@
             <div class="flex-container" style="margin-left: 50rem;">
               <div>            
                 <button id="returnProcessBtn" class="returnProcessBtn" >差し戻し </button>
-                <button class="cancelProcessBtn" name="submit" value="cancel">中止</button>
+                <button id="cancelProcessBtn" class="cancelProcessBtn" >中止</button>
               </div> 
             </div>
           </td>
