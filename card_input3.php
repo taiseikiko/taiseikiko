@@ -434,7 +434,7 @@
               <div class="flex-container" style="margin-left:50rem">
                 <div>
                   <button id="returnProcessBtn" class="returnProcessBtn">差し出し </button>
-                  <button class="cancelProcessBtn" id="cancelProcessBtn" name="update" value="update">中止</button>
+                  <button class="cancelProcessBtn" id="cancelProcessBtn">中止</button>
                 </div>
               </div>
               <?php } ?>
@@ -584,6 +584,20 @@
       var from = 'other_dept';
 
       var url = "card_send_back.php" + "?sq_card_no=" + sq_card_no + 
+      "&sq_card_line_no=" + sq_card_line_no +
+      "&from=" + from;
+      window.open(url, "popupWindow", "width=900,height=260,left=100,top=50");
+    })
+
+    /*----------------------------------------------------------------------------------------------- */
+    //中止ボタンを押下する場合
+    $('#cancelProcessBtn').click(function () {
+      event.preventDefault();
+      var sq_card_no = document.getElementById('sq_card_no').value;
+      var sq_card_line_no = document.getElementById('sq_card_line_no').value;
+      var from = 'other_dept';
+
+      var url = "card_abort.php" + "?sq_card_no=" + sq_card_no + 
       "&sq_card_line_no=" + sq_card_line_no +
       "&from=" + from;
       window.open(url, "popupWindow", "width=900,height=260,left=100,top=50");

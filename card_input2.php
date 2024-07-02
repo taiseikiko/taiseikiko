@@ -97,6 +97,19 @@
 
     /*----------------------------------------------------------------------------------------------- */
     
+    //中止ボタンを押下する場合
+    $('#cancelProcessBtn').click(function () {
+      event.preventDefault();
+      var sq_card_no = document.getElementById('card_no').value;
+      var from = 'procurement';
+
+      var url = "card_abort.php" + "?sq_card_no=" + sq_card_no + 
+      "&from=" + from;
+      window.open(url, "popupWindow", "width=900,height=260,left=100,top=50");
+    })
+
+    /*----------------------------------------------------------------------------------------------- */
+    
     //アプロードボタンを押下場合
     $('#upload').click(function(event) {
       //何の処理かを書く
