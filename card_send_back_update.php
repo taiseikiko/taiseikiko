@@ -13,7 +13,6 @@
   $type = $_POST['type']; //client／entrant
   $from = $_POST['from']; //どの画面から来たかをセットされている（資材部。技術部）
   $success = true;
-  $success_mail = true;
 
   //処理後、移動する画面を指定する
   $redirect = './card_input1.php';
@@ -54,11 +53,6 @@
       include('card_mail_send3.php');
     } else {
       echo "<script>window.close();window.opener.location.href='$err_redirect';</script>";
-    }
-    if ($success && $success_mail) {
-      echo "<script>window.close();window.opener.location.href='$redirect';</script>";
-    } else {
-      
     }
   }
 

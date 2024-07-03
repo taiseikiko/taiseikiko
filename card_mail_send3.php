@@ -4,7 +4,6 @@
     include('card_mail_send_select.php');
     $url = $_SERVER['HTTP_REFERER']; //メール送信する時、利用するため
     $redirect = './card_input1.php';
-    $err_redirect = './card_input2.php?err=exceErr';
 
     try {
         // DB接続
@@ -41,7 +40,7 @@
             foreach ($datas as $item) {
                 //データベースからもらったテキストにclientとsq_noをセットする
                 $search = array("client", "card_no");
-                $replace = array($from_name, $sq_card_no);
+                $replace = array($from_name, $card_no);
                 $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
                 $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
                 $to_email = $item['email'];
@@ -54,24 +53,21 @@
                     'from_name' => $from_name,       //送信者name
                     'subject' => $subject,    
                     'body' => $body,
-                    'sq_card_no' => $sq_card_no,
+                    'sq_card_no' => $card_no,
                     'url' => $url
                 ];
             }
             // メール送信処理を行う
             $success = sendMail($email_datas);
-            if ($success) {
-                echo "<script>window.close();window.opener.location.href='$redirect'  </script>";
-            } else {
-                echo "<script>window.location.href='card_input2.php?err=exceErr'</script>";
-            }
-        } else {
-            echo "<script>window.location.href='$redirect'  </script>";
-        }
+        } 
+
+        // リダイレクト処理
+        $redirect_url = ($success) ? "$redirect" : "card_input2.php?err=" . ($datas ? "exceErr" : "noMail");
+        echo "<script>window.close(); window.opener.location.href='$redirect_url';</script>";
 
     } catch(PDOException $e) {
         error_log("Error: " . $e->getMessage(), 3, "error_log.txt");
-        echo "<script>window.location.href='$err_redirect'  </script>";
+        echo "<script>window.close();window.opener.location.href='card_input2.php?err=exceErr'</script>";
     }
 
     /***
