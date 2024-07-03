@@ -8,19 +8,19 @@ function errMsgForEmpty(name) {
 
 function checkValidation(event) {
   var isErr = false;
+  var errMessage = '';
   var employee_code = document.getElementById("contact_person").value;
+  var employee_code_nm = "担当者";
 
   if (!isErr && employee_code.length > 10) {
-    alert(errMsgForLength("担当者", "40"));
+    errMessage = errMsgForLength(employee_code_nm, "40");
     isErr = true;
   }
 
   if (!isErr && employee_code == "") {
-    alert(errMsgForEmpty("担当者"));
+    errMessage = errMsgForEmpty(employee_code_nm);
     isErr = true;
   }
 
-  if (isErr) {
-    event.preventDefault();
-  }
+  return errMessage;
 }

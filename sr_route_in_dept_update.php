@@ -3,6 +3,28 @@
   require_once('function.php');
   // DB接続
   $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
+
+  if (isset($_POST['submit'])) {
+    //check duplicate error
+    global $pdo;
+    $dept_id = $_POST['hid_dept_id'];
+    $group_id = $_POST['group'];
+    $employee_code = $_POST['employee_code'];
+    $role = $_POST['role'];
+    $success = true;
+
+    $sql = "SELECT * FROM sq_route_in_dept WHERE dept_id='$dept_id' AND group_id='$group_id' AND employee_code='$employee_code' AND role='$role'";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    if (!$row) {
+      $success = reg_or_upd_route_in_dept();
+    }
+    $redirect_url = ($success && !$row) ? "sr_route_in_dept_input1.php" : "sr_route_in_dept_input2.php?err=" . ($row ? "duplicate" : "execErr");
+    echo "<script>
+      window.location.href='$redirect_url';
+    </script>";
+  }
   function reg_or_upd_route_in_dept() {
     $today = date('Y/m/d');
     $success = true;
@@ -47,13 +69,8 @@
         $pdo->commit();
       } catch (PDOException $e) {
         $success = false;
-        if (strpos($e->getMessage(), 'SQLSTATE[42000]') !== false) {
-          error_log("SQL Syntax Error or Access Violation: " . $e->getMessage(),3,'error_log.txt');
-        } else {
-          $pdo->rollback();
-          throw($e);
-          error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
-        }
+        $pdo->rollback();
+        error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
       }
       return $success;
     }    

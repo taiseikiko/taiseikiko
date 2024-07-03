@@ -15,6 +15,7 @@
   $group_id = '';
   $dept_id = '';
   $employee_code = '';
+  $err = $_GET['err'] ?? '';
 
   //部署リスト
   $deptList = getDropdownDataOfDept('sq_dept');                  
@@ -41,36 +42,6 @@
           $office_position_name = $cpDatas['role_name'];
         }
       }
-    }
-  }
-
-  if (isset($_POST['submit'])) {
-    //check duplicate error
-    global $pdo;
-    $dept_id = $_POST['hid_dept_id'];
-    $group_id = $_POST['group'];
-    $employee_code = $_POST['employee_code'];
-    $role = $_POST['role'];
-
-    $sql = "SELECT * FROM sq_route_in_dept WHERE dept_id='$dept_id' AND group_id='$group_id' AND employee_code='$employee_code' AND role='$role'";
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute();
-    $row = $stmt->fetch(PDO::FETCH_ASSOC);
-    if (!$row) {
-      $success = reg_or_upd_route_in_dept();
-      if ($success) {
-        echo "<script>
-          window.location.href='sr_route_in_dept_input1.php';
-        </script>";
-      } else {
-        echo "<script>
-          window.onload = function() { alert('失敗しました。'); }
-        </script>";
-      }
-    } else {
-      echo "<script>
-        window.onload = function() { alert('重複の登録があります。'); }
-      </script>";
     }
   }
 
