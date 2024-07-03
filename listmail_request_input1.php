@@ -12,7 +12,8 @@ include("header1.php");
     <h3>通知メール保守</h3>
   </div>
   <div class="container">
-    <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="notification_mail_form" action="listmail_update_input1.php">
+    <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="notification_mail_form">
+      <?php include("dialog.php") ?>
       <table style="width:auto;">
         <tr>
           <div class="field-row">
@@ -85,6 +86,7 @@ include("header1.php");
 </main><!-- End #main -->
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
     // データを取得してフィールドに入力する
@@ -97,7 +99,8 @@ include("header1.php");
     });
 
     // フォーム validation
-    $('#notification_mail_form').on('submit', function(event) {
+    $('#updateBtn').click(function(event) {
+      event.preventDefault();
       var isValid = false;
       $('textarea').each(function() {
         if ($(this).val().trim() !== '') {
@@ -106,21 +109,20 @@ include("header1.php");
         }
       });
 
+      //エラーがある場合
       if (!isValid) {
-        alert('入力項目に不備があります。');
-        event.preventDefault();
+        //何の処理かを書く
+        var process = "validate";
+        //OKDialogを呼ぶ
+        openOkModal("入力項目に不備があります。", process);
       } else {
         let buttonText = $('#updateBtn').text();
-        if (!confirm(buttonText + 'します、よろしいでしょうか？')) {
-          event.preventDefault();
-        } else {
-          // Prepare hidden inputs for arrays of emails
-          $('textarea').each(function() {
-            let emails = $(this).val().split(',').map(email => email.trim()).filter(email => email !== '');
-            $(this).after('<input type="hidden" name="' + $(this).attr('name') + '[]" value="' + emails.join('|') + '">');
-          });
-          $('textarea').remove();
-        }
+        //確認メッセージを書く
+        var msg = buttonText + "します。よろしいですか？";
+        //何の処理科を書く
+        var process = "update";
+        //確認Dialogを呼ぶ
+        openConfirmModal(msg, process);
       }
     });
 
@@ -128,7 +130,58 @@ include("header1.php");
     $('#returnBtn').click(function() {
       window.history.back();
     });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    //確認BOXに"はい"ボタンを押下する場合
+    $("#confirm_okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+      //更新処理の場合
+      if (process == "update") {        
+        // Prepare hidden inputs for arrays of emails
+        $('textarea').each(function() {
+          let emails = $(this).val().split(',').map(email => email.trim()).filter(email => email !== '');
+          $(this).after('<input type="hidden" name="' + $(this).attr('name') + '[]" value="' + emails.join('|') + '">');
+        });
+        $('textarea').remove();
+        //submitしたいボタン名をセットする
+        $("#confirm_okBtn").attr("name", "submit");
+        $('#notification_mail_form').attr('action', 'listmail_update_input1.php');
+      }
+    });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    //ALERT BOXに"はい"ボタンを押下する場合
+    $("#ok_okBtn").click(function(event) {
+      //画面上変更なし
+      $('#ok_okBtn').attr('data-dismiss', 'modal');
+    });
   });
+  /**---------------------------------------------Javascript----------------------------------------------------------------- */
+  function openConfirmModal(msg, process) {
+    event.preventDefault();
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#confirm-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#confirm").modal({backdrop: false});
+  }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
+
+  function openOkModal(msg, process) {
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#ok-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#ok").modal({backdrop: false});
+  }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
+
 </script>
 
 <style>
