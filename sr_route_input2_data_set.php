@@ -5,6 +5,7 @@ require_once('function.php');
 $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 
 // 初期設定 & データセット
+$err = $_GET['err'] ?? '';
 $route_id = '';
 $btn_name = '登録';
 $dept_list = getDropdownData();
@@ -61,20 +62,3 @@ function getRouteData($route_id)
   return $route_data ? array_values($route_data) : array_fill(0, 5, '');
 }
 
-function createRoute($route_id, $route_depts)
-{
-  global $pdo;
-  $add_date = date('Y/m/d');
-  $sql = "INSERT INTO sq_route (route_id, route1_dept, route2_dept, route3_dept, route4_dept, route5_dept, add_date) VALUES (?, ?, ?, ?, ?, ?, ?)";
-  $stmt = $pdo->prepare($sql);
-  $stmt->execute(array_merge([$route_id], $route_depts, [$add_date]));
-}
-
-function updateRoute($route_id, $route_depts)
-{
-  global $pdo;
-  $upd_date = date('Y/m/d');
-  $sql = "UPDATE sq_route SET route1_dept = ?, route2_dept = ?, route3_dept = ?, route4_dept = ?, route5_dept = ?, upd_date = ?  WHERE route_id = ?";
-  $stmt = $pdo->prepare($sql);
-  $stmt->execute(array_merge($route_depts, [$upd_date,$route_id]));
-}
