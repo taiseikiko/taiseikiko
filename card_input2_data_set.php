@@ -180,13 +180,14 @@ function getApproverList($department_code)
 {
   global $pdo;
   $datas = [];
-
+  $dept_code = $department_code;  //ログインユーザーの部署
+  $dept_code = '04'; //資材部
 
   $sql = "SELECT e.employee_code, e.employee_name 
             FROM card_route_in_dept r
             LEFT JOIN employee e 
             ON r.employee_code = e.employee_code 
-            WHERE r.department_code = '$department_code' 
+            WHERE r.department_code = '$dept_code' 
             AND r.role = '3'";
   $stmt = $pdo->prepare($sql);
   $stmt->execute();

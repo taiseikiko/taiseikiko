@@ -269,6 +269,7 @@
         <ul>
           <li><a href="">電子カード処理　登録</a></li>
           <li><a href="card_input1.php">電子カード処理　資材部入力、承認</a></li>
+          <li><a href="card_route_in_dept_input1.php">部署内ルートマスター保守</a></li>
         </ul>
       </details>
     </li>';
