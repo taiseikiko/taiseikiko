@@ -4,6 +4,20 @@ require_once('function.php');
 
 // DB接続
 $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
+
+//When form is submitted
+if (isset($_POST['submit'])) {
+  $success = reg_or_upd_public_office();
+  if ($success) {
+    echo "<script>
+      window.location.href='public_office_input1.php';
+    </script>";
+  } else {
+    echo "<script>
+      window.location.href='public_office_input2.php?err=errExec';
+    </script>";
+  }
+}
 function reg_or_upd_public_office()
 {
   $today = date('Y/m/d');
@@ -15,6 +29,7 @@ function reg_or_upd_public_office()
     $process = $_POST['process'];
 
     try {
+      $pdo->beginTransaction();
       if ($process == 'create') {
         //新規作成の場合
         $data = [
@@ -40,19 +55,13 @@ function reg_or_upd_public_office()
         WHERE pf_code=:pf_code";
         $stmt = $pdo->prepare($sql);
       }
-
-      $pdo->beginTransaction();
+      
       $stmt->execute($data);
       $pdo->commit();
     } catch (PDOException $e) {
       $success = false;
-      if (strpos($e->getMessage(), 'SQLSTATE[42000]') !== false) {
-        error_log("SQL Syntax Error or Access Violation: " . $e->getMessage(), 3, 'error_log.txt');
-      } else {
-        $pdo->rollback();
-        throw ($e);
-        error_log("PDO Exception: " . $e->getMessage(), 3, 'error_log.txt');
-      }
+      $pdo->rollback();
+      error_log("PDO Exception: " . $e->getMessage(), 3, 'error_log.txt');
     }
     return $success;
   }

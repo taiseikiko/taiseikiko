@@ -1,7 +1,7 @@
 <?php
   // 初期処理
   require_once('function.php');
-  include('public_office_update.php');
+
   // DB接続
   $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
   // 初期設定 & データセット
@@ -13,6 +13,7 @@
   $employee_name = '';
   $department_name = '';
   $office_position_name = '';
+  $err = $_GET['err'] ?? '';
 
   //一覧画面からPOSTを取得
   if (isset($_POST['process'])) {
@@ -51,19 +52,6 @@
   }
   $_SESSION['pf_name'] = $pf_name;
 
-  //When form is submitted
-  if (isset($_POST['submit'])) {
-    $success = reg_or_upd_public_office();
-    if ($success) {
-      echo "<script>
-        window.location.href='public_office_input1.php';
-      </script>";
-    } else {
-      echo "<script>
-        window.onload = function() { alert('失敗しました。'); }
-      </script>";
-    }
-  }
   function getPfCode() {
     global $pdo;
     //官庁マスターからMAXを取得する

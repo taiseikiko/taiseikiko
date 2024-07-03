@@ -8,30 +8,31 @@ function errMsgForEmpty(name) {
 
 function checkValidation(event) {
   var isErr = false;
+  var errMessage = '';
   var pf_name = document.getElementById("pf_name").value;
+  var pf_name_nm = "官庁名称";
   var employee_code = document.getElementById("contact_person").value;
+  var employee_code_nm = "担当者";
 
   if (!isErr && pf_name.length > 40) {
-    alert(errMsgForLength("官庁名称", "40"));
+    errMessage = errMsgForLength(pf_name_nm, "40");
     isErr = true;
   }
 
   if (!isErr && pf_name == '') {
-    alert(errMsgForEmpty("官庁名称"));
+    errMessage = errMsgForEmpty(pf_name_nm);
     isErr = true;
   }
 
   if (!isErr && employee_code.length > 10) {
-    alert(errMsgForLength("担当者", "40"));
+    errMessage = errMsgForLength(employee_code_nm, "40");
     isErr = true;
   }
 
   if (!isErr && employee_code == "") {
-    alert(errMsgForEmpty("担当者"));
+    errMessage = errMsgForEmpty(employee_code_nm);
     isErr = true;
   }
 
-  if (isErr) {
-    event.preventDefault();
-  }
+  return errMessage;
 }
