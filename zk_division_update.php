@@ -9,7 +9,7 @@ if ($_SESSION['token'] !== $_POST['csrf_token']) {
 
 // DB接続
 $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
-
+$success = true;
 $process = $_POST['process'];
 $zk_div_name = $_POST['zk_div_name'] ?? null;
 $zk_division = getZkDiv($pdo, $zk_div_name);
@@ -67,9 +67,16 @@ try {
 
   $pdo->commit();
 } catch (PDOException $e) {
+  $success = false;
   $pdo->rollBack();
   error_log("PDO Exception: " . $e->getMessage(), 3, 'error_log.txt');
-  throw $e;
 }
-header('Location: zk_division_input1.php');
-exit();
+if ($success) {
+    echo "<script>
+    window.location.href='zk_division_input1.php';
+    </script>";
+} else {
+    echo "<script>
+    window.location.href='zk_division_input2.php?err=exceErr';
+    </script>";
+}

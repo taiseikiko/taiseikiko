@@ -21,7 +21,8 @@
   <h3>材工名仕様マスター保守</h3>
 </div>
   <div class="container">
-    <form class="row g-3" action="zk_division_update.php" method="POST" id="zk_division_form" enctype="multipart/form-data">
+    <form class="row g-3" method="POST" id="zk_division_form" enctype="multipart/form-data">
+      <?php include("dialog.php") ?>
       <input type="hidden" name="process" value="<?= htmlspecialchars($process) ?>">
       <input type="hidden" name="original_zk_division" value="<?= htmlspecialchars($zk_division) ?>">
       <input type="hidden" name="original_zk_div_name" value="<?= htmlspecialchars($zk_div_name) ?>">
@@ -34,14 +35,14 @@
           <td>
             <div class="field-row">
               <label class="common_label" for="zk_div_name" >材工仕様</label>
-              <select type="text" id="zk_div_name" name="zk_div_name" value="" style="width: 140px;" required>
+              <select type="text" id="zk_div_name" name="zk_div_name" value="" style="width: 140px;">
                 <option value="">※選択して下さい。</option>
                 <?php foreach ($zk_div_names as $name) { ?>
                   <option value="<?= $name['zk_div_name'] ?>" <?= ($zk_div_name == $name['zk_div_name']) ? 'selected' : '' ?>><?= $name['zk_div_name'] ?></option>
                 <?php } ?>
               </select>
               <label class="common_label" for="zk_tp" >区分１</label>
-              <select type="text" id="zk_tp" name="zk_tp" value="" style="width: 140px;" required>
+              <select type="text" id="zk_tp" name="zk_tp" value="" style="width: 140px;">
                 <option value="">※選択して下さい。</option>
                 <?php foreach ($zk_tp_values as $tp_value) { ?>
                   <option value="<?= $tp_value['zk_tp'] ?>" <?= ($zk_tp == $tp_value['zk_tp']) ? 'selected' : '' ?>><?= $tp_value['zk_tp'] ?></option>
@@ -49,7 +50,7 @@
               </select>
               
               <label class="common_label" for="zk_no" >区分２</label>
-              <select type="text" id="zk_no" name="zk_no" value="" style="width: 140px;" required>
+              <select type="text" id="zk_no" name="zk_no" value="" style="width: 140px;">
                 <option value="">※選択して下さい。</option>
                 <?php foreach ($zk_no_values as $no_value) { ?>
                   <option value="<?= $no_value['zk_no'] ?>" <?= ($zk_no == $no_value['zk_no']) ? 'selected' : '' ?>><?= $no_value['zk_no'] ?></option>
@@ -62,7 +63,7 @@
           <td>
             <div class="field-row">
               <label class="common_label" for="zk_div_data" >材工名仕様詳細</label>
-              <input type="text" id="zk_div_data" name="zk_div_data" style="width: 700px;" value="<?= $zk_div_data?>" maxlength="50" required>
+              <input type="text" id="zk_div_data" name="zk_div_data" style="width: 700px;" value="<?= $zk_div_data?>" maxlength="50">
             </div>
           </td>
         </tr>
@@ -82,45 +83,113 @@
     </form><!-- Vertical Form -->
   </div>
 </main><!-- End #main -->
-<script src="assets/js/inquiry_ent.js"></script>
-<script src="assets/js/inquiry_ent_check.js"></script>
+<script src="assets/js/zk_division_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">  
   $(document).ready(function(){
     
     $('#returnBtn').click(function(event) {
-      event.preventDefault();  
-      if (confirm('一覧画面に戻ります．よろしいですか？')) {
-        window.location.href = 'zk_division_input1.php';
+      //確認メッセージを書く
+      var msg = "前の画面に戻します。よろしいですか？";
+      //何の処理科を書く
+      var process = "return";
+      //確認Dialogを呼ぶ
+      openConfirmModal(msg, process);
+    });
+
+/**-------------------------------------------------------------------------------------------------------------- */
+    //更新ボタンを押下場合
+    $('#upd_regBtn').click(function(event) {
+      event.preventDefault();
+      var errMessage = checkValidation();
+      
+      //エラーがある場合
+      if (errMessage !== '') {
+        //何の処理かを書く
+        var process = "validate";
+        //OKDialogを呼ぶ
+        openOkModal(errMessage, process);
+      } else {
+        var btnName = '<?= $btn_name ?>';
+        //確認メッセージを書く
+        var msg = btnName + "します。よろしいですか？";
+        //何の処理科を書く
+        var process = "update";
+        //確認Dialogを呼ぶ
+        openConfirmModal(msg, process);
       }
     });
 
+  /**-------------------------------------------------------------------------------------------------------------- */
+
+    //確認BOXに"はい"ボタンを押下する場合
+    $("#confirm_okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+      //戻る処理の場合
+      if (process == "return") {
+        $('#zk_division_form').attr('action', 'zk_division_input1.php');
+      }
+      //戻る処理の場合
+      else if (process == "update") {
+        //submitしたいボタン名をセットする
+        $("#confirm_okBtn").attr("name", "submit");
+        $('#zk_division_form').attr('action', 'zk_division_update.php');
+      }
+    });
+
+  /**-------------------------------------------------------------------------------------------------------------- */
+
+    //ALERT BOXに"はい"ボタンを押下する場合
+    $("#ok_okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+
+      if (process == "errExec") {
+        //zk_division_input1へ移動
+        $('#zk_division_form').attr('action', 'zk_division_input1.php');
+      } else {
+        //画面上変更なし
+        $('#ok_okBtn').attr('data-dismiss', 'modal');
+      }
+    });
+
+  /*----------------------------------------------------------------------------------------------- */
+
+    //エラーがあるかどうか確認する
+    var err = '<?= $err ?>';
+    //エラーがある場合
+    if (err !== '') {
+      //OKメッセージを書く
+      var msg = "処理にエラーがありました。係員にお知らせください。";
+      //OKDialogを呼ぶ
+      openOkModal(msg, 'errExec');
+    }
+
   });
 
-  //更新ボタンをクリックする時、チェックする
-  document.getElementById('upd_regBtn').onclick = function(event) {
-    var zk_div_data = document.getElementById('zk_div_data').value;
-    var isErr = false;
-    if (zk_div_data == '') {
-      alert('「入力項目に不備があります。」');
-      isErr = true;
-    }
-
-    if(zk_div_data.length > 50) {
-      alert('「材工仕様詳細」は50文字以内で入力して下さい。');
-      isErr = true;
-    }
-    if(isErr) {
-      event.preventDefault();
-    } else {
-      // Show confirmation dialog
-      var btn_name = '<?= htmlspecialchars($btn_name) ?>';
-      if (!confirm(btn_name + 'します、よろしいでしょうか？')) {
-        event.preventDefault();
-      }
-    }
+  /**---------------------------------------------Javascript----------------------------------------------------------------- */
+  function openConfirmModal(msg, process) {
+    event.preventDefault();
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#confirm-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#confirm").modal({backdrop: false});
   }
-  //
+
+  /**-------------------------------------------------------------------------------------------------------------- */
+
+  function openOkModal(msg, process) {
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#ok-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#ok").modal({backdrop: false});
+  }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
 </script>
 <style>
   .container {

@@ -2,6 +2,8 @@
   // 初期処理
   require_once('function.php');
  
+  $err = $_GET['err'] ?? '';
+  
   // DB接続
   $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 
