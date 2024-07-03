@@ -1,7 +1,6 @@
 <?php
   // 初期処理
   require_once('function.php');
-  include("sq_zkm_update.php");
 
   // DB接続
   $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
@@ -32,6 +31,7 @@
   $c_divList = [];          //一般・工事
   $datas = [];
   $btn_name = '登録';
+  $err = $_GET['err'] ?? '';
 
   $sizeList = getDropdownData('size');                  //サイズ
   $jointList = getDropdownData('joint');                //接合形状
@@ -78,18 +78,6 @@
     }
   }
 
-  if (isset($_POST['submit'])) {
-    $success = reg_or_upd_sq_zkm();
-    if ($success) {
-      echo "<script>
-        window.location.href='sq_zkm_input1.php';
-      </script>";
-    } else {
-      echo "<script>
-        window.onload = function() { alert('失敗しました。'); }
-      </script>";
-    }
-  }
   function getDropdownData($code_id) {
     global $pdo;
     //sq_code テーブルからデータ取得する

@@ -3,12 +3,26 @@
   require_once('function.php');
   // DB接続
   $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
+
+  if (isset($_POST['submit'])) {
+    $success = reg_or_upd_sq_zkm();
+    if ($success) {
+      echo "<script>
+        window.location.href='sq_zkm_input1.php';
+      </script>";
+    } else {
+      echo "<script>
+        window.location.href='sq_zkm_input2.php?err=execErr';
+      </script>";
+    }
+  }
   function reg_or_upd_sq_zkm() {
     $success = true;
     global $pdo;
 
     if (isset($_POST['process'])) {
       try {
+        $pdo->beginTransaction();
         //新規作成or更新の場合
         $process = $_POST['process'];
 
@@ -39,19 +53,13 @@
           WHERE class_code=:class_code AND zkm_code=:zkm_code";
           $stmt = $pdo->prepare($sql);       
         }
-
-        $pdo->beginTransaction();
+        
         $stmt->execute($data);
         $pdo->commit();
       } catch (PDOException $e) {
         $success = false;
-        if (strpos($e->getMessage(), 'SQLSTATE[42000]') !== false) {
-          error_log("SQL Syntax Error or Access Violation: " . $e->getMessage(),3,'error_log.txt');
-        } else {
-          $pdo->rollback();
-          throw($e);
-          error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
-        }
+        $pdo->rollback();
+        error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
       }
       return $success;
     }    

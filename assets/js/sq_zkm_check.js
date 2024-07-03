@@ -9,16 +9,16 @@ function errMsgForEmpty(name) {
 function checkValidation(event) {
   var errMessage = '';
   var isErr = false;
-  var class_name = document.getElementById("class_name").value;
-  var class_nm = "分類名称";
+  var zkm_name = document.getElementById("zkm_name").value;
+  var zkm_nm = "材工名　名称";
 
-  if (!isErr && class_name.length > 20) {
-    errMessage = errMsgForLength(class_nm, "20");
+  if (!isErr && zkm_name.length > 40) {
+    errMessage = errMsgForLength(zkm_nm, "40");
     isErr = true;
   }
 
-  if (!isErr && class_name == "") {
-    errMessage = errMsgForEmpty(class_nm);
+  if (!isErr && zkm_name == "") {
+    errMessage = errMsgForEmpty(zkm_nm);
     isErr = true;
   }
 
