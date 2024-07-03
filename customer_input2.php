@@ -14,7 +14,8 @@
     <h3>得意先マスター保守</h3>
   </div>
   <div class="container">
-    <form class="row g-3" action="<?= htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST" id="customer_form" enctype="multipart/form-data">
+    <form class="row g-3" method="POST" id="customer_form" enctype="multipart/form-data">
+      <?php include("dialog.php") ?>
       <input type="hidden" id="process" name="process" value="<?= $process ?>">
       <table style="width:auto;">
         <tr>
@@ -38,7 +39,7 @@
               <input type="text" id="cust_name" name="cust_name" value="<?= $cust_name ?>">
 
               <label class="common_label" for="custmer_div" >区分</label>
-              <select name="custmer_div" required>
+              <select name="custmer_div">
                 <option value="">※選択して下さい。</option>
                 <?php foreach ($custmer_div_options as $option): 
                   $custmer_div_value = $option['custmer_div']; 
@@ -55,7 +56,7 @@
           <td>
             <div class="field-row">
               <label class="common_label" for="employee_code" >担当者</label>
-              <input type="text" id="contact_person" name="employee_code" value="<?= $employee_code ?>" onblur="onBlurEmpCode()">
+              <input type="text" id="contact_person" name="employee_code" value="<?= $employee_code ?>" onblur="onBlurEmpCode()" class="readonlyText" readonly>
               
               <button class="search_btn" style="margin-left: 11px;" onclick="emp_inq_open(event)">社員検索 </button>
               <input style="margin-left:30px" type="text" id="cp_name" name="employee_name" value="<?= $employee_name?>" class="readonlyText" readonly>
@@ -101,7 +102,8 @@
 <script src="assets/js/inquiry_ent.js"></script>
 <script src="assets/js/inquiry_ent_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="assets/js/customer_input2_check.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="assets/js/customer_check.js"></script>
 <script type="text/javascript">
 
 $(document).ready(function() {
@@ -115,17 +117,112 @@ $(document).ready(function() {
     }
     // Handle return button click
     $('#returnBtn').click(function(event) {
-      event.preventDefault();  // Prevent the default form submission
-      if (confirm('一覧画面に戻ります．よろしいですか？')) {
-        window.location.href = 'customer_input1.php';
+      //確認メッセージを書く
+      var msg = "前の画面に戻します。よろしいですか？";
+      //何の処理科を書く
+      var process = "return";
+      //確認Dialogを呼ぶ
+      openConfirmModal(msg, process);
+    });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+    //更新ボタンを押下場合
+    $('#upd_regBtn').click(function(event) {
+      event.preventDefault();
+      var errMessage = checkValidation();
+      
+      //エラーがある場合
+      if (errMessage !== '') {
+        //何の処理かを書く
+        var process = "validate";
+        //OKDialogを呼ぶ
+        openOkModal(errMessage, process);
+      } else {
+        var btnName = '<?= $btn_name ?>';
+        //確認メッセージを書く
+        var msg = btnName + "します。よろしいですか？";
+        //何の処理科を書く
+        var process = "update";
+        //確認Dialogを呼ぶ
+        openConfirmModal(msg, process);
       }
     });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    //確認BOXに"はい"ボタンを押下する場合
+    $("#confirm_okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+      //戻る処理の場合
+      if (process == "return") {
+        $('#customer_form').attr('action', 'customer_input1.php');
+      }
+      //戻る処理の場合
+      else if (process == "update") {
+        //submitしたいボタン名をセットする
+        $("#confirm_okBtn").attr("name", "submit");
+        $('#customer_form').attr('action', 'customer_update.php');
+      }
+    });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    //ALERT BOXに"はい"ボタンを押下する場合
+    $("#ok_okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+
+      if (process == "errExec") {
+        //customer_input1へ移動
+        $('#customer_form').attr('action', 'customer_input1.php');
+      } else {
+        //画面上変更なし
+        $('#ok_okBtn').attr('data-dismiss', 'modal');
+      }
+    });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    //エラーがあるかどうか確認する
+    var err = '<?= $err ?>';
+    //エラーがある場合
+    if (err !== '') {
+      //OKメッセージを書く
+      var msg = "処理にエラーがありました。係員にお知らせください。";
+      //OKDialogを呼ぶ
+      openOkModal(msg, 'errExec');
+    }
     
   });
+
+  /**---------------------------------------------Javascript----------------------------------------------------------------- */
+  function openConfirmModal(msg, process) {
+    event.preventDefault();
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#confirm-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#confirm").modal({backdrop: false});
+  }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
+
+  function openOkModal(msg, process) {
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#ok-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#ok").modal({backdrop: false});
+  }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
+
   //更新ボタンをクリックする時、チェックする
   document.getElementById('upd_regBtn').onclick = function(event) {
     checkValidation(event);
   }
+
   function onBlurEmpCode() {
     let emp_cd = document.getElementById('contact_person');
     let emp_nm = document.getElementById('cp_name');
@@ -137,6 +234,8 @@ $(document).ready(function() {
       op_nm.value = '';
     }
   }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
   
   function checkForm($this)
   {

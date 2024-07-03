@@ -5,6 +5,21 @@
   // DB接続
   $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 
+  //When form is submitted
+  if (isset($_POST['submit'])) {
+ 
+    $success = reg_or_upd_customer();
+    if ($success) {
+        echo "<script>
+        window.location.href='customer_input1.php';
+        </script>";
+    } else {
+        echo "<script>
+        window.location.href='customer_input2.php?err=exceErr';
+        </script>";
+    }
+  }
+
   function reg_or_upd_customer() {
     $today = date('Y/m/d');
     $success = true;
@@ -14,6 +29,7 @@
     //新規作成or更新の場合
     $process = $_POST['process'];      
     try {  
+      $pdo->beginTransaction();
       if ($process == 'create') {
         //新規作成の場合
         $data = [
@@ -41,18 +57,13 @@
         WHERE cust_code=:cust_code";
         $stmt = $pdo->prepare($sql);       
       }          
-        $pdo->beginTransaction();
+        
         $stmt->execute($data);
         $pdo->commit();
       } catch (Exception $e) {
         $success = false;
-        if (strpos($e->getMessage(), 'SQLSTATE[42000]') !== false) {
-          error_log("SQL Syntax Error or Access Violation: " . $e->getMessage(),3,'error_log.txt');
-        } else {
-          $pdo->rollback();
-          throw($e);
-          error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
-        }
+        $pdo->rollback();
+        error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
       }
       return $success;
     }    

@@ -16,6 +16,7 @@
   $custmer_div_options = getDistinctCustmerDiv();
   $department_name = '';
   $office_position_name = '';
+  $err = $_GET['err'] ?? '';
   
   //一覧画面からPOSTを取得
   if (isset($_POST['process'])) {
@@ -55,22 +56,7 @@
     }
   }
   $_SESSION['cust_name'] = $cust_name;
-  //When form is submitted
-  if (isset($_POST['submit'])) {
- 
-    $success = reg_or_upd_customer();
-    if ($success) {
-        $action = $process == 'create' ? '登録' : '更新';
-        echo "<script>
-            // alert('$action は成功しました。前の画面に戻ります。');//
-            window.location.href='customer_input1.php';
-        </script>";
-    } else {
-      echo "<script>
-      window.onload = function() { alert('$action 失敗しました。'); }
-      </script>";
-    }
-  }
+  
   function getCustomerCode() {
     global $pdo;
     //得意先マスターからMAXを取得する
