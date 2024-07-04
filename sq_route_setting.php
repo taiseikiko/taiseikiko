@@ -9,9 +9,11 @@
   $sq_no = $_POST['sq_no'];
   $sq_line_no = $_POST['sq_line_no'];
   $dept_id = $_POST['dept_id'];
+  $title = $_POST['title'] ?? '';
 
   if (isset($_POST['submit'])) {
     $route_pattern = isset($_POST['route_pattern']) ? $_POST['route_pattern'] : '';
+    $process = $_POST['process2'];  //更新 || 登録
     $success = true;
     try {
       $pdo->beginTransaction();
@@ -30,18 +32,16 @@
       $pdo->commit();
     } catch (PDOException $e) {
       $success = false;
-      if (strpos($e->getMessage(), 'SQLSTATE[42000]') !== false) {
-        error_log("SQL Syntax Error or Access Violation: " . $e->getMessage(),3,'error_log.txt');
-      } else {
-        $pdo->rollback();
-        throw($e);
-        error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
-      }
+      $pdo->rollback();
+      error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
     }
     //登録処理にエラーが無ければメール送信する
     if ($success) {
       //メール送信する
-      include('sq_mail_send2.php');
+      //include('sq_mail_send2.php');
+    } else {
+      $redirect_url = 'sales_route_input3.php?err=errExec&title=' . $title . "&process2=" . $process . "&sq_no=" . $sq_no . "&line=" . $sq_line_no;
+      header('Location: ' . $redirect_url);
     }
   }
 

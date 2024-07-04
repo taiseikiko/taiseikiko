@@ -11,7 +11,7 @@
   $route_pattern_list = [];
   $route_pattern_list = get_route_pattern_list();  
 
-  $title = isset($_GET['title']) ? $_GET['title'] : '';
+  $title = $_GET['title'] ?? '';
 ?>
 
 <main>
@@ -25,7 +25,9 @@
 <script type="text/javascript"></script>
 <script src="assets/js/inquiry_ent.js"></script>
 <script src="assets/js/inquiry_ent_check.js"></script>
+<script src="assets/js/sales_route_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
     let class_code = $('#classList').val();
@@ -35,6 +37,8 @@
         console.log(error);
       })
     }
+
+    /**-------------------------------------------------------------------------------------------------------------- */
 
     $("#classList").change(function() {
       let class_code = $(this).val();
@@ -46,19 +50,115 @@
       })
     });
 
+    /**-------------------------------------------------------------------------------------------------------------- */
+
     //材工名のプルダウンがCHANGEされた場合、区分TEXTBOXにデータセット
     $("#zaikoumeiList").change(function() {
       set_c_div();
     })
 
+    /**-------------------------------------------------------------------------------------------------------------- */
+
     $("#returnBtn").click(function() {
-      $("#input3").attr("action", "sales_route_input2.php?sq_no="+<?= $sq_no ?>+"&process=detail&title=<?= $title ?>");
+      //確認メッセージを書く
+      var msg = "前の画面に戻します。よろしいですか？";
+      //何の処理科を書く
+      var process = "return";
+      //確認Dialogを呼ぶ
+      openConfirmModal(msg, process);      
     })
 
-    $("#updBtn").click(function() {
-      $("#input3").attr("action", "sq_route_setting.php");
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    $("#updBtn").click(function() {      
+      event.preventDefault();
+      var errMessage = checkValidation();
+
+      //エラーがある場合
+      if (errMessage !== '') {
+        //何の処理かを書く
+        var process = "validate";
+        //OKDialogを呼ぶ
+        openOkModal(errMessage, process);
+      } else {
+        //確認メッセージを書く
+        var msg = "ルート設定します？よろしいですか？";
+        //何の処理科を書く
+        var process = "update";
+        //確認Dialogを呼ぶ
+        openConfirmModal(msg, process);
+      }      
     })
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    //確認BOXにはいボタンを押下する場合
+    $("#confirm_okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+      //戻る処理の場合
+      if (process == "return") {
+        $("#input3").attr("action", "sales_route_input2.php?sq_no="+<?= $sq_no ?>+"&process=detail&title=<?= $title ?>");
+      }
+      //ヘッダ更新処理の場合
+      else if (process == "update") {
+        //submitしたいボタン名をセットする
+        $("#confirm_okBtn").attr("name", "submit");
+        //sales_request_update.phpへ移動する
+        $("#input3").attr("action", "sq_route_setting.php");
+      }
+    });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    //ALERT BOXに"はい"ボタンを押下する場合
+    $("#ok_okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+
+      if (process == "errExec") {
+        //sq_class_input1へ移動
+        $('#input3').attr('action', 'sales_route_input1.php?title=<?= $title ?>');
+      } else {
+        //画面上変更なし
+        $('#ok_okBtn').attr('data-dismiss', 'modal');
+      }
+    });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    //エラーがあるかどうか確認する
+    var err = '<?= $err ?>';
+    //エラーがある場合
+    if (err !== '') {
+      //OKメッセージを書く
+      var msg = "処理にエラーがありました。係員にお知らせください。";
+      //OKDialogを呼ぶ
+      openOkModal(msg, 'errExec');
+    }
   });
+
+  /**---------------------------------------------Javascript----------------------------------------------------------------- */
+  function openConfirmModal(msg, process) {
+    event.preventDefault();
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#confirm-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#confirm").modal({backdrop: false});
+  }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
+
+  function openOkModal(msg, process) {
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#ok-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#ok").modal({backdrop: false});
+  }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
 
   function fetchData(class_code) {
     $('#zaikoumeiList option:not(:first-child)').remove();
@@ -93,6 +193,8 @@
     });
   }
 
+  /**-------------------------------------------------------------------------------------------------------------- */
+
   function set_c_div() {
     let c_div = $('#zaikoumeiList option:selected').attr('class');
 
@@ -108,6 +210,8 @@
       $('#c_div_code').val('');
     }
   }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
 
   document.addEventListener("DOMContentLoaded", function() {
     var quantity = document.getElementById('quantity');
@@ -130,6 +234,8 @@
       event.target.value = value.replace(/\D/g, '');
     });
   });
+
+  /**-------------------------------------------------------------------------------------------------------------- */
 
   //Disabled Input 
   var inputs = document.getElementsByTagName('input');
@@ -155,7 +261,7 @@
 
   //Disabled select 
   var selects = document.getElementsByTagName('select');
-  const excludeSelects = ['otherProcess', 'route_pattern'];
+  const excludeSelects = ['otherProcess', 'route_no'];
   for (var k = 0; k < selects.length; k++) {
     if (!excludeSelects.includes(selects[k].id)) {
       selects[k].disabled = true;
@@ -164,7 +270,7 @@
 
   //Disabled button 
   var buttons = document.getElementsByTagName('button');
-  const excludeButtons = ['returnBtn', 'setEmp', 'update', 'setRoute'];
+  const excludeButtons = ['returnBtn', 'setEmp', 'update', 'setRoute', 'okBtn', 'cancelBtn'];
   for (var k = 0; k < buttons.length; k++) {
     if (!excludeButtons.includes(buttons[k].className)) {
       buttons[k].disabled = true;

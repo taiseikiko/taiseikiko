@@ -8,7 +8,7 @@
     <input type="hidden" name="sq_no" id="sq_no" value="<?= $sq_no ?>">
     <input type="hidden" name="sq_line_no" id="sq_line_no" value="<?= $sq_line_no ?>">
     <input type="hidden" name="record_div" id="record_div" value="<?= $record_div ?>">
-    <input type="hidden" name="route_pattern" id="route_pattern" value="<?= $route_pattern?>">
+    <input type="hidden" name="hid_route_pattern" id="route_pattern" value="<?= $route_pattern?>">
     <input type="hidden" name="dept_id" id="dept_id" value="<?= $dept_id ?>">
     <input type="hidden" name="title" id="title" value="<?= $title ?>">
     <input type="hidden" name="user_code" value="<?= $_SESSION["login"] ?>">
@@ -478,7 +478,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="route_pattern">ルート設定 </label>
-            <select class="dropdown-menu" id="route_pattern" name="route_pattern" <?php if (!empty($route_pattern)) { echo 'disabled'; } ?>>
+            <select class="dropdown-menu" id="route_no" name="route_pattern" <?php if (!empty($route_pattern)) { echo 'disabled'; } ?>>
               <option value="">選択して下さい。</option>
               <?php 
                 if (isset($route_pattern_list) && !empty($route_pattern_list)) {
