@@ -11,6 +11,7 @@
   $sq_no = $_POST['sq_no'];
   $sq_line_no = $_POST['sq_line_no'];
   $title = $_POST['title'] ?? '';
+  $redirect_url_with_err = 'sq_detail_tr_sales_management_input3.php?err=errExec&title=' . $title . "&process2=detail&sq_no=" . $sq_no . "&line=" . $sq_line_no;
 
   //担当者設定ボタンを押下する場合
   if (isset($_POST['submit_receipt'])) {
@@ -37,17 +38,14 @@
       $pdo->commit();
     } catch (PDOException $e) {
       $success = false;
-      if (strpos($e->getMessage(), 'SQLSTATE[42000]') !== false) {
-        error_log("SQL Syntax Error or Access Violation: " . $e->getMessage(),3,'error_log.txt');
-      } else {
-        $pdo->rollback();
-        throw($e);
-        error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
-      }
+      $pdo->rollback();
+      error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
     }
     //登録処理にエラーがなければメール送信する
     if ($success) {
       include("sq_mail_send3.php");
+    } else {
+      echo "<script>window.close(); window.opener.location.href='$redirect_url_with_err';</script>";
     }
   }
 
@@ -75,17 +73,14 @@
       $pdo->commit();
     } catch (PDOException $e) {
       $success = false;
-      if (strpos($e->getMessage(), 'SQLSTATE[42000]') !== false) {
-        error_log("SQL Syntax Error or Access Violation: " . $e->getMessage(),3,'error_log.txt');
-      } else {
-        $pdo->rollback();
-        throw($e);
-        error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
-      }
+      $pdo->rollback();
+      error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
     }
     //登録処理にエラーがない場合
     if ($success) {
       include('sq_mail_send3.php');
+    } else {
+      echo "<script>window.location.href='$redirect_url_with_err';</script>";
     }
   }
 
