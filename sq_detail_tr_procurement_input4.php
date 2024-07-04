@@ -212,7 +212,7 @@
       //何の処理科を書く
       var process = "update";
       //確認Dialogを呼ぶ
-      openModal(msg, process);
+      openConfirmModal(msg, process);
     })
 
     //見積原価のアップロードボタンを押下する場合
@@ -238,7 +238,7 @@
     });
   });
 
-  function openModal(msg, process) {
+  function openConfirmModal(msg, process) {
     event.preventDefault();
     //何の処理かをセットする
     $("#btnProcess").val(process);

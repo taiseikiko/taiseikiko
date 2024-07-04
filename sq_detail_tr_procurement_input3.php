@@ -56,7 +56,7 @@
       //何の処理科を書く
       var process = "return";
       //確認Dialogを呼ぶ
-      openModal(msg, process);
+      openConfirmModal(msg, process);
     })
 
     //確認BOXにはいボタンを押下する場合
@@ -67,9 +67,37 @@
         $("#input3").attr("action", "sq_detail_tr_procurement_input2.php?sq_no="+<?= $sq_no ?>+"&process=detail&title=<?= $title ?>");
       }
     });
+
+     /**-------------------------------------------------------------------------------------------------------------- */
+
+    //ALERT BOXに"はい"ボタンを押下する場合
+    $("#ok_okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+
+      if (process == "errExec") {
+        //sq_class_input1へ移動
+        $('#input3').attr('action', 'sq_detail_tr_procurement_input1.php?title=<?= $title ?>');
+      } else {
+        //画面上変更なし
+        $('#ok_okBtn').attr('data-dismiss', 'modal');
+      }
+    });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    //エラーがあるかどうか確認する
+    var err = '<?= $err ?>';
+    //エラーがある場合
+    if (err !== '') {
+      //OKメッセージを書く
+      var msg = "処理にエラーがありました。係員にお知らせください。";
+      //OKDialogを呼ぶ
+      openOkModal(msg, 'errExec');
+    }
   });
 
-  function openModal(msg, process) {
+  /**---------------------------------------------Javascript----------------------------------------------------------------- */
+  function openConfirmModal(msg, process) {
     event.preventDefault();
     //何の処理かをセットする
     $("#btnProcess").val(process);
@@ -78,6 +106,19 @@
     //確認Dialogを呼ぶ
     $("#confirm").modal({backdrop: false});
   }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
+
+  function openOkModal(msg, process) {
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#ok-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#ok").modal({backdrop: false});
+  }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
 
   function fetchData(class_code) {
     $('#zaikoumeiList option:not(:first-child)').remove();
