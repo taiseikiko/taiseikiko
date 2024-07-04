@@ -24,7 +24,8 @@ $button_text = '更新';
   <div class="pagetitle">
     <h3>部署内初期ルート設定</h3>
     <div class="container">
-      <form class="row g-3" action="sq_default_role_update.php" method="POST" id="sq_default_role_form" enctype="multipart/form-data">
+      <form class="row g-3" method="POST" id="sq_default_role_form" enctype="multipart/form-data">
+        <?php include('dialog.php'); ?>
         <input type="hidden" name="department_code" id="department_code" value="<?= $department_code ?>">
         <input type="hidden" name="dept_id" id="dept_id" value="<?= htmlspecialchars($dept_id) ?>">
         <table class="responsive-table" style="width:auto;">
@@ -77,7 +78,7 @@ $button_text = '更新';
             <td>
               <div class="flex-container" style="margin-left:3rem">
                 <div>
-                  <button class="updateBtn" id="updateBtn"><?= htmlspecialchars($button_text) ?></button>
+                  <button class="updateBtn" id="updateBtn" name="submit"><?= htmlspecialchars($button_text) ?></button>
                 </div>
               </div>
             </td>
@@ -88,6 +89,7 @@ $button_text = '更新';
   </div>
 </main>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
     $('#group').change(function() {
@@ -125,6 +127,14 @@ $button_text = '更新';
           console.error("AJAX Error: ", error);
         }
       });
+    }
+
+    function loadExistingRoleData(data) {
+      if (data) {
+        $('#entrant').val(data.entrant);
+        $('#confirmer').val(data.confirmer);
+        $('#approver').val(data.approver);
+      }
     }
 
     function fetchData(group) {
@@ -182,6 +192,8 @@ $button_text = '更新';
       });
     }
 
+    /**-------------------------------------------------------------------------------------------------------------- */
+
     $('#entrant').change(function() {
       var entrant = $(this).val();
       var dept_id = $('#dept_id').val();
@@ -220,25 +232,80 @@ $button_text = '更新';
       });
     }
 
-    function loadExistingRoleData(data) {
-      if (data) {
-        $('#entrant').val(data.entrant);
-        $('#confirmer').val(data.confirmer);
-        $('#approver').val(data.approver);
-      }
-    }
-    $('#sq_default_role_form').submit(function(e) {
+    /**-------------------------------------------------------------------------------------------------------------- */
+    
+    $('#updateBtn').click(function(e) {
       $('#group_id').val($('#group').val());
       if (!$('#entrant').val() && !$('#confirmer').val() && !$('#approver').val()) {
-        alert('入力項目に不備があります。');
+        //何の処理かを書く
+        var process = "validate";
+        //OKDialogを呼ぶ
+        openOkModal('入力項目に不備があります。', process);
         e.preventDefault();
       } else {
         let buttonText = $('#updateBtn').text();
-        if (!confirm(buttonText + 'します、よろしいでしょうか？')) {
-          e.preventDefault();
-        }
+        //確認メッセージを書く
+        var msg = buttonText + "します？よろしいですか？";
+        //何の処理科を書く
+        var process = "update";
+        //確認Dialogを呼ぶ
+        openConfirmModal(msg, process);
       }
     });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    //確認BOXにはいボタンを押下する場合
+    $("#confirm_okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+      //更新処理の場合
+      if (process == "update") {
+        //submitしたいボタン名をセットする
+        $("#confirm_okBtn").attr("name", "submit");
+        //sales_request_update.phpへ移動する
+        $("#sq_default_role_form").attr("action", "sq_default_role_update.php");
+      }
+    });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    //ALERT BOXに"はい"ボタンを押下する場合
+    $("#ok_okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+
+      if (process == "errExec") {
+        //sq_class_input1へ移動
+        $('#input2').attr('action', 'sales_request_input1.php');
+      } else {
+        //画面上変更なし
+        $('#ok_okBtn').attr('data-dismiss', 'modal');
+      }
+    });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    function openConfirmModal(msg, process) {
+      event.preventDefault();
+      //何の処理かをセットする
+      $("#btnProcess").val(process);
+      //確認メッセージをセットする
+      $("#confirm-message").text(msg);
+      //確認Dialogを呼ぶ
+      $("#confirm").modal({backdrop: false});
+    }
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    function openOkModal(msg, process) {
+      //何の処理かをセットする
+      $("#btnProcess").val(process);
+      //確認メッセージをセットする
+      $("#ok-message").text(msg);
+      //確認Dialogを呼ぶ
+      $("#ok").modal({backdrop: false});
+    }
+
+    /**-------------------------------------------------------------------------------------------------------------- */
   });
 </script>
 
