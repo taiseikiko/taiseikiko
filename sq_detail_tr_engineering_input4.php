@@ -135,7 +135,7 @@
       //何の処理科を書く
       var process = "update";
       //確認Dialogを呼ぶ
-      openModal(msg, process);
+      openConfirmModal(msg, process);
     })
 
     //見積図面のアップロードボタンを押下する場合
@@ -153,7 +153,7 @@
     //確認BOXにはいボタンを押下する場合
     $("#confirm_okBtn").click(function(event) {
       var process = $("#btnProcess").val();
-      //戻る処理の場合
+      //更新処理の場合
       if (process == "update") {
         //submitしたいボタン名をセットする
         $("#confirm_okBtn").attr("name", "submit_entrant1");

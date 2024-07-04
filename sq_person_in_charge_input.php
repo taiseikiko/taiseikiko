@@ -77,6 +77,7 @@
 </div>
 </body>
 </html>
+<script src="assets/js/sq_person_in_charge_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
@@ -92,12 +93,23 @@
 
     //担当者設定を押下する場合
     $('#select').click(function() {
-      //確認メッセージを書く
-      var msg = "担当者設定します。よろしいですか？";
-      //何の処理科を書く
-      var process = "setRoute";
-      //確認Dialogを呼ぶ
-      openModal(msg, process);
+      event.preventDefault();
+      var errMessage = checkValidation();
+
+      //エラーがある場合
+      if (errMessage !== '') {
+        //何の処理かを書く
+        var process = "validate";
+        //OKDialogを呼ぶ
+        openOkModal(errMessage, process);
+      } else {
+        //確認メッセージを書く
+        var msg = "担当者設定します。よろしいですか？";
+        //何の処理科を書く
+        var process = "setRoute";
+        //確認Dialogを呼ぶ
+        openConfirmModal(msg, process);
+      }      
     })
 
     //確認BOXにはいボタンを押下する場合
@@ -127,7 +139,46 @@
         }
       }
     });
+
+     /**-------------------------------------------------------------------------------------------------------------- */
+
+    //ALERT BOXに"はい"ボタンを押下する場合
+    $("#ok_okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+
+      if (process == "errExec") {
+        //sq_class_input1へ移動
+        $('#input2').attr('action', 'sales_request_input1.php?title=<?= $title ?>');
+      } else {
+        //画面上変更なし
+        $('#ok_okBtn').attr('data-dismiss', 'modal');
+      }
+    });
   });
+
+  /**---------------------------------------------Javascript----------------------------------------------------------------- */
+  function openConfirmModal(msg, process) {
+    event.preventDefault();
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#confirm-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#confirm").modal({backdrop: false});
+  }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
+
+  function openOkModal(msg, process) {
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#ok-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#ok").modal({backdrop: false});
+  }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
 
   function fetchData(group) {
     $('#entrant option:not(:first-child)').remove();
@@ -156,14 +207,4 @@
       }
     });
   }
-
-  function openModal(msg, process) {
-    event.preventDefault();
-    //何の処理かをセットする
-    $("#btnProcess").val(process);
-    //確認メッセージをセットする
-    $("#confirm-message").text(msg);
-    //確認Dialogを呼ぶ
-    $("#confirm").modal({backdrop: false});
-  }  
 </script>

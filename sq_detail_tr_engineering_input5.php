@@ -184,7 +184,7 @@
       //何の処理科を書く
       var process = "update";
       //確認Dialogを呼ぶ
-      openModal(msg, process);      
+      openConfirmModal(msg, process);      
     })
 
     //納入仕様書のアップロードボタンを押下する場合

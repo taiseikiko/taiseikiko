@@ -35,6 +35,8 @@
       })
     }
 
+    /**-------------------------------------------------------------------------------------------------------------- */
+
     $("#classList").change(function() {
       let class_code = $(this).val();
       $('#zkm_code').val('');
@@ -45,10 +47,14 @@
       })
     });
 
+    /**-------------------------------------------------------------------------------------------------------------- */
+
     //材工名のプルダウンがCHANGEされた場合、区分TEXTBOXにデータセット
     $("#zaikoumeiList").change(function() {
       set_c_div();
     })
+
+    /**-------------------------------------------------------------------------------------------------------------- */
 
     $("#returnBtn").click(function() {
       //確認メッセージを書く
@@ -56,8 +62,10 @@
       //何の処理科を書く
       var process = "return";
       //確認Dialogを呼ぶ
-      openModal(msg, process);
+      openConfirmModal(msg, process);
     })
+
+    /**-------------------------------------------------------------------------------------------------------------- */
 
     //確認BOXにはいボタンを押下する場合
     $("#confirm_okBtn").click(function(event) {
@@ -67,7 +75,36 @@
         $("#input3").attr("action", "sq_detail_tr_engineering_input2.php?sq_no="+<?= $sq_no ?>+"&process=detail&title=<?= $title ?>");
       }
     });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    //ALERT BOXに"はい"ボタンを押下する場合
+    $("#ok_okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+
+      if (process == "errExec") {
+        //sq_class_input1へ移動
+        $("#input3").attr("action", "sq_detail_tr_engineering_input1.php?title=<?= $title ?>");
+      } else {
+        //画面上変更なし
+        $('#ok_okBtn').attr('data-dismiss', 'modal');
+      }
+    });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    //エラーがあるかどうか確認する
+    var err = '<?= $err ?>';
+    //エラーがある場合
+    if (err !== '') {
+      //OKメッセージを書く
+      var msg = "処理にエラーがありました。係員にお知らせください。";
+      //OKDialogを呼ぶ
+      openOkModal(msg, 'errExec');
+    }
   });
+
+  /**-------------------------------------------------------------------------------------------------------------- */
 
   function fetchData(class_code) {
     $('#zaikoumeiList option:not(:first-child)').remove();
@@ -102,6 +139,8 @@
     });
   }
 
+  /**-------------------------------------------------------------------------------------------------------------- */
+
   function set_c_div() {
     let c_div = $('#zaikoumeiList option:selected').attr('class');
 
@@ -117,6 +156,8 @@
       $('#c_div_code').val('');
     }
   }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
 
   document.addEventListener("DOMContentLoaded", function() {
     var quantity = document.getElementById('quantity');
@@ -140,6 +181,8 @@
     });
   });
 
+  /**-------------------------------------------------------------------------------------------------------------- */
+
   //担当者設定子画面呼び出し
   function person_in_charge(event) {
     var sq_no = document.getElementById('sq_no').value;
@@ -159,7 +202,8 @@
     window.open(url,"popupWindow","width=500,height=200,left=100,top=50");
   }
 
-  function openModal(msg, process) {
+  /**-------------------------------------------------------------------------------------------------------------- */
+  function openConfirmModal(msg, process) {
     event.preventDefault();
     //何の処理かをセットする
     $("#btnProcess").val(process);
@@ -168,6 +212,19 @@
     //確認Dialogを呼ぶ
     $("#confirm").modal({backdrop: false});
   }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
+
+  function openOkModal(msg, process) {
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#ok-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#ok").modal({backdrop: false});
+  }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
 
   //Disabled Input 
   var inputs = document.getElementsByTagName('input');
