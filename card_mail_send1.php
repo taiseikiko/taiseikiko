@@ -105,7 +105,7 @@
         $datas = [];
 
         //資材部入力後card_header_trのprocurement_approver（承認者）へ送信
-        if ($process == 'new') {
+        if ($process !== 'approve') {
             $sql = "SELECT e.employee_name, e.email
             FROM card_header_tr h
             LEFT JOIN employee e ON e.employee_code = h.procurement_approver
@@ -140,6 +140,7 @@
 
         switch ($process) {
             case 'new':
+            case 'update':
                 $seq_no = '1';
                 break;
             

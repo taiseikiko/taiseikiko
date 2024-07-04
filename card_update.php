@@ -63,11 +63,7 @@ if (isset($_POST['submit'])) {
 
   //エラーがない場合
   if ($success == true) {
-    if ($process == 'approve') {
-      include('card_mail_send1.php');
-    } else {
-      echo "<script>window.location.href='card_input1.php'</script>";
-    }
+    include('card_mail_send1.php');
   } else {
     echo "<script>window.location.href='card_input2.php?err=exceErr'</script>";
   }
