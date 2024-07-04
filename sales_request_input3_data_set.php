@@ -73,6 +73,7 @@
   if(isset($_POST['process2']) || isset($_GET['process2'])) {
     $process2 = $_POST['process2']?? $_GET['process2'];
     $sq_no = $_POST['sq_no']?? $_GET['sq_no'];
+    $dept_id = isset($_POST['dept_id']) ? $_POST['dept_id'] : '';
 
     if ($process2 == 'update' || $process2 == 'copy' || $process2 == 'detail') {
       $sq_line_no = $_GET['line'];
