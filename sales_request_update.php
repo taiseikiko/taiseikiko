@@ -49,13 +49,8 @@
         $stmt->execute($data);
         $pdo->commit();
       } catch (PDOException $e) {
-        if (strpos($e->getMessage(), 'SQLSTATE[42000]') !== false) {
-          error_log("SQL Syntax Error or Access Violation: " . $e->getMessage(),3,'error_log.txt');
-        } else {
-          $pdo->rollback();
-          throw($e);
-          error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
-        }
+        $pdo->rollback();
+        error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
       }
     }
 
@@ -146,16 +141,12 @@
       $pdo->commit();
     } catch (PDOException $e) {
       $success = false;
-      if (strpos($e->getMessage(), 'SQLSTATE[42000]') !== false) {
-        error_log("SQL Syntax Error or Access Violation: " . $e->getMessage(),3,'error_log.txt');
-      } else {
-        $pdo->rollback();
-        throw($e);
-        error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
-      }
+      $pdo->rollback();
+      error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
     }
 
-    header('location:sales_request_input1.php?title='.$title . '&result='.$success);
+    $redirect_url = ($success) ? "sales_request_input1.php?title=" . $title : "sales_request_input2.php?err=errExec&title=" . $title . "&process=" . $process . "&sq_no=" . $datas['sq_no'];
+    header('location:' . $redirect_url);
   }
 
 ?>

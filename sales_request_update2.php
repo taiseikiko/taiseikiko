@@ -133,6 +133,9 @@
     if ($success) {
       //Send Mail
       include('sq_mail_send1.php');
+    } else {
+      $redirect_url = "sales_request_input3.php?err=errExec&title=" . $title . "&process2=" . $process . "&sq_no=" . $sq_no . "&line=" . $datas['sq_line_no'];
+      header('location:' . $redirect_url);
     }
   }
 
@@ -176,13 +179,8 @@
       $pdo->commit();
     } catch (PDOException $e) {
       $success = false;
-      if (strpos($e->getMessage(), 'SQLSTATE[42000]') !== false) {
-        error_log("SQL Syntax Error or Access Violation: " . $e->getMessage(),3,'error_log.txt');
-      } else {
-        $pdo->rollback();
-        throw($e);
-        error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
-      }
+      $pdo->rollback();
+      error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
     }
     return $success;
   }
@@ -216,13 +214,8 @@
       $pdo->commit();
     } catch (PDOException $e) {
       $success = false;
-      if (strpos($e->getMessage(), 'SQLSTATE[42000]') !== false) {
-        error_log("SQL Syntax Error or Access Violation: " . $e->getMessage(),3,'error_log.txt');
-      } else {
-        $pdo->rollback();
-        throw($e);
-        error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
-      }
+      $pdo->rollback();
+      error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
     }
 
     return $success;

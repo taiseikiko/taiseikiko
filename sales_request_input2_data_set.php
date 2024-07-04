@@ -31,6 +31,7 @@
   $sq_no = '';                      //営業依頼書№
   $process = '';                    //処理
   $regBtnDisabled = '';
+  $err = $_GET['err'] ?? '';
 
   //sales_request_input3から営業依頼書№を取得する
   $sq_no = isset($_GET['sq_no']) ? $_GET['sq_no'] : '';

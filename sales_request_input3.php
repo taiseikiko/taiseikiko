@@ -21,7 +21,7 @@
 <script type="text/javascript"></script>
 <script src="assets/js/inquiry_ent.js"></script>
 <script src="assets/js/inquiry_ent_check.js"></script>
-<script src="assets/js/sales_request_input3_check.js"></script>
+<script src="assets/js/sales_request_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
@@ -55,16 +55,27 @@
       //何の処理科を書く
       var process = "return";
       //確認Dialogを呼ぶ
-      openModal(msg, process);
+      openConfirmModal(msg, process);
     })
 
     $("#updBtn").click(function() {
-      //確認メッセージを書く
-      var msg = "営業依頼書 明細を作成．更新します。よろしいですか？";
-      //何の処理科を書く
-      var process = "update";
-      //確認Dialogを呼ぶ
-      openModal(msg, process);
+      event.preventDefault();
+      var errMessage = checkValidationInput3();
+
+      //エラーがある場合
+      if (errMessage !== '') {
+        //何の処理かを書く
+        var process = "validate";
+        //OKDialogを呼ぶ
+        openOkModal(errMessage, process);
+      } else {
+        //確認メッセージを書く
+        var msg = "営業依頼書 明細を作成．更新します。よろしいですか？";
+        //何の処理科を書く
+        var process = "update";
+        //確認Dialogを呼ぶ
+        openConfirmModal(msg, process);
+      }
     })
 
     //はいボタンを押下する場合
@@ -75,9 +86,7 @@
         $("#input3").attr("action", "sales_request_input2.php?sq_no="+<?= $sq_no ?>+"&process=update&title=<?= $title ?>");
       }
       //明細更新処理の場合
-      else if (process == "update") {
-        checkValidation(event);
-        
+      else if (process == "update") {       
         //submitしたいボタン名をセットする
         $("#confirm_okBtn").attr("name", "submit");
         //sales_request_update.phpへ移動する
@@ -85,16 +94,57 @@
       }
     });
 
-    function openModal(msg, process) {
-      event.preventDefault();
-      //何の処理かをセットする
-      $("#btnProcess").val(process);
-      //確認メッセージをセットする
-      $("#confirm-message").text(msg);
-      //確認Dialogを呼ぶ
-      $("#confirm").modal({backdrop: false});
+     /**-------------------------------------------------------------------------------------------------------------- */
+
+    //ALERT BOXに"はい"ボタンを押下する場合
+    $("#ok_okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+
+      if (process == "errExec") {
+        //sq_class_input1へ移動
+        $('#input3').attr('action', 'sales_request_input1.php?title=<?= $title ?>');
+      } else {
+        //画面上変更なし
+        $('#ok_okBtn').attr('data-dismiss', 'modal');
+      }
+    });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    //エラーがあるかどうか確認する
+    var err = '<?= $err ?>';
+    //エラーがある場合
+    if (err !== '') {
+      //OKメッセージを書く
+      var msg = "処理にエラーがありました。係員にお知らせください。";
+      //OKDialogを呼ぶ
+      openOkModal(msg, 'errExec');
     }
   });
+
+  /**---------------------------------------------Javascript----------------------------------------------------------------- */
+  function openConfirmModal(msg, process) {
+    event.preventDefault();
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#confirm-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#confirm").modal({backdrop: false});
+  }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
+
+  function openOkModal(msg, process) {
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#ok-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#ok").modal({backdrop: false});
+  }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
 
   function fetchData(class_code) {
     $('#zaikoumeiList option:not(:first-child)').remove();

@@ -137,10 +137,8 @@
               }
               ?>
             </select>
-            <label class="common_label" for="size1">　　サイズ </label>
-            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeA1" value="<?= $sizeA1 ?>">mm　　✖
-            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeB1" value="<?= $sizeB1 ?>">mm　
-            <button class="approveBtn" name="detail" id="detailBtn1" style="margin-left: 3rem;" value="1" <?= $disabled_detail_btn1 ?>>詳細</button>
+
+            <button class="approveBtn" name="detail" id="detailBtn1" style="margin-left: 8rem;" value="1" <?= $disabled_detail_btn1 ?>>詳細</button>
           </div>
         </td>
       </tr>
@@ -149,6 +147,10 @@
       <tr>
         <td>
           <div class="field-row">
+            <label class="common_label" for="size1">　　サイズ </label>
+            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeA1" value="<?= $sizeA1 ?>">mm　　✖
+            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeB1" value="<?= $sizeB1 ?>">mm　            
+
             <label class="common_label" for="specification_no1">仕様書№</label>
             <input type="text" style="margin-left: 1rem;" class="input-res" maxlength="10" name="specification_no1" value="<?= $specification_no1 ?>">
             <label class="common_label" for="special_note1">特記事項</label>
@@ -211,10 +213,8 @@
               }
               ?>
             </select>
-            <label class="common_label" for="size2">　　サイズ </label>
-            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeA2" value="<?= $sizeA2 ?>">mm　　✖
-            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeB2" value="<?= $sizeB2 ?>">mm　
-            <button class="approveBtn" name="detail" id="detailBtn2" style="margin-left: 3rem;" value="2" <?= $disabled_detail_btn2 ?>>詳細</button>
+                        
+            <button class="approveBtn" name="detail" id="detailBtn2" style="margin-left: 8rem;" value="2" <?= $disabled_detail_btn2 ?>>詳細</button>
           </div>
         </td>
       </tr>
@@ -223,6 +223,10 @@
       <tr>
         <td>
           <div class="field-row">
+            <label class="common_label" for="size2">　　サイズ </label>
+            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeA2" value="<?= $sizeA2 ?>">mm　　✖
+            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeB2" value="<?= $sizeB2 ?>">mm　
+
             <label class="common_label" for="specification_no2">仕様書№</label>
             <input type="text" style="margin-left: 1rem;" class="input-res" maxlength="10" name="specification_no2" value="<?= $specification_no2 ?>">
             <label class="common_label" for="special_note2">特記事項</label>
@@ -285,10 +289,8 @@
               }
               ?>
             </select>
-            <label class="common_label" for="size3">　　サイズ </label>
-            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeA3" value="<?= $sizeA3 ?>">mm　　✖
-            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeB3" value="<?= $sizeB3 ?>">mm　
-            <button class="approveBtn" name="detail" id="detailBtn3" style="margin-left: 3rem;" value="3" <?= $disabled_detail_btn3 ?>>詳細</button>
+                        
+            <button class="approveBtn" name="detail" id="detailBtn3" style="margin-left: 8rem;" value="3" <?= $disabled_detail_btn3 ?>>詳細</button>
           </div>
         </td>
       </tr>
@@ -297,6 +299,10 @@
       <tr>
         <td>
           <div class="field-row">
+            <label class="common_label" for="size3">　　サイズ </label>
+            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeA3" value="<?= $sizeA3 ?>">mm　　✖
+            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeB3" value="<?= $sizeB3 ?>">mm　
+
             <label class="common_label" for="specification_no3">仕様書№</label>
             <input type="text" style="margin-left: 1rem;" class="input-res" maxlength="10" name="specification_no3" value="<?= $specification_no3 ?>">
             <label class="common_label" for="special_note3">特記事項</label>
@@ -358,11 +364,9 @@
                 }
               }
               ?>
-            </select>
-            <label class="common_label" for="size4">　　サイズ </label>
-            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeA4" value="<?= $sizeA4 ?>">mm　　✖
-            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeB4" value="<?= $sizeB4 ?>">mm　
-            <button class="approveBtn" name="detail" id="detailBtn4" style="margin-left: 3rem;" value="4" <?= $disabled_detail_btn4 ?>>詳細</button>
+            </select>            
+            
+            <button class="approveBtn" name="detail" id="detailBtn4" style="margin-left: 8rem;" value="4" <?= $disabled_detail_btn4 ?>>詳細</button>
           </div>
         </td>
       </tr>
@@ -371,6 +375,10 @@
       <tr>
         <td>
           <div class="field-row">
+            <label class="common_label" for="size4">　　サイズ </label>
+            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeA4" value="<?= $sizeA4 ?>">mm　　✖
+            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeB4" value="<?= $sizeB4 ?>">mm　
+
             <label class="common_label" for="specification_no4">仕様書№</label>
             <input type="text" style="margin-left: 1rem;" class="input-res" maxlength="10" name="specification_no4" value="<?= $specification_no4 ?>">
             <label class="common_label" for="special_note4">特記事項</label>

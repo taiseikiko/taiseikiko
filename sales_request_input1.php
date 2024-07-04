@@ -18,7 +18,7 @@ $result = $_GET['result'] ?? '';
    <!-- PHP to display result if available -->
 
   <div class="container">
-    <form id="searchForm" class="row g-3" action="sales_request_input2.php?title=<?= $title ?>" method="POST">
+    <form id="searchForm" class="row g-3" action="sales_request_input2.php?title=<?= $title ?>" method="POST" id="sales_request_input1_form">
       <table style="width:auto;">
         <tr>
           <td>
@@ -108,7 +108,7 @@ $(document).ready(function(){
       success: function(response) {
         $('#sq_data_table').html(response);
       }      
-    });
+    });    
   });
 
   $(document).on('click', '.updateBtn', function() {
@@ -116,12 +116,9 @@ $(document).ready(function(){
     $('.sq_no').val(selectedId);
   });
 
-  //登録更新処理にエラーがあった場合、エラーメッセージを表示する
-  var result = "<?= $result ?>";
-  if (result == '0') {
-    showErrorMsg();
-  }
 });
+
+/**-------------------------------------------------------------------------------------------------------------- */
 
 function handleWindowClose() {
   $.ajax({
@@ -138,15 +135,7 @@ function handleWindowClose() {
   });
 }
 
-function showErrorMsg() {
-  var message = "エラーが発生しました。係員にお知らせください。";
-  //確認メッセージをセットする
-  $("#ok-message").text(message);
-  //確認Dialogを呼ぶ
-  $("#ok").modal({backdrop: false});
-}
-
-// localStorage.removeItem('sales_request_form');
+/**-------------------------------------------------------------------------------------------------------------- */
 </script>
 <?php
 include("footer.html");

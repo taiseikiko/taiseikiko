@@ -58,6 +58,7 @@
   $o_c_directionDisabled = '';
   $zumen_disabled = false;
   $mitsumori_disabled = false;
+  $err = $_GET['err'] ?? '';
 
   $class_datas = get_class_datas();                     //分類プルダウンにセットするデータを取得する
   $sizeList = getDropdownData('size');                  //サイズ
@@ -69,10 +70,9 @@
   $valveList = getDropdownData('valve');                //バルブ仕様
   $o_c_directionList = getDropdownData('o_c_direction');//開閉方向
 
-  if(isset($_POST['process2'])) {
-    $process2 = $_POST['process2'];
-    $sq_no = $_POST['sq_no'];
-    $dept_id = isset($_POST['dept_id']) ? $_POST['dept_id'] : '';
+  if(isset($_POST['process2']) || isset($_GET['process2'])) {
+    $process2 = $_POST['process2']?? $_GET['process2'];
+    $sq_no = $_POST['sq_no']?? $_GET['sq_no'];
 
     if ($process2 == 'update' || $process2 == 'copy' || $process2 == 'detail') {
       $sq_line_no = $_GET['line'];

@@ -36,7 +36,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="text26">提出先</label>
-            <input type="text" style="margin-left: 1rem;" id="cust_name" name="cust_name" value="<?= $cust_name ?>" class="readonlyText input-res">
+            <input type="text" style="margin-left: 1rem;" id="cust_name" name="cust_name" value="<?= $cust_name ?>" class="readonlyText input-res" readonly>
             <input type="hidden" name="cust_code" id="cust_code" value="<?= $cust_code ?>">
             <button class="search_btn" onclick="customer_open(event)">提出先検索</button>
             
@@ -52,7 +52,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="text26">事業体 </label>
-            <input type="text" style="margin-left: 1rem;" id="pf_name" name="pf_name" value="<?= $pf_name ?>" class="readonlyText input-res">
+            <input type="text" style="margin-left: 1rem;" id="pf_name" name="pf_name" value="<?= $pf_name ?>" class="readonlyText input-res" readonly>
             <input type="hidden" name="pf_code" id="pf_code" value="<?= $pf_code ?>">
             <button class="search_btn" onclick="public_office_open(event)">事業体検索</button>
 

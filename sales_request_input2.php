@@ -21,31 +21,29 @@
 </html>
 <script src="assets/js/customer_ent.js"></script>
 <script src="assets/js/public_office_ent.js"></script>
-<script src="assets/js/sales_request_input_check.js"></script>
+<script src="assets/js/sales_request_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
     //一覧から新規作成を押下する場合
     $(".createBtn").click(function(){
-      //localStorageにフォームデータを保存する
-      // saveFormData();
-
       //sales_request_input3.phpへ移動する
       $("#input2").attr("action", "sales_request_input3.php?title=<?= $title ?>");
     });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
 
     //一覧画面から更新 or コピーボタンを押下する場合
     $(".updateBtn, .copyBtn").click(function(){
       //クリックされた行の営業依頼書行№	を取得する
       var selected = $(this).data('sq_line_no');
 
-      //localStorageにフォームデータを保存する
-      // saveFormData();
-
       //sales_request_input3.phpへ移動する
       $("#input2").attr("action", "sales_request_input3.php?line="+selected+"&title=<?= $title ?>");
     });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
 
     //アップロードボタンを押下する場合
     $("#upload").click(function(){
@@ -53,15 +51,30 @@
       $("#input2").attr("action", "sq_attach_upload1.php?from=sr");
     })
 
+    /**-------------------------------------------------------------------------------------------------------------- */
+
     //確認ボタンを押下する場合
     $(".approveBtn").click(function(event){
-      //確認メッセージを書く
-      var msg = "営業依頼書を入力します？よろしいですか？";
-      //何の処理科を書く
-      var process = "update";
-      //確認Dialogを呼ぶ
-      openModal(msg, process);
+      event.preventDefault();
+      var errMessage = checkValidationInput2();
+
+      //エラーがある場合
+      if (errMessage !== '') {
+        //何の処理かを書く
+        var process = "validate";
+        //OKDialogを呼ぶ
+        openOkModal(errMessage, process);
+      } else {
+        //確認メッセージを書く
+        var msg = "営業依頼書を入力します？よろしいですか？";
+        //何の処理科を書く
+        var process = "update";
+        //確認Dialogを呼ぶ
+        openConfirmModal(msg, process);
+      }      
     })
+
+    /**-------------------------------------------------------------------------------------------------------------- */
     
     //戻るボタンを押下する場合
     $("#returnBtn").click(function(event) {
@@ -70,8 +83,10 @@
       //何の処理科を書く
       var process = "return";
       //確認Dialogを呼ぶ
-      openModal(msg, process);
+      openConfirmModal(msg, process);
     });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
 
     //確認BOXにはいボタンを押下する場合
     $("#confirm_okBtn").click(function(event) {
@@ -82,7 +97,6 @@
       }
       //ヘッダ更新処理の場合
       else if (process == "update") {
-        checkValidation(event);
         //submitしたいボタン名をセットする
         $("#confirm_okBtn").attr("name", "submit");
         //sales_request_update.phpへ移動する
@@ -90,38 +104,56 @@
       }
     });
 
-    function openModal(msg, process) {
-      event.preventDefault();
-      //何の処理かをセットする
-      $("#btnProcess").val(process);
-      //確認メッセージをセットする
-      $("#confirm-message").text(msg);
-      //確認Dialogを呼ぶ
-      $("#confirm").modal({backdrop: false});
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    //ALERT BOXに"はい"ボタンを押下する場合
+    $("#ok_okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+
+      if (process == "errExec") {
+        //sq_class_input1へ移動
+        $('#input2').attr('action', 'sales_request_input1.php?title=<?= $title ?>');
+      } else {
+        //画面上変更なし
+        $('#ok_okBtn').attr('data-dismiss', 'modal');
+      }
+    });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    //エラーがあるかどうか確認する
+    var err = '<?= $err ?>';
+    //エラーがある場合
+    if (err !== '') {
+      //OKメッセージを書く
+      var msg = "処理にエラーがありました。係員にお知らせください。";
+      //OKDialogを呼ぶ
+      openOkModal(msg, 'errExec');
     }
   });
-
-  function getById(id) {
-    return document.getElementById(id);
+  /**---------------------------------------------Javascript----------------------------------------------------------------- */
+  function openConfirmModal(msg, process) {
+    event.preventDefault();
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#confirm-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#confirm").modal({backdrop: false});
   }
 
-  // const myForm = getById("input2");
-  //localStorageにフォームデータを保存する
-  // function saveFormData() {
-  //   const formData = new FormData(myForm);
-  //   const jsonData = JSON.stringify(Object.fromEntries(formData));
-  //   localStorage.setItem('sales_request_form', jsonData);
-  // }
+  /**-------------------------------------------------------------------------------------------------------------- */
 
-  //localStorageからフォームデータをセットする
-  // const formData = JSON.parse(localStorage.getItem('sales_request_form'));
-  // if (formData) {
-  //   Object.keys(formData).forEach(key => {
-  //     if (key !== 'uploaded_file') {
-  //       myForm.elements[key].value = formData[key];
-  //     }
-  //   })
-  // }
+  function openOkModal(msg, process) {
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#ok-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#ok").modal({backdrop: false});
+  }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
 </script>
 <?php
 // フッターセット
