@@ -21,7 +21,7 @@
 </html>
 <script src="assets/js/customer_ent.js"></script>
 <script src="assets/js/public_office_ent.js"></script>
-<script src="assets/js/sales_request_input_check.js"></script>
+<script src="assets/js/sales_request_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
@@ -49,12 +49,23 @@
 
     //確認ボタンを押下する場合
     $(".approveBtn").click(function(){
-      //確認メッセージを書く
-      var msg = "営業依頼書を確認します？よろしいですか？";
-      //何の処理科を書く
-      var process = "update";
-      //確認Dialogを呼ぶ
-      openModal(msg, process);      
+      event.preventDefault();
+      var errMessage = checkValidationInput2();
+
+      //エラーがある場合
+      if (errMessage !== '') {
+        //何の処理かを書く
+        var process = "validate";
+        //OKDialogを呼ぶ
+        openOkModal(errMessage, process);
+      } else {
+        //確認メッセージを書く
+        var msg = "営業依頼書を確認します？よろしいですか？";
+        //何の処理科を書く
+        var process = "update";
+        //確認Dialogを呼ぶ
+        openConfirmModal(msg, process);
+      }
     })
 
     //戻るボタンを押下する場合
@@ -64,7 +75,7 @@
       //何の処理科を書く
       var process = "return";
       //確認Dialogを呼ぶ
-      openModal(msg, process);      
+      openConfirmModal(msg, process);      
     })
 
     //確認BOXにはいボタンを押下する場合
@@ -76,20 +87,43 @@
       }
       //ヘッダ更新処理の場合
       else if (process == "update") {
-        checkValidation(event);
         //submitしたいボタン名をセットする
         $("#confirm_okBtn").attr("name", "submit");
         //sales_request_update.phpへ移動する
         $("#input2").attr("action", "sales_request_update.php?title=<?= $title ?>");
       }
     });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    //ALERT BOXに"はい"ボタンを押下する場合
+    $("#ok_okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+
+      if (process == "errExec") {
+        //sq_class_input1へ移動
+        $('#input2').attr('action', 'sales_request_check1.php?title=<?= $title ?>');
+      } else {
+        //画面上変更なし
+        $('#ok_okBtn').attr('data-dismiss', 'modal');
+      }
+    });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    //エラーがあるかどうか確認する
+    var err = '<?= $err ?>';
+    //エラーがある場合
+    if (err !== '') {
+      //OKメッセージを書く
+      var msg = "処理にエラーがありました。係員にお知らせください。";
+      //OKDialogを呼ぶ
+      openOkModal(msg, 'errExec');
+    }
   });
 
-  function getById(id) {
-    return document.getElementById(id);
-  }
-
-  function openModal(msg, process) {
+  /**---------------------------------------------Javascript----------------------------------------------------------------- */
+  function openConfirmModal(msg, process) {
     event.preventDefault();
     //何の処理かをセットする
     $("#btnProcess").val(process);
@@ -98,6 +132,19 @@
     //確認Dialogを呼ぶ
     $("#confirm").modal({backdrop: false});
   }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
+
+  function openOkModal(msg, process) {
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#ok-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#ok").modal({backdrop: false});
+  }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
 </script>
 <?php
 // フッターセット

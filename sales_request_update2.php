@@ -134,7 +134,7 @@
       //Send Mail
       include('sq_mail_send1.php');
     } else {
-      $redirect_url = "sales_request_input3.php?err=errExec&title=" . $title . "&process2=" . $process . "&sq_no=" . $sq_no . "&line=" . $datas['sq_line_no'];
+      $redirect_url = 'sales_request_' . $title . '3.php?err=errExec&title=' . $title . "&process2=" . $process . "&sq_no=" . $sq_no . "&line=" . $datas['sq_line_no'];
       header('location:' . $redirect_url);
     }
   }

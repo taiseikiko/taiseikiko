@@ -145,7 +145,15 @@
       error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
     }
 
-    $redirect_url = ($success) ? "sales_request_input1.php?title=" . $title : "sales_request_input2.php?err=errExec&title=" . $title . "&process=" . $process . "&sq_no=" . $datas['sq_no'];
+    $redirect_list = [
+      'input' => 'sales_request_input' . ($success ? '1' : '2') . '.php?title=' . $title,
+      'check' => 'sales_request_check' . ($success ? '1' : '2') . '.php?title=' . $title,
+      'approve' => 'sales_request_approve' . ($success ? '1' : '2') . '.php?title=' . $title,
+    ];
+    $redirect = $redirect_list[$title];
+
+    $redirect_url = ($success) ? $redirect : 
+                  $redirect . '&err=errExec&process=' . $process . "&sq_no=" . $datas['sq_no'];
     header('location:' . $redirect_url);
   }
 
