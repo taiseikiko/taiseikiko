@@ -12,6 +12,7 @@
     <input type="hidden" name="dept_id" id="dept_id" value="<?= $dept_id ?>">
     <input type="hidden" name="title" id="title" value="<?= $title ?>">
     <input type="hidden" name="user_code" value="<?= $_SESSION["login"] ?>">
+    <input type="hidden" name="status" id="status" value="<?= $status ?>">
     <table style="width:auto;">
       <tr style="height:10px;"></tr>
       <tr style="height:10px; margin-top:20px"></tr>

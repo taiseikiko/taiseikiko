@@ -26,6 +26,14 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
+    //入力以外の画面の場合、detailの内容を編集出来ないようにする
+    // var status = $('#status').val();
+    // if (status == '1') {
+      disabledForm();
+    // }
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
     let class_code = $('#classList').val();
     if (class_code != '') {
       fetchData(class_code, function(response) {
@@ -189,6 +197,8 @@
     });
   }
 
+  /**-------------------------------------------------------------------------------------------------------------- */
+
   function set_c_div() {
     let c_div = $('#zaikoumeiList option:selected').attr('class');
 
@@ -204,6 +214,8 @@
       $('#c_div_code').val('');
     }
   }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
 
   document.addEventListener("DOMContentLoaded", function() {
     var quantity = document.getElementById('quantity');
@@ -226,6 +238,48 @@
       event.target.value = value.replace(/\D/g, '');
     });
   });
+
+  /**-------------------------------------------------------------------------------------------------------------- */
+  function disabledForm() {
+    //Disabled Input 
+    var inputs = document.getElementsByTagName('input');
+    const excludeInputs = ['hidden', 'submit', 'file'];
+    for (var i = 0; i < inputs.length; i++) {
+      if (!excludeInputs.includes(inputs[i].type.toLowerCase()) && inputs[i].className !== 'mail') {
+        inputs[i].disabled = true;
+      }
+      if (inputs[i].type.toLowerCase() == 'text') {
+        inputs[i].style.backgroundColor = '#e6e6e6';
+      }
+    }
+  
+    //Disabled textarea 
+    var textareas = document.getElementsByTagName('textarea');
+    const excludeTextarea = ['confirmer_comment'];
+    for (var j = 0; j < textareas.length; j++) {
+      if (!excludeTextarea.includes(textareas[j].id)) {
+        textareas[j].disabled = true;
+        textareas[j].style.backgroundColor = '#e6e6e6';
+      }
+    }
+  
+    //Disabled select 
+    var selects = document.getElementsByTagName('select');
+    for (var k = 0; k < selects.length; k++) {
+      if (selects[k].id !== 'otherProcess') {
+        selects[k].disabled = true;
+      }
+    }
+  
+    //Disabled button 
+    var buttons = document.getElementsByTagName('button');
+    const excludeButtons = ['returnBtn', 'createOrUpdate', 'setEmp', 'update', 'okBtn', 'cancelBtn'];
+    for (var k = 0; k < buttons.length; k++) {
+      if (!excludeButtons.includes(buttons[k].className)) {
+        buttons[k].disabled = true;
+      }
+    }
+  }
 
 </script>
 

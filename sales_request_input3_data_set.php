@@ -43,6 +43,7 @@
   $special_tube_od1 = '';       //特殊管外径１
   $special_tube_od2 = '';       //特殊管外径２
   $sq_no = '';
+  $status = '';                 //ステータス
   $route_pattern = '';          //ルートパタン
   $entrant_comments = '';       //入力者コメント
   $confirmer_comments = '';     //確認者コメント
@@ -84,7 +85,7 @@
         $fields = ['estimate_div1', 'estimate_div2', 'specification_div', 'drawing_div', 'document_div', 'check_type', 'deadline_estimate_date', 'deadline_drawing_date', 'cad_data_div', 'const_div1',
         'const_div2', 'const_div3', 'const_div4', 'c_div', 'design_water_pressure', 'reducing_pressure_div', 'normal_water_puressure', 'water_outage', 'inner_film', 'outer_film', 'quantity', 
         'right_quantity', 'left_quantity', 'special_note', 'size', 'joint', 'pipe', 'fluid', 'inner_coating', 'outer_coating', 'valve', 'record_div', 'class_code', 'zkm_code', 'special_tube_od1',
-        'special_tube_od2', 'route_pattern', 'entrant_comments', 'approver_comments', 'confirmer_comments'];
+        'special_tube_od2', 'route_pattern', 'entrant_comments', 'approver_comments', 'confirmer_comments', 'status'];
 
         foreach ($fields as $field) {
           ${$field} = $sq_detail_datas[$field];
