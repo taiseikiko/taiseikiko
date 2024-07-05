@@ -193,7 +193,7 @@
           <option value="" class="">選択して下さい。</option>
           <option value="1" class="">差し出し</option>
           <option value="2" class="">中止</option>
-          <option value="3" class="">スキップ</option>
+          <?php if ($showSkip) echo'<option value="3" class="">スキップ</option>'; ?>
         </select>
       </div>
       <?php

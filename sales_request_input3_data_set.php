@@ -60,6 +60,7 @@
   $zumen_disabled = false;
   $mitsumori_disabled = false;
   $err = $_GET['err'] ?? '';
+  $showSkip = false;
 
   $class_datas = get_class_datas();                     //分類プルダウンにセットするデータを取得する
   $sizeList = getDropdownData('size');                  //サイズ
@@ -75,6 +76,13 @@
     $process2 = $_POST['process2']?? $_GET['process2'];
     $sq_no = $_POST['sq_no']?? $_GET['sq_no'];
     $dept_id = isset($_POST['dept_id']) ? $_POST['dept_id'] : '';
+
+    //現在の部署が「技術部と資材部」かつ、受付画面のみに、スキップを行う
+    $s_title = substr($title, 0, 2);
+    $e_title = substr($title, 3);
+    if (($s_title == 'td' && $e_title == 'receipt') || ($s_title == 'pc' && $e_title == 'receipt')) {
+      $showSkip = true;
+    }
 
     if ($process2 == 'update' || $process2 == 'copy' || $process2 == 'detail') {
       $sq_line_no = $_GET['line'];
