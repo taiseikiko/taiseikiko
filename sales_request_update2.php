@@ -62,6 +62,7 @@
         'reducing_pressure_div' => $_POST['reducing_pressure_div'] ?? '', //施工時減圧区分
         'special_note' => $_POST['special_note'], //特記事項
         'entrant_comments' => $_POST['entrant_comments'],  //入力者コメント
+        'status' => '1'
       ];
 
       //見積区分１（estimate_div1）または、見積区分２（estimate_div2）が、"1" の場合で、
@@ -101,8 +102,7 @@
     if ($process == 'new' || $process == 'copy') {
       $sq_line_no = get_sq_line_no($sq_no); //営業依頼書行№
       $datas['sq_line_no'] = $sq_line_no;
-      $datas['add_date'] = $today;
-      $datas['status'] = '1';
+      $datas['add_date'] = $today;      
 
       if ($record_div_type == "both") {
         for ($i=0; $i<2; $i++) { 
@@ -220,7 +220,7 @@
                 const_div4=:const_div4,size=:size,joint=:joint,pipe=:pipe,inner_coating=:inner_coating,inner_film=:inner_film,outer_coating=:outer_coating,
                 outer_film=:outer_film,fluid=:fluid,valve=:valve,o_c_direction=:o_c_direction,special_tube_od1=:special_tube_od1,special_tube_od2=:special_tube_od2,quantity=:quantity,right_quantity=:right_quantity,
                 left_quantity=:left_quantity,design_water_pressure=:design_water_pressure,water_outage=:water_outage,normal_water_puressure=:normal_water_puressure,
-                reducing_pressure_div=:reducing_pressure_div,special_note=:special_note,entrant_comments=:entrant_comments,record_div=:record_div,";
+                reducing_pressure_div=:reducing_pressure_div,special_note=:special_note,entrant_comments=:entrant_comments,record_div=:record_div,status=:status,";
       }
       //確認画面の時だけ確認者をセットする
       else if ($title == 'check') {
