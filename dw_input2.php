@@ -13,9 +13,11 @@
 
 <main>
   <div class="pagetitle">
-    <h3>図面管理入力</h3>
+    <h3>図面管理　<?= $header ?></h3>
     <div class="container">
       <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="dw_input2">
+        <input type="hidden" name="process" value="<?= $process ?>">
+        <input type="hidden" name="dw_no" value="<?= $dw_no ?>">
         <?php include('dialog.php'); ?>
         <table style="width:auto;">
           <input type="hidden" name="sq_no" id="sq_no" value="<?= $sq_no ?>">
@@ -41,24 +43,24 @@
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="dw_div">区分</label>
+                <label class="common_label" for="dw_div">区分<?= $dw_div1 ?></label>
 
                 <input type="radio" id="dw_div1_1" name="dw_div1" value="1" <?php if ($dw_div1 == '1') { echo "checked"; } ?>>
                 <label class="common_label" for="dw_div1_1" style="margin-left:35px; ">標準</label>
 
                 <input type="radio" id="dw_div1_2" name="dw_div1" value="2" <?php if ($dw_div1 == '2') { echo "checked"; } ?>>
-                <label class="common_label" for="dw_div1_2" style="">特殊</label>
+                <label class="common_label" for="dw_div1_2">特殊</label>
 
-                <input type="radio" id="dw_div1_3" name="dw_div1" value="3" <?php if ($dw_div1 == '2') { echo "checked"; } ?>>
-                <label class="common_label" for="dw_div1_3" style="">鋼板製</label>
+                <input type="radio" id="dw_div1_3" name="dw_div1" value="3" <?php if ($dw_div1 == '3') { echo "checked"; } ?>>
+                <label class="common_label" for="dw_div1_3">鋼板製</label>
 
                 <label class="common_label" for="open_div">公開区分</label>
 
-                <input type="radio" id="open_div1" name="case_div" value="1" <?php if ($open_div == '1') { echo "checked"; } ?>>
+                <input type="radio" id="open_div1" name="open_div" value="1" <?php if ($open_div == '1') { echo "checked"; } ?>>
                 <label class="common_label" for="open_div1" style="margin-left:35px; ">公開</label>
 
-                <input type="radio" id="open_div2" name="case_div" value="2" <?php if ($open_div == '2') { echo "checked"; } ?>>
-                <label class="common_label" for="open_div2" style="">非公開</label>
+                <input type="radio" id="open_div2" name="open_div" value="2" <?php if ($open_div == '2') { echo "checked"; } ?>>
+                <label class="common_label" for="open_div2">非公開</label>
               </div>
             </td>
           </tr>
@@ -251,7 +253,7 @@
                   <button id="returnBtn" class="returnBtn">前の画面に戻る </button>
                 </div>
                 <div>
-                  <button id="updBtn" class="setRoute" style="background:#80dfff;" name="submit"><?= $btn_name ?> </button>
+                  <button id="updBtn" style="background:#80dfff;" name="submit"><?= $btn_name ?> </button>
                 </div>
               </div>
             </td>
@@ -308,7 +310,8 @@
     //登録更新ボタンを押下場合
     $('#updBtn').click(function() {
       event.preventDefault();
-      var errMessage = checkValidationInput2();
+      var errMessage = '';
+      // var errMessage = checkValidationInput2();
 
       //エラーがある場合
       if (errMessage !== '') {
@@ -317,14 +320,14 @@
         //OKDialogを呼ぶ
         openOkModal(errMessage, process);
       } else {
+        var btnName = $('#updBtn').text();
         //確認メッセージを書く
-        var msg = "営業依頼書を入力します？よろしいですか？";
+        var msg = btnName + "入力します？よろしいですか？";
         //何の処理科を書く
         var process = "update";
         //確認Dialogを呼ぶ
         openConfirmModal(msg, process);
       }
-      $('#dw_input2').attr('action', 'dw_update.php');
     });
 
     /**-------------------------------------------------------------------------------------------------------------- */
@@ -341,7 +344,7 @@
         //submitしたいボタン名をセットする
         $("#confirm_okBtn").attr("name", "submit");
         //sales_request_update.phpへ移動する
-        $("#dw_input2").attr("action", "sales_request_update.php?title=<?= $title ?>");
+        $("#dw_input2").attr("action", "dw_update.php");
       }
     });
 
@@ -392,7 +395,6 @@
           }
           i++;
         });
-        set_c_div();
       },
       error: function(xhr, status, error) {
         console.log('error')

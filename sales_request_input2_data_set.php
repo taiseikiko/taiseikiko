@@ -99,7 +99,14 @@
         //事業体名を取得する
         if ($pf_code !== '') {
           $pf_name = get_pf_name($pf_code);
-        }        
+        }    
+        //申請者のデータを取得する
+        $client_datas = get_client_infos($client);
+        if (isset($client_datas) && !empty($client_datas)) {
+          $user_name = $client_datas['employee_name'];  //登録者名  
+          $office_name = $client_datas['dept_name'];        //部署名
+          $office_position_name = $client_datas['role_name'];        //役職
+        }
       }    
     }
   }
@@ -165,6 +172,32 @@
       $pf_name = $datas['pf_name'];
     }
     return $pf_name;
+  }
+
+  /**
+ * client産の情報を取得する
+ */
+  function get_client_infos($client)
+  {
+    global $pdo;
+
+    $sql = "SELECT e.employee_name, cmd.text2 AS dept_name, cmp.text1 AS role_name, pf.pf_code AS p_office_code, pf.pf_name AS p_office_name 
+      FROM sq_header_tr h
+      LEFT JOIN employee e
+      ON e.employee_code = h.client
+      LEFT JOIN code_master cmd
+      ON e.department_code = cmd.text1
+      AND cmd.code_id = 'department'
+      LEFT JOIN code_master cmp
+      ON e.office_position_code = cmp.code_no
+      AND cmp.code_id = 'office_position'
+      LEFT JOIN public_office pf
+      ON pf.pf_code = h.p_office_no
+      WHERE h.client = :client";
+    $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':client', $client);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
   }
 
   /**

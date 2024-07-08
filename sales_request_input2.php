@@ -6,6 +6,10 @@
   $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
   $title = $_GET['title'] ?? '';
   $dept_code = $_SESSION['department_code'];
+  $user_code = $_SESSION["login"];
+  $user_name = $_SESSION['user_name'];      //登録者
+  $office_name = $_SESSION['office_name'];  //部署
+  $office_position_name = $_SESSION['office_position_name'];  //役職
   include("sales_request_input2_data_set.php");
   // ヘッダーセット
   include("header1.php");

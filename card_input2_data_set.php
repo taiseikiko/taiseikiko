@@ -79,27 +79,15 @@ if (isset($_POST['process']) || isset($_GET['card_no'])) {
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $data = $stmt->fetchAll();
-
-    try {
-      $pdo->beginTransaction();
-      if (isset($data) && !empty($data)) {
-        $code_no = $data[0]['code_no'];
-        $no = $code_no + 1;
-        $card_no = $ym . $no;
-      } else {
-        $no = '1';
-        $card_no = $ym . $no;
-      }
-      $pdo->commit();
-    } catch (PDOException $e) {
-      if (strpos($e->getMessage(), 'SQLSTATE[42000]') !== false) {
-        error_log("SQL Syntax Error or Access Violation: " . $e->getMessage(), 3, 'error_log.txt');
-      } else {
-        $pdo->rollback();
-        throw ($e);
-        error_log("PDO Exception: " . $e->getMessage(), 3, 'error_log.txt');
-      }
-    }
+   
+    if (isset($data) && !empty($data)) {
+      $code_no = $data[0]['code_no'];
+      $no = $code_no + 1;
+      $card_no = $ym . $no;
+    } else {
+      $no = '1';
+      $card_no = $ym . $no;
+    }      
   }
 
   //card_detail_trテーブルから取得する

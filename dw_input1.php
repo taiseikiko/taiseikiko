@@ -19,19 +19,19 @@ include("header1.php");
         <tr>
           <td>
             <div class="field-row">
-              <label class="common_label" for="class_code">分類</label>
-              <input type="text" id="class_code" name="class_code" value="<?= isset($class_code) ? htmlspecialchars($class_code) : '' ?>">
+              <label class="common_label" for="class_name">分類</label>
+              <input type="text" id="class_name" name="class_name" value="<?= $class_name ?>">
 
-              <label class="common_label" for="zkm_code">材工名</label>
-              <input type="text" id="zkm_code" name="zkm_code" value="<?= isset($zkm_code) ? htmlspecialchars($zkm_code) : '' ?>">
+              <label class="common_label" for="zkm_name">材工名</label>
+              <input type="text" id="zkm_name" name="zkm_name" value="<?= $zkm_name ?>">
 
               <label class="common_label" for="size">サイズ</label>
-              <input type="text" id="size" name="size" value="<?= isset($size) ? htmlspecialchars($size) : '' ?>">
+              <input type="text" id="size" name="size" value="<?= $size ?>">
 
               <label class="common_label" for="joint">接合形状</label>
-              <input type="text" id="joint" name="joint" value="<?= isset($joint) ? htmlspecialchars($joint) : '' ?>">
+              <input type="text" id="joint" name="joint" value="<?= $joint ?>">
 
-              <button type="submit" style="margin-left:20px;" id="searchBtn" name="process" value="search" class="search_btn">検索</button>
+              <button type="submit" style="margin-left:20px;background:#80dfff;" id="searchBtn" name="process" value="search" class="search_btn">検索</button>
             </div>
           </td>
         </tr>
@@ -57,8 +57,8 @@ include("header1.php");
         <tbody>
         <?php foreach ($dw_datas as $item): ?>
         <tr>
-          <td><?= $item['class_code'] ?></td>
-          <td><?= $item['zkm_code'] ?></td>
+          <td><?= $item['class_name'] ?></td>
+          <td><?= $item['zkm_name'] ?></td>
           <td><?= $item['size'] ?></td>
           <td><?= $item['joint'] ?></td>
           <td><?= $item['specification'] ?></td>
@@ -94,8 +94,9 @@ $(document).ready(function(){
   });
 
   $(document).on('click', '.updateBtn', function() {
-    var selectedId = $(this).data('sq_no');
-    $('.sq_no').val(selectedId);
+    var selectedId = $(this).data('dw_no');
+    $('.dw_no').val(selectedId);
+    $('#dw_input_form').attr('action', 'dw_input2.php');
   });
 
 });
