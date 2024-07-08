@@ -284,6 +284,9 @@
         <ul>
           <li><a href="dw_input1.php">図面　登録</a></li>
         </ul>
+        <ul>
+          <li><a href="dw_route_in_dept_input1.php">部署内ルートマスター</a></li>
+        </ul>
       </details>
     </li>';
     echo $s_menu4;}
