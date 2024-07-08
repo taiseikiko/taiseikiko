@@ -4,7 +4,7 @@
     include('card_mail_send_select.php');
     $url = $_SERVER['HTTP_REFERER']; //メール送信する時、利用するため
 
-    $redirect = './card_input1.php';
+    $redirect = './dw_input1.php';
 
     try {
         // DB接続
@@ -24,8 +24,8 @@
         $mail_details = getSqMailSentence();
         if (!empty($mail_details)) {
             //データベースからもらったテキストにclientとsq_noをセットする
-            $search = array("client", "card_no");
-            $replace = array($from_name, $sq_card_no);
+            $search = array("client", "dw_no");
+            $replace = array($from_name, $dw_no);
             $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
             $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
         }
@@ -41,13 +41,22 @@
             }
         }
 
+        switch ($process) {
+            case 'new':
+                $url = $base_url . 'dw_input2.php?dw_no=' . $dw_no;
+                break;
+            
+            default:
+                $url = $base_url . 'dw_input1.php';
+                break;
+        }
+
         //送信内容をセットする
         $email_datas = [
             'from_email' => $from_email,     //送信者email
             'from_name' => $from_name,       //送信者name
             'subject' => $subject,    
             'body' => $body,
-            'sq_card_no' => $sq_card_no,
             'url' => $url
         ];
         
@@ -60,7 +69,7 @@
             if ($success) {
                 echo "<script>window.location.href='$redirect'  </script>";
             } else {
-                echo "<script>window.location.href='card_input2.php?err=exceErr'</script>";
+                echo "<script>window.location.href='dw_input2.php?err=exceErr'</script>";
             }
         } else {
             echo "<script>window.location.href='$redirect'  </script>";
@@ -95,26 +104,30 @@
      */
     function get_mail_recipient_data() {
         global $pdo;
-        global $sq_card_no;
+        global $dw_no;
         global $process;
         $datas = [];
 
-        //資材部入力後card_header_trのprocurement_approver（承認者）へ送信
-        if ($process !== 'approve') {
+        //入力後dw_route_in_deptのrole=2のメンバー（承認者）へ送信
+        if ($process == 'new') {
+            
             $sql = "SELECT e.employee_name, e.email
-            FROM card_header_tr h
-            LEFT JOIN employee e ON e.employee_code = h.procurement_approver
-            WHERE h.card_no = :card_no";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':card_no', $sq_card_no);
-        } else {
-            //資材部承認後card_route_in_deptの、department_id = "02"or"03"　かつ　role = "0"：受付者 の全員へ送信
-            $sql = "SELECT e.employee_name, e.email
-                    FROM card_route_in_dept d
+                    FROM dw_route_in_dept d
                     LEFT JOIN employee e ON d.employee_code = e.employee_code
-                    WHERE (d.department_code = '02' OR d.department_code = '03') AND d.role = '0'";
+                    WHERE (d.department_code = '02' OR d.department_code = '03') AND d.role = '3'";
             $stmt = $pdo->prepare($sql);
-        }        
+        } 
+        //承認後clientにメール送信
+        else {
+
+            $sql = "SELECT e.employee_name, e.email
+                    FROM dw_management_tr dw
+                    LEFT JOIN employee e ON dw.client = e.employee_code
+                    WHERE dw.dw_no = :dw_no";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':dw_no', $dw_no);
+
+        }    
         
         $stmt->execute();
         while ($recipient_row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -131,11 +144,11 @@
         global $pdo;
         global $process;
 
-        $sq_mail_id = '07';
+        $sq_mail_id = '11';
 
         switch ($process) {
             case 'new':
-            case 'update':
+            // case 'update':
                 $seq_no = '1';
                 break;
             

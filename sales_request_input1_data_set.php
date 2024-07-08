@@ -9,44 +9,50 @@ $title1 = $_POST['title'] ?? $_GET['title'];
 function get_sq_datas($cust_name = "", $pf_name = "") {
   global $pdo;
   global $title1;
+  $search_kw = [];
 
   $sql = "SELECT h.sq_no, h.cust_no, c.cust_name, h.p_office_no, pf.pf_name, pf.person_in_charge, e.employee_name, h.item_name
           FROM sq_header_tr h
           LEFT JOIN customer c ON h.cust_no = c.cust_code
           LEFT JOIN public_office pf ON h.p_office_no = pf.pf_code
           LEFT JOIN employee e ON h.client = e.employee_code 
-          WHERE ";
+          WHERE 1=1 ";
   //確認画面の場合、確認日がNULLのデータだけに表示させる
   if ($title1 == 'check') {
-    $sql .= "EXISTS (
+    $sql .= "AND EXISTS (
             SELECT 1 
             FROM sq_detail_tr d 
             WHERE d.sq_no = h.sq_no 
-            AND d.status = '1'
-            AND d.confirm_date IS NULL) AND ";
+            AND d.confirm_date IS NULL) ";
   }
   //承認画面の場合、承認日がNULLかつ、確認日がNOT NULLのデータだけに表示させる
   if ($title1 == 'approve') {
-    $sql .= "EXISTS (
+    $sql .= "AND EXISTS (
             SELECT 1 
             FROM sq_detail_tr d 
             WHERE d.sq_no = h.sq_no 
-            AND d.confirm_date IS NOT NULL AND d.approve_date IS NULL) AND ";
+            AND d.confirm_date IS NOT NULL AND d.approve_date IS NULL) ";
   }
   //ルート設定の場合、承認日がNOT NULLかつroute_patternがNULLのデータだけを取得する
   if ($title1 == 'set_route') {
-    $sql .= "EXISTS (
+    $sql .= "AND EXISTS (
             SELECT 1 
             FROM sq_detail_tr d 
             WHERE d.sq_no = h.sq_no 
-            AND d.approve_date IS NOT NULL AND d.route_pattern IS NULL) AND ";
+            AND d.approve_date IS NOT NULL AND d.route_pattern IS NULL) ";
   }
-  $sql .= "c.cust_name LIKE :cust_name AND pf.pf_name LIKE :pf_name";
+
+  
+  if (!empty($cust_name)) {
+    $search_kw['cust_name'] = '%' . $cust_name . '%';
+    $sql .= " AND c.cust_name LIKE :cust_name";
+  }
+  if (!empty($pf_name)) {
+    $search_kw['pf_name'] = '%' . $pf_name . '%';
+    $sql .= " AND pf.pf_name LIKE :pf_name";
+  }
   $stmt = $pdo->prepare($sql);
-  $stmt->execute([
-    ':cust_name' => '%' . $cust_name . '%',
-    ':pf_name' => '%' . $pf_name . '%'
-  ]);
+  $stmt->execute($search_kw);
 
   $datas = $stmt->fetchAll(PDO::FETCH_ASSOC);
   return $datas;

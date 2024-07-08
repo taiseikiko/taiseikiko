@@ -21,6 +21,13 @@
 
         //メールの内容を取得する
         $mail_details = getSqMailSentence();
+        if (!empty($mail_details)) {
+            //データベースからもらったテキストにclientとsq_noをセットする
+            $search = array("client", "card_no");
+            $replace = array($from_name, $card_no);
+            $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
+            $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
+        }
 
         //baseurl を設定する
         $parsed_url = parse_url($url);
@@ -32,33 +39,23 @@
                 $base_url = $parsed_url['scheme'] . '://' . $parsed_url['host'] . '/taisei/taiseikiko/';
             }
         }
+
+        //送信内容をセットする
+        $email_datas = [
+            'from_email' => $from_email,     //送信者email
+            'from_name' => $from_name,       //送信者name
+            'subject' => $subject,    
+            'body' => $body,
+            'sq_card_no' => $card_no,
+            'url' => $url
+        ];
         
         //送信先のデータを取得する
-        $datas = get_mail_recipient_datas();
+        $to_datas = get_mail_recipient_datas();
 
-        if (!empty($datas) && isset($datas)) {
-            foreach ($datas as $item) {
-                //データベースからもらったテキストにclientとsq_noをセットする
-                $search = array("client", "card_no");
-                $replace = array($from_name, $card_no);
-                $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
-                $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
-                $to_email = $item['email'];
-                $url = '';
-
-                $email_datas[] = [
-                    'to_email' => $to_email,         //送信先email
-                    'to_name' => $to_name,           //送信先name
-                    'from_email' => $from_email,     //送信者email
-                    'from_name' => $from_name,       //送信者name
-                    'subject' => $subject,    
-                    'body' => $body,
-                    'sq_card_no' => $card_no,
-                    'url' => $url
-                ];
-            }
+        if (!empty($to_datas) && isset($to_datas)) {
             // メール送信処理を行う
-            $success = sendMail($email_datas);
+            $success = sendMail($email_datas, $to_datas);
         } 
 
         // リダイレクト処理

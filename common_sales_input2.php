@@ -13,14 +13,14 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="user_name" >登録者</label>
-            <input type="text" style="margin-left: 1rem;" class="readonlyText input-res" name="user_name" value="<?= $_SESSION['user_name'] ?>" readonly>
+            <input type="text" style="margin-left: 1rem;" class="readonlyText input-res" name="user_name" value="<?= $user_name ?>" readonly>
             <input type="hidden" name="user_code" value="<?= $_SESSION["login"] ?>">
             
             <label class="common_label" for="office_name">　　部署</label>
-            <input type="text" style="width:370px;" name="office_name" class="readonlyText input-res" value="<?= $_SESSION['office_name'] ?>" readonly>
+            <input type="text" style="width:370px;" name="office_name" class="readonlyText input-res" value="<?= $office_name ?>" readonly>
 
             <label class="common_label" for="office_position_name" >　　役職</label>
-            <input type="text" style="width:100px;" class="readonlyText input-res" name="office_position_name" value="<?= $_SESSION['office_position_name'] ?>" readonly>
+            <input type="text" style="width:100px;" class="readonlyText input-res" name="office_position_name" value="<?= $office_position_name ?>" readonly>
           </div>
         </td>      
       </tr>
