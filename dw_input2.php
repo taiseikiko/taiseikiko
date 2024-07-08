@@ -355,13 +355,25 @@
       var process = $("#btnProcess").val();
 
       if (process == "errExec") {
-        //sq_class_input1へ移動
-        $('#input2').attr('action', 'sales_request_input1.php?title=<?= $title ?>');
+        //dw_input1へ移動
+        $('#dw_input2').attr('action', 'dw_input1.php');
       } else {
         //画面上変更なし
         $('#ok_okBtn').attr('data-dismiss', 'modal');
       }
     });
+
+    /*----------------------------------------------------------------------------------------------- */
+
+    //エラーがあるかどうか確認する
+    var err = '<?= $err ?>';
+    //エラーがある場合
+    if (err !== '') {
+      //OKメッセージを書く
+      var msg = "処理にエラーがありました。係員にお知らせください。";
+      //OKDialogを呼ぶ
+      openOkModal(msg, 'errExec');
+    }
 
     /**-------------------------------------------------------------------------------------------------------------- */
 
