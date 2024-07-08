@@ -5,6 +5,7 @@ $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 $dept_cd = $_POST['dept_code'] ?? $dept_code;
 $dept_id = getDeptId($dept_cd);
 $dw_datas = [];
+$search_kw = [];
 
 //検索ボタンを押下した場合
 if (isset($_POST['process']) == 'search') {

@@ -14,7 +14,7 @@ include("header1.php");
    <!-- PHP to display result if available -->
 
   <div class="container">
-    <form id="searchForm" class="row g-3" method="POST" id="dw_input_form">
+    <form class="row g-3" method="POST" id="dw_input_form">
       <table style="width:auto;">
         <tr>
           <td>
@@ -51,7 +51,7 @@ include("header1.php");
         </tr>
         <tr>
           <td colspan="9">
-            <button type="submit" name="process" value="new">新規登録</button>
+            <button type="submit" name="process" id="regBtn" value="new">新規登録</button>
           </td>
         </tr>
         <tbody>
@@ -89,10 +89,9 @@ include("header1.php");
 <script type="text/javascript">
   
 $(document).ready(function(){
-  // $('#searchBtn').click(function() {
-  //   alert('hereere');
-  //   $('#dw_input_form').attr('action', 'dw_input1_data_set.php');
-  // });
+  $('#regBtn').click(function() {
+    $('#dw_input_form').attr('action', 'dw_input2.php');
+  });
 
   $(document).on('click', '.updateBtn', function() {
     var selectedId = $(this).data('sq_no');

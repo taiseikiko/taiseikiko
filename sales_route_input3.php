@@ -5,13 +5,11 @@
   require_once('function.php');
   $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
   include("header1.php");
+  $title = $_GET['title'] ?? '';
   include("sales_request_input3_data_set.php");
   include("sales_route_input3_data_set.php");
-
   $route_pattern_list = [];
   $route_pattern_list = get_route_pattern_list();  
-
-  $title = $_GET['title'] ?? '';
 ?>
 
 <main>
