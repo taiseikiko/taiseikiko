@@ -26,10 +26,10 @@ include("header1.php");
               <input type="text" id="zkm_name" name="zkm_name" value="<?= $zkm_name ?>">
 
               <label class="common_label" for="size">サイズ</label>
-              <input type="text" id="size" name="size" value="<?= $size ?>">
+              <input type="text" id="size" name="size_name" value="<?= $size_name ?>">
 
               <label class="common_label" for="joint">接合形状</label>
-              <input type="text" id="joint" name="joint" value="<?= $joint ?>">
+              <input type="text" id="joint" name="joint_name" value="<?= $joint_name ?>">
 
               <button type="submit" style="margin-left:20px;background:#80dfff;" id="searchBtn" name="process" value="search" class="search_btn">検索</button>
             </div>
