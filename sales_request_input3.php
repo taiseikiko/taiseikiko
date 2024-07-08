@@ -74,6 +74,8 @@
         //OKDialogを呼ぶ
         openOkModal(errMessage, process);
       } else {
+        //detailの作成ボタンを連打するとdetailも複数行できてしまうからボタンをdisabledにする
+        $('.createOrUpdate').attr('disabled', true);
         //確認メッセージを書く
         var msg = "営業依頼書 明細を作成．更新します。よろしいですか？";
         //何の処理科を書く
@@ -96,6 +98,15 @@
         $("#confirm_okBtn").attr("name", "submit");
         //sales_request_update.phpへ移動する
         $("#input3").attr("action", "sales_request_update2.php?title=<?= $title ?>");
+      }
+    });
+
+    //cancelボタンを押下する場合
+    $("#cancelBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+      //明細更新処理の場合
+      if (process == "update") {       
+        $('.createOrUpdate').attr('disabled', false);
       }
     });
 
