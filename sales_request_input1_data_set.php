@@ -23,6 +23,7 @@ function get_sq_datas($cust_name = "", $pf_name = "") {
             SELECT 1 
             FROM sq_detail_tr d 
             WHERE d.sq_no = h.sq_no 
+            AND d.status = '1'
             AND d.confirm_date IS NULL) ";
   }
   //承認画面の場合、承認日がNULLかつ、確認日がNOT NULLのデータだけに表示させる
