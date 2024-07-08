@@ -25,6 +25,12 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
+    //営業で入力が完了して確認、または承認まで進んでいるdetailのレコードは
+    //登録画面の一覧から閲覧はできるが、更新はできないようにする
+    var confirm_date = '<?= $confirm_date ?>';
+    if (confirm_date !== '') {
+      disabledForm();
+    }
     let class_code = $('#classList').val();
     if (class_code != '') {
       fetchData(class_code, function(response) {
@@ -215,6 +221,47 @@
       event.target.value = value.replace(/\D/g, '');
     });
   });
+
+  function disabledForm() {
+    //Disabled Input 
+    var inputs = document.getElementsByTagName('input');
+    const excludeInputs = ['hidden', 'submit', 'file'];
+    for (var i = 0; i < inputs.length; i++) {
+      if (!excludeInputs.includes(inputs[i].type.toLowerCase()) && inputs[i].className !== 'mail') {
+        inputs[i].disabled = true;
+      }
+      if (inputs[i].type.toLowerCase() == 'text') {
+        inputs[i].style.backgroundColor = '#e6e6e6';
+      }
+    }
+  
+    //Disabled textarea 
+    var textareas = document.getElementsByTagName('textarea');
+    const excludeTextarea = ['confirmer_comment'];
+    for (var j = 0; j < textareas.length; j++) {
+      if (!excludeTextarea.includes(textareas[j].id)) {
+        textareas[j].disabled = true;
+        textareas[j].style.backgroundColor = '#e6e6e6';
+      }
+    }
+  
+    //Disabled select 
+    var selects = document.getElementsByTagName('select');
+    for (var k = 0; k < selects.length; k++) {
+      if (selects[k].id !== 'otherProcess') {
+        selects[k].disabled = true;
+      }
+    }
+  
+    //Disabled button 
+    var buttons = document.getElementsByTagName('button');
+    const excludeButtons = ['returnBtn', 'setEmp', 'update', 'okBtn', 'cancelBtn'];
+    for (var k = 0; k < buttons.length; k++) {
+      if (!excludeButtons.includes(buttons[k].className)) {
+        buttons[k].disabled = true;
+      }
+    }
+  }
 
 </script>
 
