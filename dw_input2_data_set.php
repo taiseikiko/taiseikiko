@@ -18,6 +18,7 @@
   $dw_div2 = '';            //種類
   $comments = '';
   $btn_name = '登録';
+  $btn_status = '';          //登録ボタンの表示状態
   $header = '入力処理';
   $err = $_GET['err'] ?? '';
 
@@ -35,7 +36,7 @@
     }
     //新規の場合
     if ($process == 'new') {
-      
+      $btn_status = 'hidden';
     }
     //更新の場合  
     else {

@@ -17,7 +17,7 @@
     <div class="container">
       <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="dw_input2">
         <input type="hidden" name="process" value="<?= $process ?>">
-        <input type="hidden" name="dw_no" value="<?= $dw_no ?>">
+        <input type="hidden" name="dw_no" id="dw_no" value="<?= $dw_no ?>">
         <?php include('dialog.php'); ?>
         <table style="width:auto;">
           <input type="hidden" name="sq_no" id="sq_no" value="<?= $sq_no ?>">
@@ -257,6 +257,13 @@
                 </div>
               </div>
             </td>
+            <td>
+            <div class="flex-container" style="margin-left: 50rem;">
+              <div>            
+                <button id="returnProcessBtn" class="returnProcessBtn" <?= $btn_status?> >差し戻し </button>
+              </div> 
+            </div>
+          </td>
           </tr>
         </table>
       </form><!-- Vertical Form -->
@@ -376,7 +383,18 @@
     }
 
     /**-------------------------------------------------------------------------------------------------------------- */
+    
+    //差し戻しボタンを押下する場合
+    $('#returnProcessBtn').click(function () {
+      event.preventDefault();
+      var dw_no = document.getElementById('dw_no').value;
 
+      var url = "dw_send_back.php" + "?dw_no=" + dw_no;
+      window.open(url, "popupWindow", "width=900,height=260,left=100,top=50");
+    })
+
+    /*----------------------------------------------------------------------------------------------- */
+    
 
   });
 
