@@ -28,9 +28,11 @@
     //営業で入力が完了して確認、または承認まで進んでいるdetailのレコードは
     //登録画面の一覧から閲覧はできるが、更新はできないようにする
     var confirm_date = '<?= $confirm_date ?>';
-    if (confirm_date !== '') {
+    var process2 = '<?= $process2 ?>';
+    if (confirm_date !== '' && process2 !== 'copy') {
       disabledForm();
     }
+    
     let class_code = $('#classList').val();
     if (class_code != '') {
       fetchData(class_code, function(response) {
