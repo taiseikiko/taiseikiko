@@ -11,6 +11,7 @@
     ];
 
     $redirect = $redirectList[$title];
+    $to_datas = array();
 
     try {
         // DB接続
@@ -30,6 +31,13 @@
 
         //メールの内容を取得する
         $mail_details = getSqMailSentence();
+        if (!empty($mail_details)) {
+            //データベースからもらったテキストにclientとsq_no、URLをセットする
+            $search = array("client", "sq_no", "sq_line_no");
+            $replace = array($from_name, $sq_no, $sq_line_no);
+            $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
+            $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
+        }
         
         //入力画面と確認画面の場合
         if ($title !== 'approve') {
@@ -51,7 +59,7 @@
             } else {
                 $base_url = $parsed_url['scheme'] . '://' . $parsed_url['host'] . '/taisei/taiseikiko/';
             }
-        }
+        }        
 
         switch ($title) {
             //入力画面の場合確認画面へ移動出来るように設定する
@@ -68,53 +76,42 @@
                 break;
         }
 
-        if ($datas) {
-            foreach ($datas as $item) {
-                //データベースからもらったテキストにclientとsq_no、URLをセットする
-                $search = array("client", "sq_no", "sq_line_no");
-                $replace = array($from_name, $sq_no, $sq_line_no);
-                $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
-                $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
+        $email_datas = [
+            'from_email' => $from_email,     //送信者email
+            'from_name' => $from_name,       //送信者name
+            'subject' => $subject,    
+            'body' => $body,
+            'sq_no' => $sq_no,
+            'url' => $url
+        ];
 
+        if ($datas) {
+            $i = 0;
+            foreach ($datas as $item) {
                 switch ($title) {
                     //①営業部内で、入力完了後、sq_default_role にある、確認者（confirmor）へ送信
                     case 'input':
-                        $to_email = $item['confirmer_email'];
-                        $to_name = $item['confirmer_name'];
+                        $to_datas[$i]['email'] = $item['confirmer_email'];
+                        $to_datas[$i]['employee_name'] = $item['confirmer_name'];
                         break;
 
                     //②営業部内で、確認処理後、sq_default_role にある、承認者（approver）へ送信
                     case 'check':
-                        $to_email = $item['approver_email'];
-                        $to_name = $item['approver_name'];
+                        $to_datas[$i]['email'] = $item['approver_email'];
+                        $to_datas[$i]['employee_name'] = $item['approver_name'];
                         break;
 
                     //③営業部内で、承認処理後、sq_route_in_dept の、dept_id = "01"：ルート設定　かつ　role = "0"：受付者 の全員へ送信
                     case 'approve':
-                        $to_email = $item['email'];
-                        $to_name = $item['email'];
-                        break;
-
-                    default:
-                        $to_email = '';
-                        $to_name = '';
+                        $to_datas[$i]['email'] = $item['email'];
+                        $to_datas[$i]['employee_name'] = '';
                         break;
                 }
-
-                $email_datas[] = [
-                    'to_email' => $to_email,         //送信先email
-                    'to_name' => $to_name,           //送信先name
-                    'from_email' => $from_email,     //送信者email
-                    'from_name' => $from_name,       //送信者name
-                    'subject' => $subject,    
-                    'body' => $body,
-                    'sq_no' => $sq_no,
-                    'url' => $url
-                ];
+                $i++;
             }
 
             //メール送信処理を行う
-            $success = sendMail($email_datas);
+            $success = sendMail($email_datas, $to_datas);
             if ($success) {
                 echo "<script>window.location.href='$redirect'  </script>";
             }

@@ -20,6 +20,13 @@ try {
 
   // メールの内容を取得する
   $mail_details = getSqMailSentence();
+  if (!empty($mail_details)) {
+    //データベースからもらったテキストにclientとsq_no、URLをセットする
+    $search = array("client", "sq_no");
+    $replace = array($from_name, $sq_no);
+    $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
+    $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
+  }
 
   // baseurl を設定する
   // $parsed_url = parse_url($url);
@@ -31,32 +38,20 @@ try {
   //     $base_url = $parsed_url['scheme'] . '://' . $parsed_url['host'] . '/taisei/taiseikiko/';
   //   }
   // }
+  $email_datas = [
+    'from_email' => $from_email,     //送信者email
+    'from_name' => $from_name,       //送信者name
+    'subject' => $subject,
+    'body' => $body,
+    'sq_no' => $sq_no,
+    'url' => $url
+  ];
 
   $route_mail_datas = get_sq_route_mail_datas($sq_no, $sq_line_no, $dept_id);
 
   if ($route_mail_datas) {
-    foreach ($route_mail_datas as $item) {
-      //データベースからもらったテキストにclientとsq_no、URLをセットする
-      $search = array("client", "sq_no");
-      $replace = array($from_name, $sq_no);
-      $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
-      $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
-      $to_email = $item['email'];
-      // $url = $base_url . $item['url'];
-
-      $email_datas[] = [
-        'to_email' => $to_email,         //送信先email
-        'to_name' => $to_name,           //送信先name
-        'from_email' => $from_email,     //送信者email
-        'from_name' => $from_name,       //送信者name
-        'subject' => $subject,
-        'body' => $body,
-        'sq_no' => $sq_no,
-        'url' => $url
-      ];
-    }
     //メール送信処理を行う
-    $success_mail = sendMail($email_datas);
+    $success_mail = sendMail($email_datas, $route_mail_datas);
   } else {
     $success_mail = false;
   }

@@ -64,7 +64,6 @@ function get_card_header_datas() {
     employee e_approver ON ch.procurement_approver = e_approver.employee_code
   WHERE 
     ch.card_status != 5
-  AND (ch.client = '$user_code' || ch.procurement_approver = '$user_code')
   GROUP BY 
     ch.card_no, 
     ch.card_status, 

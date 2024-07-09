@@ -90,9 +90,10 @@
       $data['approver'] = NULL;
       $data['confirm_date'] = NULL;
       $data['approve_date'] = NULL;
+      $data['status'] = '0';
       $sql = 'UPDATE sq_detail_tr SET processing_dept=:processing_dept, processing_status=:processing_status, route_pattern=:route_pattern,
               confirmer_comments=:confirmer_comments, approver_comments=:approver_comments, confirmer=:confirmer, approver=:approver,
-              confirm_date=:confirm_date, approve_date=:approve_date, upd_date=:upd_date
+              confirm_date=:confirm_date, approve_date=:approve_date,  status=:status, upd_date=:upd_date
               WHERE sq_no=:sq_no AND sq_line_no=:sq_line_no';
     } else {
       //その他の部署の場合

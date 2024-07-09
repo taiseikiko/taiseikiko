@@ -1,5 +1,5 @@
 <?php
-  session_start();
+  // session_start();
   require_once('function.php');
   header('Content-type: text/html; charset=utf-8');
   $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する

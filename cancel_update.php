@@ -42,8 +42,8 @@ if (isset($_POST['cancel'])) {
 
     //更新処理にエラーがなければメール送信する
   if ($success) {
-    delete_sq_route_records($sq_no, $sq_line_no);
     include('sq_mail_send6.php');
+    delete_sq_route_records($sq_no, $sq_line_no);
     echo '<script type="text/javascript">window.close();</script>';
     exit;
   }
