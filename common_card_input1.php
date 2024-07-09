@@ -58,15 +58,15 @@
                     }
                   }
 
-                  $client = $row['client'];
-                  if (isset($client)) {
-                    $client_disabled = 'disabled';
-                    if ($client == $_SESSION["login"]) {
-                      $client_disabled = '';
-                    }
-                  }                
+                  // $client = $row['client'];
+                  // if (isset($client)) {
+                  //   $client_disabled = 'disabled';
+                  //   if ($client == $_SESSION["login"]) {
+                  //     $client_disabled = '';
+                  //   }
+                  // }                
                 ?>
-                  <button type="submit" class="updateBtn" id="updateBtn" name="process" value="update" data-card_no="<?= htmlspecialchars($row['card_no']) ?>" <?= $client_disabled ?>>更新</button>
+                  <button type="submit" class="updateBtn" id="updateBtn" name="process" value="update" data-card_no="<?= htmlspecialchars($row['card_no']) ?>" >更新</button>
                 
                   <button type="submit" class="approveBtn" id="updateBtn" name="process" value="approve" data-card_no="<?= htmlspecialchars($row['card_no']) ?>" <?= $approve_disabled ?>>承認</button>
                 </td>                
