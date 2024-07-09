@@ -352,13 +352,7 @@
         $("#dw_input2").attr("action", "dw_input1.php");
       }
       //ヘッダ更新処理の場合
-      else if (process == "update") {
-        //submitしたいボタン名をセットする
-        $("#confirm_okBtn").attr("name", "submit");
-        //dw_update.phpへ移動する
-        $("#dw_input2").attr("action", "dw_update.php");
-      }
-      else if (process == "approve") {
+      else if (process == "update" || process == "approve") {
         //submitしたいボタン名をセットする
         $("#confirm_okBtn").attr("name", "submit");
         //dw_update.phpへ移動する
