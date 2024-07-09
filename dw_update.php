@@ -79,17 +79,18 @@ if (isset($_POST['submit'])) {
 
 
     }
-    //更新の場合
+    //更新または承認の場合
     else {
       $dw_datas['dw_no'] = $_POST['dw_no'];
-      $dw_datas['dw_status'] = '2';
+      $dw_datas['dw_status'] = $process == 'update' ? '1' : '2';
       $dw_sql = "UPDATE dw_management_tr SET dw_status=:dw_status, dw_div1=:dw_div1, open_div=:open_div, class_code=:class_code, 
                 zkm_code=:zkm_code, size=:size, joint=:joint, pipe=:pipe, specification=:specification, dw_div2=:dw_div2,
-                upd_date=:date WHERE dw_no=:dw_no";
-
+                upd_date=:date 
+                WHERE dw_no=:dw_no";
       $dw_stmt = $pdo->prepare($dw_sql);
       $dw_stmt->execute($dw_datas);
     }
+
     $dw_no = $dw_datas['dw_no'];
     $pdo->commit();
   } catch (PDOException $e) {

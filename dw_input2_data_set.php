@@ -19,6 +19,7 @@
   $comments = '';
   $btn_name = '登録';
   $btn_status = '';          //登録ボタンの表示状態
+  $btn_class = 'updRegBtn'; 
   $header = '入力処理';
   $err = $_GET['err'] ?? '';
 
@@ -51,6 +52,12 @@
         $variables = ['client', 'dw_div1', 'open_div', 'class_code', 'zkm_code', 'size', 'joint', 'pipe', 'specification', 'dw_div2'];
         foreach ($variables as $variable) {
           ${$variable} = $dw_datas[$variable];
+        }
+        
+        if ($dw_datas['dw_status'] == '3') {
+          $btn_name = '更新';
+          $btn_class = 'updateBtn';
+          $btn_status = 'hidden';
         }        
       }
     }

@@ -148,7 +148,7 @@
 
         switch ($process) {
             case 'new':
-            // case 'update':
+            case 'update':
                 $seq_no = '1';
                 break;
             

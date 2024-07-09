@@ -16,8 +16,8 @@
     <h3>図面管理　<?= $header ?></h3>
     <div class="container">
       <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="dw_input2">
-        <input type="hidden" name="process" value="<?= $process ?>">
-        <input type="hidden" name="dw_no" id="dw_no" value="<?= $dw_no ?>">
+        <input type="hidden" id="process" name="process" value="<?= $process ?>">
+        <input type="hidden" name="dw_no" id="dw_no" value="<?php echo htmlspecialchars($dw_no); ?>">
         <?php include('dialog.php'); ?>
         <table style="width:auto;">
           <input type="hidden" name="sq_no" id="sq_no" value="<?= $sq_no ?>">
@@ -253,7 +253,7 @@
                   <button id="returnBtn" class="returnBtn">前の画面に戻る </button>
                 </div>
                 <div>
-                  <button id="updBtn" style="background:#80dfff;" name="submit"><?= $btn_name ?> </button>
+                  <button id="updBtn" class="<?=$btn_class?>" name="submit"><?= $btn_name ?> </button>
                 </div>
               </div>
             </td>
@@ -329,9 +329,14 @@
       } else {
         var btnName = $('#updBtn').text();
         //確認メッセージを書く
-        var msg = btnName + "入力します？よろしいですか？";
+        var msg = btnName + "します？よろしいですか？";
         //何の処理科を書く
-        var process = "update";
+        if ($.trim(btnName) == '更新'){
+          var process = "update";
+        } else {
+          var process = "approve";          
+        }
+        $('#process').val(process);
         //確認Dialogを呼ぶ
         openConfirmModal(msg, process);
       }
@@ -350,7 +355,13 @@
       else if (process == "update") {
         //submitしたいボタン名をセットする
         $("#confirm_okBtn").attr("name", "submit");
-        //sales_request_update.phpへ移動する
+        //dw_update.phpへ移動する
+        $("#dw_input2").attr("action", "dw_update.php");
+      }
+      else if (process == "approve") {
+        //submitしたいボタン名をセットする
+        $("#confirm_okBtn").attr("name", "submit");
+        //dw_update.phpへ移動する
         $("#dw_input2").attr("action", "dw_update.php");
       }
     });
@@ -493,6 +504,10 @@
 
   .business_daily_report {
     width: 630px;
+  }
+
+  .updRegBtn {
+    background:#80dfff;
   }
 </style>
 <?php

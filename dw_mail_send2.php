@@ -41,15 +41,15 @@
             }
         }
 
-        switch ($process) {
-            case 'new':
-                $url = $base_url . 'dw_input2.php?dw_no=' . $dw_no;
-                break;
+        // switch ($process) {
+        //     case 'new':
+        //         $url = $base_url . 'dw_input2.php?dw_no=' . $dw_no;
+        //         break;
             
-            default:
-                $url = $base_url . 'dw_input1.php';
-                break;
-        }
+        //     default:
+        //     break;
+        // }
+        $url = $base_url . 'dw_input2.php?dw_no=' . $dw_no;
 
         //送信内容をセットする
         $email_datas = [
@@ -67,17 +67,17 @@
             // メール送信処理を行う
             $success = sendMail($email_datas, $to_datas);
             if ($success) {
-                echo "<script>window.location.href='$redirect'  </script>";
+                echo "<script>window.close(); window.opener.location.href='$redirect'  </script>";
             } else {
-                echo "<script>window.location.href='dw_input2.php?err=exceErr'</script>";
+                echo "<script>window.close(); window.opener.location.href='dw_input2.php?err=exceErr'</script>";
             }
         } else {
-            echo "<script>window.location.href='$redirect'  </script>";
+            echo "<script>window.close(); window.opener.location.href='$redirect'  </script>";
         }
 
     } catch(PDOException $e) {
         error_log("Error: " . $e->getMessage(), 3, "error_log.txt");
-        echo "<script>window.location.href='card_input2.php?err=exceErr'</script>";
+        echo "<script>window.close(); window.opener.location.href='card_input2.php?err=exceErr'</script>";
     }
 
     /***
