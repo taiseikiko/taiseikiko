@@ -20,6 +20,13 @@
 
         //メールの内容を取得する
         $mail_details = getSqMailSentence();        
+        if (!empty($mail_details)) {
+            //データベースからもらったテキストにclientとsq_noをセットする
+            $search = array("client", "sq_no");
+            $replace = array($from_name, $sq_no);
+            $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
+            $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
+        }
         
         //route1_deptをsq_routeから取得する
         $route1_dept = get_route1_dept();
@@ -56,35 +63,22 @@
                 break;
         }
 
+        $email_datas = [
+            'from_email' => $from_email,     //送信者email
+            'from_name' => $from_name,       //送信者name
+            'subject' => $subject,    
+            'body' => $body,
+            'sq_no' => $sq_no,
+            'url' => $url
+        ];
+
         //④ルート設定後、sq_route_tr の、route1_dept をKEYにして、sq_route_in_dept を読み、
         //role = "0"：受付者　全員に送信（※group_id は無視）
-        $datas = get_sq_route_in_dept2($route1_dept);
+        $to_datas = get_sq_route_in_dept2($route1_dept);
 
-        if (!empty($datas) && isset($datas)) {
-            foreach ($datas as $item) {
-                //データベースからもらったテキストにclientとsq_noをセットする
-                $search = array("client", "sq_no");
-                $replace = array($from_name, $sq_no);
-                $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
-                $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
-                $to_email = $item['email'];
-                $to_name = $item['email'];
-
-
-                $email_datas[] = [
-                    'to_email' => $to_email,         //送信先email
-                    'to_name' => $to_name,           //送信先name
-                    'from_email' => $from_email,     //送信者email
-                    'from_name' => $from_name,       //送信者name
-                    'subject' => $subject,    
-                    'body' => $body,
-                    'sq_no' => $sq_no,
-                    'url' => $url
-                ];
-            }
-
+        if (!empty($to_datas) && isset($to_datas)) {
             //メール送信処理を行う
-            $success = sendMail($email_datas);
+            $success = sendMail($email_datas, $to_datas);
             if ($success) {
                 header('location:sales_route_input1.php?title=set_route');
             }

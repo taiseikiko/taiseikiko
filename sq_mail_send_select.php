@@ -16,7 +16,7 @@ mb_internal_encoding('UTF-8');
 /***
  * メール送信する
  */
-function sendMail($email_datas) {
+function sendMail($email_datas, $to_datas) {
     // インスタンスを生成（true指定で例外を有効化）
     $mail = new PHPMailer(true);
 
@@ -46,32 +46,23 @@ function sendMail($email_datas) {
         );
 
         // 送受信先設定（第二引数は省略可）
-        foreach ($email_datas as $item) {
-            if ($item['from_email'] !== '' || $item['to_email'] !== '') {
-                $body = '';
-                $body = $item['body'] . "<br>"; // Add a line break before the link;
-                $body .= "<a href='" . $item['url'] . "'>" . $item['url'] . "</a>";
-                $mail->setFrom($item['from_email'], $item['from_name']); // 送信者
-                $mail->addAddress($item['to_email'], $item['to_name']);
-                $mail->addReplyTo('peacefullife4497@gmail.com', 'HTET HTET'); // 返信先
-                //$mail->addCC($cc_address, $cc_person_name); // CC宛先
-                $mail->Sender = $item['from_email']; // Return-path
+        foreach ($to_datas as $item) {
+            $mail->addAddress($item['email'], '');
+        }
 
-                // 送信内容設定
-                
-                $mail->Subject = $item['subject'];
-                $mail->isHTML(true); // Set email format to plain text
-                $mail->Body    = "<pre>$body</pre>";
+        $body = '';
+        $body = $email_datas['body'] . "<br>"; // Add a line break before the link;
+        $body .= "<a href='" . $email_datas['url'] . "'>" . $email_datas['url'] . "</a>";
+        $mail->setFrom($email_datas['from_email'], $email_datas['from_name']); // 送信者
+        $mail->addReplyTo($email_datas['from_email'], $email_datas['from_name']); // 返信先
+        $mail->Sender = $email_datas['from_email']; // Return-path
 
-                if(!$mail->send()){
-                    $success = false;
-                }
-                $sq_no = $item['sq_no'];
-            } else {
-                $success = false;
-                // エラーの場合
-                echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
-            }
+        // 送信内容設定        
+        $mail->Subject = $email_datas['subject'];
+        $mail->isHTML(true); // Set email format to plain text
+        $mail->Body    = "<pre>$body</pre>";
+        if(!$mail->send()){
+            $success = false;
         }
     } catch (Exception $e) {
         $success = false;

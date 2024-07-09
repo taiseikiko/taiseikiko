@@ -55,7 +55,7 @@ function sendMail($email_datas, $to_datas) {
         $body = $email_datas['body'] . "<br>"; // Add a line break before the link;
         $body .= "<a href='" . $email_datas['url'] . "'>" . $email_datas['url'] . "</a>";
         $mail->setFrom($email_datas['from_email'], $email_datas['from_name']); // 送信者
-        $mail->addReplyTo('peacefullife4497@gmail.com', 'HTET HTET'); // 返信先
+        $mail->addReplyTo($email_datas['from_email'], $email_datas['from_name']); // 返信先
         $mail->Sender = $email_datas['from_email']; // Return-path
 
         // 送信内容設定        

@@ -51,9 +51,7 @@
                 $subject = str_replace($search, $replace, $item['subject']); //subject
                 $body = str_replace($search, $replace, $item['body']); //body
 
-                $email_datas[] = [
-                    'to_email' => $item['email'],         //送信先email
-                    'to_name' => $to_name,           //送信先name
+                $email_datas = [
                     'from_email' => $from_email,     //送信者email
                     'from_name' => $from_name,       //送信者name
                     'subject' => $subject,    
@@ -64,7 +62,7 @@
             }
 
             //メール送信処理を行う
-            $success = sendMail($email_datas);
+            $success = sendMail($email_datas, $sq_route_mail_datas);
             if ($success) {
                 if ($e_title == 'receipt') {
                     echo "<script>
