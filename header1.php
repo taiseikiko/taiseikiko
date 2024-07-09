@@ -4,6 +4,7 @@
     $slider2 = 'img/sample2.jpg';
     $slider3 = 'img/sample3.jpg';
     $size_w = '80';
+    require_once('auth.php');
 ?>
 
 <!DOCTYPE html>
@@ -267,8 +268,7 @@
       <details>
         <summary><a href="#components">電子カード処理</a></summary>
         <ul>
-          <li><a href="">電子カード処理　登録</a></li>
-          <li><a href="card_input1.php">電子カード処理　資材部入力、承認</a></li>
+          <li><a href="card_input1.php">電子カード処理　登録、承認</a></li>
           <li><a href="card_route_in_dept_input1.php">部署内ルートマスター保守</a></li>
         </ul>
       </details>
@@ -282,10 +282,7 @@
       <details>
         <summary><a href="#components">図面管理</a></summary>
         <ul>
-          <li><a href="dw_input1.php">図面　登録</a></li>
-        </ul>
-        <ul>
-          <li><a href="dw_route_in_dept_input1.php">部署内ルートマスター</a></li>
+          <li><a href="">図面　登録</a></li>
         </ul>
       </details>
     </li>';
@@ -339,17 +336,31 @@
           <li><a href="customer_input1.php">得意先M/F　登録</a></li>
         </ul>
         <ul>
-          <li><a href="sr_route_input1.php">部署ルートM/F　登録</a></li>
-        </ul>
-        <ul>
           <li><a href="sr_route_in_dept_input1.php">部署内ルートM/F　登録</a></li>
+        </ul>
+
+      </details>
+    </li>';
+    echo $s_menu7;}
+?>
+
+<?php if($_SESSION['m12'] =="1"){ 
+    $s_menu8 = '
+    <li>
+      <details>
+        <summary><a href="#components">情シスメンテ項目</a></summary>
+        <ul>
+          <li><a href="sr_route_input1.php">部署ルートM/F　登録</a></li>
         </ul>
         <ul>
           <li><a href="listmail_request_input1.php">通知メール保守</a></li>
         </ul>
+        <ul>
+          <li><a href="employee_ent1.php">社員マスタ保守</a></li>
+        </ul>
       </details>
     </li>';
-    echo $s_menu7;}
+    echo $s_menu8;}
 ?>
   </ul>
 </aside><!-- End Sidebar-->

@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 /* index_data_set.php                      */
 /*　・初期処理                                         */
 /*　・画面データ採取、画面フィールド変数へデータセット     */
