@@ -451,9 +451,14 @@
                 <div>
                   <button id="updBtn" class="setEmp" style="background:#80dfff;" name="submit" onclick="person_in_charge(event)">担当者設定</button>
                 </div>                
-              <?php } else { ?>
+              <?php } else {
+                // 確認画面の場合、ボタン名を「営業依頼書　明細の確認」,
+                //　承認画面の場合、「営業依頼書　明細の承認」とする
+                if ($title == 'check') { $btn_name = '営業依頼書　明細の確認'; }
+                else if ($title == 'approve') { $btn_name = '営業依頼書　明細の承認'; }
+                else { $btn_name = '営業依頼書 明細の作成・更新'; }?>
                 <div>
-                  <button id="updBtn" class="createOrUpdate" style="background:#80dfff;" name="submit">営業依頼書 明細の作成・更新 </button>
+                  <button id="updBtn" class="createOrUpdate" style="background:#80dfff;" name="submit"><?= $btn_name ?></button>
                 </div>
               <?php } 
                 if ($title !== 'input') { ?>
