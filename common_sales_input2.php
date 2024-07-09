@@ -273,18 +273,11 @@
           <div>            
             <button id="returnBtn" class="returnBtn">前の画面に戻る </button>
           </div>
-          <?php 
-          if ($title == 'input') { 
-            $btn_name = '営業依頼書の入力'; 
-          } else if ($title == 'check') {
-            $btn_name = '営業依頼書の確認';
-          } else {
-            $btn_name = '営業依頼書の承認';
-          }
-          ?>
+          <?php if ($title == 'input') { ?>
           <div>
-            <button class="approveBtn" name="submit" value="update"><?= $btn_name ?> </button>
+            <button class="approveBtn" name="submit" value="update">営業依頼書の入力</button>
           </div>
+          <?php } ?>
           <?php if (strpos($title, 'confirm') !== false || strpos($title, 'approve') !== false): ?>
             <div style="margin-top:13px; margin-left:435px">            
               <label class="common_label" for="other">その他処理 </label>
