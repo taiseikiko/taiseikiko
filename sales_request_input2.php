@@ -30,6 +30,12 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
+    //detailのできたheaderをロックする
+    var lock_header = '<?= $lock_header ?>';
+    if (lock_header) {
+      disableInput();
+    }
+
     //一覧から新規作成を押下する場合
     $(".createBtn").click(function(){
       //sales_request_input3.phpへ移動する
@@ -158,6 +164,48 @@
   }
 
   /**-------------------------------------------------------------------------------------------------------------- */
+  function disableInput() {
+    //Disabled Input 
+    var inputs = document.getElementsByTagName('input');
+    for (var i = 0; i < inputs.length; i++) {
+      if (inputs[i].type.toLowerCase() !== 'hidden') {
+        inputs[i].disabled = true;
+      }
+      if (inputs[i].type.toLowerCase() == 'text') {
+        inputs[i].style.backgroundColor = '#e6e6e6';
+      }
+    }
+
+    //Disabled textarea 
+    var textareas = document.getElementsByTagName('textarea');
+    for (var j = 0; j < textareas.length; j++) {
+        textareas[j].disabled = true;
+        textareas[j].style.backgroundColor = '#e6e6e6';
+    }
+
+    var selects = document.getElementsByTagName('select');
+    const excludeSelect = ['otherProcess'];
+    for (var k = 0; k < selects.length; k++) {
+      if (!excludeSelect.includes(selects[k].id)) {
+        selects[k].disabled = true;
+      }
+    }
+
+    //Disabled select 
+    var selects = document.getElementsByTagName('select');
+    for (var k = 0; k < selects.length; k++) {
+        
+    }
+
+    //Disabled button 
+    var buttons = document.getElementsByTagName('button');
+    const excludeButtons = ['returnBtn', 'updateBtn', 'okBtn', 'cancelBtn', 'copyBtn', 'createBtn'];
+    for (var k = 0; k < buttons.length; k++) {
+      if (!excludeButtons.includes(buttons[k].className)) {
+        buttons[k].disabled = true;
+      }
+    }
+  }
 </script>
 <?php
 // フッターセット

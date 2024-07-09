@@ -31,6 +31,7 @@
   $sq_no = '';                      //営業依頼書№
   $process = '';                    //処理
   $regBtnDisabled = '';
+  $lock_header = false;
   $err = $_GET['err'] ?? '';
 
   //sales_request_input3から営業依頼書№を取得する
@@ -122,6 +123,11 @@
   if ($sq_no !== '') {
     //sq_detail_trからデータを取得してテーブルにセットする
     $sq_detail_list = get_sq_detail_datas($sq_no, $process);
+
+    //detailのできたheaderをロックする
+    if (count($sq_detail_list) > 0) {
+      $lock_header = true;
+    } 
   }
 
   /*----------------------------------------------------------------FUNCTION---------------------------------------------------------------------*/
