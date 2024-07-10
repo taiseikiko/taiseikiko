@@ -4,6 +4,7 @@
   // DB接続
   $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
   // 初期設定 & データセット
+  $today = date('Y/m/d');
   $dw_no = '';              //図面No
   $client = '';             //申請者
   $dw_status = '';          //状況
@@ -42,6 +43,26 @@
     //新規の場合
     if ($process == 'new') {
       $btn_status = 'hidden';
+
+      //図面№（sq_no）自動採番
+      /**--------------------------------------------------------------------------------------------------**/
+      //システム日付の年月を採取
+      $ym = substr(str_replace('/', '', $today), 0, 6);
+      $code_id = 'dw_request_no';
+
+      $sql = "SELECT code_no FROM sq_code WHERE code_id = '$code_id' AND text1 = '$ym'";
+      $stmt = $pdo->prepare($sql);
+      $stmt->execute();
+      $data = $stmt->fetchAll();
+
+      if (isset ($data) && !empty($data)) {
+        $code_no = $data[0]['code_no'];
+        $no = $code_no+1;
+        $dw_no = $ym.$no;
+      } else {
+        $no = '1';
+        $dw_no = $ym.$no;
+      }
     }
     //更新の場合  
     else {
