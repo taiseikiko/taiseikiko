@@ -392,12 +392,12 @@
         //確認メッセージを書く
         var msg = btnName + "します？よろしいですか？";
         //何の処理科を書く
-        if ($.trim(btnName) == '更新'){
-          var process = "update";
-        } else {
-          var process = "approve";          
+        var process = "update";
+
+        if ($.trim(btnName) == '承認'){
+          $('#process').val('approve');
         }
-        $('#process').val(process);
+        
         //確認Dialogを呼ぶ
         openConfirmModal(msg, process);
       }
@@ -467,7 +467,7 @@
         $("#dw_input2").attr("action", "dw_input1.php");
       }
       //ヘッダ更新処理の場合
-      else if (process == "update" || process == "approve") { 
+      else if (process == "update") { 
         //submitしたいボタン名をセットする
         $("#confirm_okBtn").attr("name", "submit");
         //dw_update.phpへ移動する

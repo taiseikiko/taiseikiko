@@ -43,6 +43,7 @@
 
         switch ($process) {
             case 'new':
+            case 'update':
                 $url = $base_url . 'dw_input2.php?dw_no=' . $dw_no;
                 break;
             
