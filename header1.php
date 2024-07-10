@@ -283,6 +283,7 @@
         <summary><a href="#components">図面管理</a></summary>
         <ul>
           <li><a href="dw_input1.php">図面　登録</a></li>
+          <li><a href="dw_route_in_dept_input1.php">部署内ルートマスター保守</a></li>
         </ul>
       </details>
     </li>';
