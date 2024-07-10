@@ -282,7 +282,7 @@
       <details>
         <summary><a href="#components">図面管理</a></summary>
         <ul>
-          <li><a href="">図面　登録</a></li>
+          <li><a href="dw_input1.php">図面　登録</a></li>
         </ul>
       </details>
     </li>';

@@ -5,7 +5,10 @@
   require_once('function.php');
   $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
   $title = $_GET['title'] ?? '';
-  $dept_code = $_SESSION['department_code'];
+  $user_code = $_SESSION['login'];
+  $user_name = $_SESSION['user_name'];      //登録者
+  $office_name = $_SESSION['office_name'];  //部署
+  $office_position_name = $_SESSION['office_position_name'];  //役職
   include("dw_input2_data_set.php");
   // ヘッダーセット
   include("header1.php");
@@ -18,6 +21,7 @@
       <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="dw_input2">
         <input type="hidden" id="process" name="process" value="<?= $process ?>">
         <input type="hidden" name="dw_no" id="dw_no" value="<?php echo htmlspecialchars($dw_no); ?>">
+        <input type="hidden" name="client" id="client" value="<?= $user_code ?>">
         <?php include('dialog.php'); ?>
         <table style="width:auto;">
           <input type="hidden" name="sq_no" id="sq_no" value="<?= $sq_no ?>">
@@ -27,14 +31,14 @@
             <td>
               <div class="field-row">
                 <label class="common_label" for="user_name" >登録者</label>
-                <input type="text" style="margin-left: 1rem;" class="readonlyText input-res" name="user_name" value="<?= $_SESSION['user_name'] ?>" readonly>
+                <input type="text" style="margin-left: 1rem;" class="readonlyText input-res" name="user_name" value="<?= $user_name ?>" readonly>
                 <input type="hidden" name="user_code" value="<?= $_SESSION["login"] ?>">
                 
                 <label class="common_label" for="office_name">　　部署</label>
-                <input type="text" style="width:370px;" name="office_name" class="readonlyText input-res" value="<?= $_SESSION['office_name'] ?>" readonly>
+                <input type="text" style="width:370px;" name="office_name" class="readonlyText input-res" value="<?= $office_name ?>" readonly>
 
                 <label class="common_label" for="office_position_name" >　　役職</label>
-                <input type="text" style="width:100px;" class="readonlyText input-res" name="office_position_name" value="<?= $_SESSION['office_position_name'] ?>" readonly>
+                <input type="text" style="width:100px;" class="readonlyText input-res" name="office_position_name" value="<?= $office_position_name ?>" readonly>
               </div>
             </td>      
           </tr>
@@ -165,84 +169,137 @@
             </td>
           </tr>
         </table>
-        
-        <table style="width:auto;">
-          <br>
-          <tr>
-            <td>
-              <div class="field-row">
-                <label class="common_label" for="mitsumori">図面 </label>
-                <label for="upload">アップロードするファイル ⇒  </label>
-                <input type="file" name="uploaded_file1">
-                <input type="submit" name="submit_entrant1" id="submit_upload1" value="アップロード">
-              </div>
-            </td>
-          </tr>
-          <table class="tab1" style="margin-left:120px; margin-top:10px;">
-            <tr>
-              <th> 添付された資料 </th>
-            </tr>
-            <?php
-              $files = glob('document/engineering/quotation/*.*');
-              // foreach ($files as $key => $value) {
-              //   $cut = str_replace('document/engineering/quotation/', '', $value);
-              //   $chk = substr($cut,0,strlen($sq_no)); //get sq_no from file name
-              //   $type = mb_substr($cut,(strlen($sq_no)+1),4);
-              //   if($sq_no == $chk && $type == '図面'){
-              //     echo "<tr><td><a href=".$value." target='_blank'>".$value."</a></td></tr>";
-              //   }
-              // }
-            ?>
-            <tr style="height:10px"></tr>
-          </table>
 
-          <tr>
-            <td>
-              <div class="field-row" style="margin-top: 10px;">
-                <label class="common_label" for="comments">コメント</label>
-                <textarea id="comments" name="comments" rows="3" cols="120" class="textarea-res"><?= $comments ?></textarea>
-              </div>
-            </td>
-          </tr>        
-        </table>
         <table>
-          <br>
-          <tr>
-            <td>
-              <div class="field-row">
-                <label class="common_label" for="mitsumori">仕様書 </label>
-                <label for="upload">アップロードするファイル ⇒  </label>
-                <input type="file" name="uploaded_file1">
-                <input type="submit" name="submit_entrant1" id="submit_upload1" value="アップロード">
-              </div>
-            </td>
-          </tr>
-          <table class="tab1" style="margin-left:120px; margin-top:10px;">
-            <tr>
-              <th> 添付された資料 </th>
-            </tr>
-            <?php
-              $files = glob('document/engineering/quotation/*.*');
-              // foreach ($files as $key => $value) {
-              //   $cut = str_replace('document/engineering/quotation/', '', $value);
-              //   $chk = substr($cut,0,strlen($sq_no)); //get sq_no from file name
-              //   $type = mb_substr($cut,(strlen($sq_no)+1),4);
-              //   if($sq_no == $chk && $type == '図面'){
-              //     echo "<tr><td><a href=".$value." target='_blank'>".$value."</a></td></tr>";
-              //   }
-              // }
-            ?>
-            <tr style="height:10px"></tr>
-          </table>
+          <tr style="height:20px;"></tr>
 
           <tr>
             <td>
-              <div class="field-row" style="margin-top: 10px;">
-                <label class="common_label" for="comments">コメント</label>
-                <textarea id="comments" name="comments" rows="3" cols="120" class="textarea-res"><?= $comments ?></textarea>
+              <div class="field-row">
+                <label class="common_label" for="document">図面</label>
+                  　アップロードするファイル ⇒
+                  <input type="file" name="uploaded_file1" id="uploaded_file1">
               </div>
             </td>
           </tr>
+
+          <tr>
+            <td>
+              <div class="field-row">
+                <textarea id="upload_comments1" style="margin-left: 285px; margin-top : 10px;" name="upload_comments1" rows="3" cols="120" class="textarea-res" ></textarea>
+                <input type="submit" name="upload" id="upload1" value="アップロード">
+              </div>
+            </td>
+          </tr>
+        </table>
+        <table class="tab1" style="margin-left:120px; margin-top:10px;width: 1020px;">
+          <tr>
+            <th> 添付された資料 </th>
+            <th> コメント </th>
+            <th> 登録日 </th>
+            <th> 登録者 </th>
+          </tr>
+          <?php
+            $files = glob('document/drawing_management/*.*');
+            foreach ($files as $key => $value) {
+              $cut = str_replace('document/drawing_management/', '', $value);
+              $chk = substr($cut,0,strlen($dw_no));//get dw_no from file name
+              $type = mb_substr($cut,strlen($dw_no)+1,2);
+
+              //コメントをセットする
+              if (!empty($file_comment_List)) {
+                foreach ($file_comment_List as $item) {
+                  //ファイル名を検索する
+                  $search = strpos($value, $item['dw_path']);
+                  //見つかったら、そのKEYのファイルコメントをセットする
+                  if ($search !== false) {
+                    $comments = $item['comment'];
+                    $comments_date = $item['add_date'];
+                    $comments_creater = $item['employee_name'];                    
+                  }
+                }
+              }
+
+              if($dw_no == $chk && $type == '図面'){
+                echo "
+                <tr>
+                  <td>
+                    <a href=".$value." target='_blank'>".$value."</a>
+                  </td>
+                  <td>$comments</td>
+                  <td>$comments_date</td>
+                  <td>$comments_creater</td>
+                </tr>";
+              }
+            }
+          ?>
+          <tr style="height:10px;"></tr>
+        </table> 
+
+        <table>
+          <tr style="height:20px;"></tr>
+
+          <tr>
+            <td>
+              <div class="field-row">
+                <label class="common_label" for="document">仕様書</label>
+                  　アップロードするファイル ⇒
+                  <input type="file" name="uploaded_file2" id="uploaded_file2">
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="field-row">
+                <textarea id="upload_comments2" style="margin-left: 285px; margin-top : 10px;" name="upload_comments2" rows="3" cols="120" class="textarea-res" ></textarea>
+                <input type="submit" name="upload" id="upload2" value="アップロード">
+              </div>
+            </td>
+          </tr>
+        </table>
+        <table class="tab1" style="margin-left:120px; margin-top:10px;width: 1020px;">
+          <tr>
+            <th> 添付された資料 </th>
+            <th> コメント </th>
+            <th> 登録日 </th>
+            <th> 登録者 </th>
+          </tr>
+          <?php
+            $files = glob('document/drawing_management/*.*');
+            foreach ($files as $key => $value) {
+              $cut = str_replace('document/drawing_management/', '', $value);
+              $chk = substr($cut,0,strlen($dw_no));//get dw_no from file name
+              $type = mb_substr($cut,strlen($dw_no)+1,3);
+
+              //コメントをセットする
+              if (!empty($file_comment_List)) {
+                foreach ($file_comment_List as $item) {
+                  //ファイル名を検索する
+                  $search = strpos($value, $item['dw_path']);
+                  //見つかったら、そのKEYのファイルコメントをセットする
+                  if ($search !== false) {
+                    $comments = $item['comment'];
+                    $comments_date = $item['add_date'];
+                    $comments_creater = $item['employee_name'];                    
+                  }
+                }
+              }
+
+              if($dw_no == $chk && $type == '仕様書'){
+                echo "
+                <tr>
+                  <td>
+                    <a href=".$value." target='_blank'>".$value."</a>
+                  </td>
+                  <td>$comments</td>
+                  <td>$comments_date</td>
+                  <td>$comments_creater</td>
+                </tr>";
+              }
+            }
+          ?>
+          <tr style="height:10px;"></tr>
         </table>
 
         <table>
@@ -279,6 +336,10 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
+    var private = '<?= $private ?>';
+    if (private) {
+      disableInput();
+    }
 
     let class_code = $('#classList').val();
     if (class_code != '') {
@@ -342,6 +403,60 @@
       }
     });
 
+    /*----------------------------------------------------------------------------------------------- */
+
+    //アプロードボタンを押下する場合
+    $('#upload1').click(function(event) {
+      //重複エラーチェック
+      checkDuplicate('uploaded_file1').then(function(isExist) {
+        //重複エラーがある場合
+        if (isExist) {
+          //何の処理かを書く
+          var process = "error1";
+          //エラーメッセージを書く
+          var errMsg = "同じ依頼書の中で同じファイル名はアップロードできません。";
+          //OKDialogを呼ぶ
+          openOkModal(errMsg, process);
+        } else {
+          //何の処理かを書く
+          var process = "upload1";
+          //エラーメッセージを書く
+          var msg = "アプロードします。よろしいですか？";
+          //確認Dialogを呼ぶ
+          openConfirmModal(msg, process);
+        }
+      }).catch(function(error) {
+        console.error("Error checking duplicate:", error);
+      })
+    });
+
+    /*----------------------------------------------------------------------------------------------- */
+
+    //アプロードボタンを押下する場合
+    $('#upload2').click(function () {
+      //重複エラーチェック
+      checkDuplicate('uploaded_file2').then(function(isExist) {
+        //重複エラーがある場合
+        if (isExist) {
+          //何の処理かを書く
+          var process = "error2";
+          //エラーメッセージを書く
+          var errMsg = "同じ依頼書の中で同じファイル名はアップロードできません。";
+          //OKDialogを呼ぶ
+          openOkModal(errMsg, process);
+        } else {
+          //何の処理かを書く
+          var process = "upload2";
+          //エラーメッセージを書く
+          var msg = "アプロードします。よろしいですか？";
+          //確認Dialogを呼ぶ
+          openConfirmModal(msg, process);
+        }
+      }).catch(function(error) {
+        console.error("Error checking duplicate:", error);
+      })      
+    })
+
     /**-------------------------------------------------------------------------------------------------------------- */
 
     //確認BOXにはいボタンを押下する場合
@@ -352,17 +467,25 @@
         $("#dw_input2").attr("action", "dw_input1.php");
       }
       //ヘッダ更新処理の場合
-      else if (process == "update") {
+      else if (process == "update" || process == "approve") {
         //submitしたいボタン名をセットする
         $("#confirm_okBtn").attr("name", "submit");
         //dw_update.phpへ移動する
         $("#dw_input2").attr("action", "dw_update.php");
       }
-      else if (process == "approve") {
+      //アプロード１処理の場合
+      else if (process == "upload1") {
         //submitしたいボタン名をセットする
-        $("#confirm_okBtn").attr("name", "submit");
-        //dw_update.phpへ移動する
-        $("#dw_input2").attr("action", "dw_update.php");
+        $("#confirm_okBtn").attr("name", "upload");
+        //sales_request_update.phpへ移動する
+        uploadFile("dw_attach_upload1.php?from=input2_1", "1", "_図面_");
+      }
+      //アプロード２処理の場合
+      else if (process == "upload2") {
+        //submitしたいボタン名をセットする
+        $("#confirm_okBtn").attr("name", "upload");
+        //sales_request_update.phpへ移動する
+        uploadFile("dw_attach_upload1.php?from=input2_2", "2", "_仕様書_");
       }
     });
 
@@ -403,6 +526,24 @@
       var url = "dw_send_back.php" + "?dw_no=" + dw_no;
       window.open(url, "popupWindow", "width=900,height=260,left=100,top=50");
     })
+
+    /*----------------------------------------------------------------------------------------------- */
+
+    //localStorageからフォームデータをセットする
+    const formData = JSON.parse(localStorage.getItem('dw_input2'));
+    if (formData) {
+      var myForm = document.getElementById('dw_input2');
+      console.log(formData);
+      Object.keys(formData).forEach(key => {
+        const exceptId = ['upload_comments1', 'upload_comments2', 'uploaded_file1', 'uploaded_file2'];
+        if (!exceptId.includes(key)) {
+          myForm.elements[key].value = formData[key];
+        }
+      })
+
+      //フォームにセット後、クリアする
+      localStorage.removeItem('dw_input2');
+    }
 
     /*----------------------------------------------------------------------------------------------- */
     
@@ -467,6 +608,118 @@
   }
 
   /**-------------------------------------------------------------------------------------------------------------- */
+
+  //重複エラーチェック
+  function checkDuplicate(uploaded_file_name) {
+    event.preventDefault();
+    
+    var isExist;
+    var dw_no = $("#dw_no").val();
+    var file_path = $("#"+uploaded_file_name).val().split('\\').pop();
+
+    return new Promise(function (resolve, reject) {
+      $.ajax({
+        type: "POST",
+        url: "dw_file.php",
+        data: {
+          checkDuplicate: true,
+          dw_no: dw_no,
+          file_path: file_path
+        },
+        success: function(response) {
+          var parse_response = JSON.parse(response);
+          resolve(parse_response.isExist);
+        },
+        error: function(xhr, status, error) {
+          console.error("AJAX request failed:", error); // Log any errors
+          reject(error);
+        }
+      });
+    });
+  }
+
+  /*----------------------------------------------------------------------------------------------- */
+
+  function uploadFile(url, index, filename) {
+    event.preventDefault();
+    var dw_no = document.getElementById('dw_no').value;
+    var client = document.getElementById('client').value;
+    var uploaded_file = document.getElementById('uploaded_file' + index).files[0];
+    var upload_comments = document.getElementById('upload_comments' + index).value;
+    var save_file_name = dw_no + filename;
+
+    var formData = new FormData();
+    formData.append('dw_no', dw_no);
+    formData.append('client', client);
+    formData.append('uploaded_file', uploaded_file);
+    formData.append('upload_comments', upload_comments);
+    formData.append('save_file_name', save_file_name);
+
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: formData,
+      processData: false, // Important: prevent jQuery from processing the data
+      contentType: false, // Important: ensure jQuery does not add a content-type header
+      success: function(response) {
+        //フォームデータを保存する
+        saveFormData();
+        //reload page
+        location.reload();
+      },
+      error: function(xhr, status, error) {
+      }
+    })
+
+  }
+
+  /*----------------------------------------------------------------------------------------------- */
+
+  function saveFormData() {
+    var myForm = document.getElementById('dw_input2');
+    const formData = new FormData(myForm);
+    const jsonData = JSON.stringify(Object.fromEntries(formData));
+    localStorage.setItem('dw_input2', jsonData);
+  }
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+  function disableInput() {
+    //Disabled Input 
+    var inputs = document.getElementsByTagName('input');
+    for (var i = 0; i < inputs.length; i++) {
+      if (inputs[i].type.toLowerCase() !== 'hidden') {
+        inputs[i].disabled = true;
+      }
+      if (inputs[i].type.toLowerCase() == 'text') {
+        inputs[i].style.backgroundColor = '#e6e6e6';
+      }
+    }
+
+    //Disabled textarea 
+    var textareas = document.getElementsByTagName('textarea');
+    for (var j = 0; j < textareas.length; j++) {
+        textareas[j].disabled = true;
+        textareas[j].style.backgroundColor = '#e6e6e6';
+    }
+
+    //Disabled select 
+    var selects = document.getElementsByTagName('select');
+    for (var k = 0; k < selects.length; k++) {
+      selects[k].disabled = true;
+    }
+
+    //Disabled button 
+    var buttons = document.getElementsByTagName('button');
+    const excludeButtons = ['returnBtn', 'okBtn', 'cancelBtn'];
+    for (var k = 0; k < buttons.length; k++) {
+      if (!excludeButtons.includes(buttons[k].className)) {
+        buttons[k].disabled = true;
+      }
+    }
+  }
+  /*----------------------------------------------------------------------------------------------- */
+  
 </script>
 <style>
   .dropdown-menu {

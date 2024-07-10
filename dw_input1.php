@@ -15,6 +15,7 @@ include("header1.php");
 
   <div class="container">
     <form class="row g-3" method="POST" id="dw_input_form">
+      <input type="hidden" name="private" value="<?= $private ?>">
       <table style="width:auto;">
         <tr>
           <td>
@@ -49,11 +50,13 @@ include("header1.php");
           <th>最終図面更新日</th>
           <th>処理</th>
         </tr>
+        <?php if (!$private) { ?>
         <tr>
           <td colspan="9">
             <button type="submit" name="process" id="regBtn" value="new">新規登録</button>
           </td>
         </tr>
+        <?php } ?>
         <tbody>
         <?php foreach ($dw_datas as $item): ?>
         <tr>

@@ -176,12 +176,6 @@
       }
     }
 
-    //Disabled select 
-    var selects = document.getElementsByTagName('select');
-    for (var k = 0; k < selects.length; k++) {
-        
-    }
-
     //Disabled button 
     var buttons = document.getElementsByTagName('button');
     const excludeButtons = ['returnBtn', 'updateBtn', 'okBtn', 'cancelBtn', 'copyBtn', 'createBtn'];

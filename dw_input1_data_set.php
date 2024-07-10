@@ -1,10 +1,16 @@
 <?php
 require_once('function.php');
 $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
-
+$dept_id = getDeptId($dept_code);
 $dw_datas = [];
 $class_name = $zkm_name = $size_name = $joint_name = '';
 $dw_datas = dw_management_list();  
+$private = false;
+
+//dept_id 02 and 03以外の部署は閲覧のみ可能
+if (!in_array($dept_id, array('02', '03'))) {
+  $private = true;
+}
 
 //検索ボタンを押下した場合
 if (isset($_POST['process']) == 'search') {
@@ -18,6 +24,7 @@ if (isset($_POST['process']) == 'search') {
 
 function dw_management_list($class_name="", $zkm_name="", $size_name="", $joint_name="") {
   global $pdo;
+  global $dept_id;
   $search_kw = [];
 
   $sql = "SELECT dw.dw_no, dw.client, 
@@ -26,12 +33,16 @@ function dw_management_list($class_name="", $zkm_name="", $size_name="", $joint_
             WHEN 2 THEN '完了'
             WHEN 3 THEN '差し戻し'
           END AS status, 
-          dw.dw_div1, dw.open_div, c.class_name, z.zkm_name, dw.size, dw.joint,
+          dw.dw_div1, dw.open_div,
+          c.class_name, z.zkm_name, dw.size, dw.joint,
           dw.pipe, dw.specification, dw.dw_div2, dw.upd_date
           FROM dw_management_tr dw 
           LEFT JOIN sq_class c ON c.class_code = dw.class_code
           LEFT JOIN sq_zaikoumei z ON z.class_code = dw.class_code AND z.zkm_code = dw.zkm_code
           WHERE 1 = 1";
+  if ($dept_id !== '02' && $dept_id !== '03') {
+    $sql .= " AND dw.open_div = '1'";
+  }
   if (!empty($class_name)) {
     $search_kw['class_name'] = '%'. $class_name . '%';
     $sql .= " AND c.class_name LIKE :class_name";
