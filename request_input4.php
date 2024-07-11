@@ -31,24 +31,7 @@ include("header1.php");
 <script type="text/javascript">
   $(document).ready(function() {
 
-    let class_code = $('#classList').val();
-    if (class_code != '') {
-      fetchData(class_code, function(response) {}, function(error) {
-        console.log(error);
-      })
-    }
-
-    /**-------------------------------------------------------------------------------------------------------------- */
-
-    $("#classList").change(function() {
-      let class_code = $(this).val();
-      $('#zkm_code').val('');
-      fetchData(class_code, function(response) {
-        console.log(response);
-      }, function(error) {
-        console.log(error);
-      })
-    });
+    disableInput();
 
     /**-------------------------------------------------------------------------------------------------------------- */
 
@@ -77,36 +60,31 @@ include("header1.php");
         //OKDialogを呼ぶ
         openOkModal(errMessage, process);
       } else {
-        var btnName = $('#updBtn').text();
+        var btnName = $('#updBtn').text().substr(3, 2);
         //確認メッセージを書く
         var msg = btnName + "します？よろしいですか？";
         //何の処理科を書く
-        if ($.trim(btnName) == '更新') {
-          var process = "update";
-        } else {
-          var process = "approve";
-        }
-        $('#process').val(process);
+        var process = "approve";
         //確認Dialogを呼ぶ
         openConfirmModal(msg, process);
       }
     });
 
-
+    /**-------------------------------------------------------------------------------------------------------------- */
 
     //確認BOXにはいボタンを押下する場合
     $("#confirm_okBtn").click(function(event) {
       var process = $("#btnProcess").val();
       //戻る処理の場合
       if (process == "return") {
-        $("#request_input2").attr("action", "request_input1.php");
+        $("#req_rec_form4").attr("action", "request_input1.php");
       }
       //ヘッダ更新処理の場合
-      else if (process == "update" || process == "approve") {
+      else if (process == "approve") {
         //submitしたいボタン名をセットする
         $("#confirm_okBtn").attr("name", "submit");
         //request_update.phpへ移動する
-        $("#request_input2").attr("action", "request_update.php");
+        $("#req_rec_form4").attr("action", "request_update.php");
       }
     });
 
@@ -118,7 +96,7 @@ include("header1.php");
 
       if (process == "errExec") {
         //request_input1へ移動
-        $('#request_input2').attr('action', 'request_input1.php');
+        $('#req_rec_form4').attr('action', 'request_input1.php');
       } else {
         //画面上変更なし
         $('#ok_okBtn').attr('data-dismiss', 'modal');
@@ -182,6 +160,45 @@ include("header1.php");
   }
 
 
+  /*----------------------------------------------------------------------------------------------- */
+
+  function disableInput() {
+    //Disabled Input 
+    var inputs = document.getElementsByTagName('input');
+    for (var i = 0; i < inputs.length; i++) {
+      if (inputs[i].type.toLowerCase() !== 'hidden') {
+        inputs[i].disabled = true;
+      }
+      if (inputs[i].type.toLowerCase() == 'text') {
+        inputs[i].style.backgroundColor = '#e6e6e6';
+      }
+    }
+
+    //Disabled textarea 
+    var textareas = document.getElementsByTagName('textarea');
+    const excludeTextareas = ['approval_comment'];
+    for (var j = 0; j < textareas.length; j++) {
+      if (!excludeTextareas.includes(textareas[j].id)) {
+        textareas[j].disabled = true;
+        textareas[j].style.backgroundColor = '#e6e6e6';
+      }
+    }
+
+    //Disabled select 
+    var selects = document.getElementsByTagName('select');
+    for (var k = 0; k < selects.length; k++) {
+      selects[k].disabled = true;
+    }
+
+    //Disabled button 
+    var buttons = document.getElementsByTagName('button');
+    const excludeButtons = ['returnBtn', 'okBtn', 'cancelBtn', 'returnProcessBtn', 'updRegBtn'];
+    for (var k = 0; k < buttons.length; k++) {
+      if (!excludeButtons.includes(buttons[k].className)) {
+        buttons[k].disabled = true;
+      }
+    }
+  }
   /*----------------------------------------------------------------------------------------------- */
 </script>
 <style>

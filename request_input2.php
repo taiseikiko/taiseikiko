@@ -9,6 +9,7 @@ $user_code = $_SESSION['login'];
 $user_name = $_SESSION['user_name'];      //登録者
 $office_name = $_SESSION['office_name'];  //部署
 $office_position_name = $_SESSION['office_position_name'];  //役職
+$dept_code = $_SESSION['department_code'];
 include("request_input2_data_set.php");
 // ヘッダーセット
 include("header1.php");
@@ -30,28 +31,6 @@ include("header1.php");
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
-
-    let class_code = $('#classList').val();
-    if (class_code != '') {
-      fetchData(class_code, function(response) {}, function(error) {
-        console.log(error);
-      })
-    }
-
-    /**-------------------------------------------------------------------------------------------------------------- */
-
-    $("#classList").change(function() {
-      let class_code = $(this).val();
-      $('#zkm_code').val('');
-      fetchData(class_code, function(response) {
-        console.log(response);
-      }, function(error) {
-        console.log(error);
-      })
-    });
-
-    /**-------------------------------------------------------------------------------------------------------------- */
-
     //戻るボタンを押下する場合
     $("#returnBtn").click(function(event) {
       //確認メッセージを書く
@@ -77,36 +56,31 @@ include("header1.php");
         //OKDialogを呼ぶ
         openOkModal(errMessage, process);
       } else {
-        var btnName = $('#updBtn').text();
+        var btnName = $('#updBtn').text().substr(3, 2);
         //確認メッセージを書く
         var msg = btnName + "します？よろしいですか？";
-        //何の処理科を書く
-        if ($.trim(btnName) == '更新') {
-          var process = "update";
-        } else {
-          var process = "approve";
-        }
-        $('#process').val(process);
+        //何の処理科を書く        
+        var process = "new";
         //確認Dialogを呼ぶ
         openConfirmModal(msg, process);
       }
     });
-
     
-
+    /**-------------------------------------------------------------------------------------------------------------- */
+    
     //確認BOXにはいボタンを押下する場合
     $("#confirm_okBtn").click(function(event) {
       var process = $("#btnProcess").val();
       //戻る処理の場合
       if (process == "return") {
-        $("#request_input2").attr("action", "request_input1.php");
+        $("#req_rec_form2").attr("action", "request_input1.php");
       }
       //ヘッダ更新処理の場合
-      else if (process == "update" || process == "approve") {
+      else if (process == "new") {
         //submitしたいボタン名をセットする
         $("#confirm_okBtn").attr("name", "submit");
         //request_update.phpへ移動する
-        $("#request_input2").attr("action", "request_update.php");
+        $("#req_rec_form2").attr("action", "request_update.php");
       }
     });
 
@@ -118,7 +92,7 @@ include("header1.php");
 
       if (process == "errExec") {
         //request_input1へ移動
-        $('#request_input2').attr('action', 'request_input1.php');
+        $('#req_rec_form2').attr('action', 'request_input1.php');
       } else {
         //画面上変更なし
         $('#ok_okBtn').attr('data-dismiss', 'modal');
