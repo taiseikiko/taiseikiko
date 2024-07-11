@@ -411,6 +411,82 @@ button {
 -------------------- Skip Button ---------------------
 -------------------------------------------------------- */
 
+
+/* ----------------------------------------------------- 
+-------------------- Clear Button ---------------------
+-------------------------------------------------------- */
+.clear_btn {
+  background: linear-gradient(
+    180deg,
+    #66b2ff,
+    #3399ff 30% 50%,
+    #0078d4 50%,
+    #005bb5
+  );
+  border: 1px solid #8e8f8f;
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px #fffc;
+  box-sizing: border-box;
+  color: #ffffff;
+  font: 9pt Segoe UI, SegoeUI, Noto Sans, sans-serif;
+  min-height: 23px;
+  min-width: 75px;
+  padding: 0 12px;
+  position: relative;
+  text-align: center;
+  z-index: 0;
+}
+
+.clear_btn:before {
+  background: linear-gradient(180deg, #4da6ff 45%, #3399ff 0, #0078d4);
+  border-radius: 3px;
+  box-shadow: inset 0 0 0 1px #fffc;
+  content: "";
+  height: 100%;
+  left: 0;
+  margin: 0;
+  opacity: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  transition: opacity 0.3s;
+  width: 100%;
+  z-index: -1;
+}
+
+.clear_btn:after {
+  background: linear-gradient(
+    180deg,
+    #80c1ff,
+    #66b2ff 30% 50%,
+    #3399ff 50%,
+    #005bb5
+  );
+  border-radius: 2px;
+  box-shadow: inset 1px 1px 0 #0003, inset -1px 1px 0 #0001;
+  content: "";
+  height: 100%;
+  left: 0;
+  margin: 0;
+  opacity: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  transition: opacity 0.3s;
+  width: 100%;
+  z-index: -1;
+}
+
+.clear_btn:not(:disabled):hover {
+  border-color: #005bb5;
+  transition: border-color 0.3s;
+}
+
+.clear_btn:not(:disabled):hover:before {
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+
 /* ----------------------------------------------------- 
 -------------------- returnProcessBtn Button ---------------------
 -------------------------------------------------------- */
