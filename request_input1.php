@@ -35,20 +35,7 @@ $(document).ready(function(){
 
 /**-------------------------------------------------------------------------------------------------------------- */
 
-function handleWindowClose() {
-  $.ajax({
-    type: 'POST',
-    url: 'sales_request_input1_data_set.php',
-    data: { 
-      return: false,
-      cust_name: cust_name, 
-      pf_name: pf_name },
-    success: function(response) {
-      $('#sq_data_table').html(response);
-    }
-    
-  });
-}
+
 
 /**-------------------------------------------------------------------------------------------------------------- */
 </script>
