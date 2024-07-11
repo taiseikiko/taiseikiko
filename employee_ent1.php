@@ -66,7 +66,10 @@
                 <input type="hidden" class="employee_code" name="employee_code" value="">
               </tr>
               <?php 
-                } }
+                } } else { ?>
+                  <td colspan="15"><b>表示するデータがございません。</b></td>
+              <?php 
+                }
               ?>
             </tbody>
           </table>

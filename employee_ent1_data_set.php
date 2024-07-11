@@ -15,11 +15,19 @@
   $office_position_code = array();
   $dept_name = array();
   $op_name = array();
+  $emp_datas = array();
+
+  $emp_datas = getDatas();
 
   //検索ボタンを押下した場合
   if (isset($_POST['process']) == 'search') {
     $emp_nm = $_POST['emp_nm']?? '';  //社員名
 
+    $emp_datas = getDatas($emp_nm);
+  }
+
+  function getDatas($emp_nm = "") {
+    global $pdo;
     $sql = "SELECT e.employee_code, e.employee_name, e.kana, e.department_code, e.office_position_code, cd1.text2 AS dept_name, cd2.text1 AS op_name
             FROM employee e
             LEFT JOIN code_master cd1 ON cd1.code_id = 'department' AND cd1.text1 = e.department_code
@@ -28,6 +36,8 @@
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $emp_datas = $stmt->fetchAll();
+
+    return $emp_datas;
   }
 
 ?>
