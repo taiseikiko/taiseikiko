@@ -26,7 +26,22 @@ if (isset($_POST['detail']) || isset($_GET['sq_card_no'])) {
   $process = $_POST['process']?? ''; //処理
   $sq_card_no = $_POST['card_no']?? $_GET['sq_card_no'];              //依頼書No
   $sq_card_line_no = $_POST['detail']?? $_GET['sq_card_line_no'];          //依頼書行No
-  $client = $_POST['user_code']?? '';                //登録者
+
+  //card_header_trテーブルから取得する
+  $header_datas = get_card_header_datas($sq_card_no);
+
+  if (!empty($header_datas) && isset($header_datas)) {
+    $client = $header_datas['client'];                   //申請者
+    //登録者の情報を取得する
+    $client_datas = get_client_infos($client);
+    if (isset($client_datas) && !empty($client_datas)) {
+      $client_name = $client_datas['employee_name'];  //登録者名  
+      $dept_name = $client_datas['dept_name'];        //部署名
+      $role_name = $client_datas['role_name'];        //役割
+      $p_office_code = $client_datas['p_office_code'];//事業体コード
+      $p_office_name = $client_datas['p_office_name'];//事業体名
+    }
+  }    
 
   //どの画面を表示するかを確認する（受付、入力、確認、承認）
   /************************************************開始***************************************************************/
@@ -61,16 +76,6 @@ if (isset($_POST['detail']) || isset($_GET['sq_card_no'])) {
     }
   }
   /************************************************完了***************************************************************/  
-
-  //登録者の情報を取得する
-  $client_datas = get_client_infos($client);
-  if (isset($client_datas) && !empty($client_datas)) {
-    $client_name = $client_datas['employee_name'];  //登録者名  
-    $dept_name = $client_datas['dept_name'];        //部署名
-    $role_name = $client_datas['role_name'];        //役割
-    $p_office_code = $client_datas['p_office_code'];//事業体コード
-    $p_office_name = $client_datas['p_office_name'];//事業体名
-  }
 
   //card_detail_trを取得する
   $card_detail_list = get_card_detail_datas($sq_card_no, $sq_card_line_no);
@@ -270,6 +275,25 @@ function get_file_comment_datas($sq_card_no, $sq_card_line_no) {
   }
 
   return $datas;
+}
+
+/**
+ * card_header_trテーブルから取得する
+ */
+function get_card_header_datas($card_no)
+{
+  global $pdo;
+  $datas = [];
+  $sql = "SELECT h.client, h.procurement_approver, h.p_office_no, o.pf_name, h.preferred_date, h.deadline 
+            FROM card_header_tr h
+            LEFT JOIN public_office o
+            ON h.p_office_no = o.pf_code
+            WHERE h.card_no = :card_no";
+  $stmt = $pdo->prepare($sql);
+  $stmt->bindParam(':card_no', $card_no);
+  $stmt->execute();
+  $row = $stmt->fetch(PDO::FETCH_ASSOC);
+  return $row;
 }
 
 

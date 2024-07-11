@@ -48,7 +48,7 @@ function sendMail($email_datas, $to_datas) {
         // 送受信先設定（第二引数は省略可）
         
         foreach ($to_datas as $item) {
-            $mail->addAddress($item['email'], $item['employee_name']);
+            $mail->addAddress($item['email'], '');
         }
 
         $body = '';

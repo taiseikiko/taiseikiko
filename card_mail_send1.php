@@ -41,6 +41,9 @@
             }
         }
 
+        //URLを設定する
+        $url = $base_url . '/card_input2.php?card_no=' . $sq_card_no;
+
         //送信内容をセットする
         $email_datas = [
             'from_email' => $from_email,     //送信者email
@@ -50,7 +53,7 @@
             'sq_card_no' => $sq_card_no,
             'url' => $url
         ];
-        
+
         //送信先のデータを取得する
         $to_datas = get_mail_recipient_data();
 

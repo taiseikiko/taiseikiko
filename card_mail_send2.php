@@ -41,6 +41,15 @@
             }
         }
 
+        //URLを設定する
+        //承認以外の場合
+        if ($page !== '承認') {
+            $url = $base_url . '/card_input3.php?sq_card_no=' . $sq_card_no . '&sq_card_line_no=' . $sq_card_line_no;
+        } else {
+            $url = $base_url . '/card_input2.php?card_no=' . $sq_card_no;
+        } 
+        
+
         //送信内容をセットする
         $email_datas = [
             'from_email' => $from_email,     //送信者email
