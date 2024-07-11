@@ -43,9 +43,13 @@ function dw_management_list($class_name="", $zkm_name="", $size_name="", $joint_
             WHEN 2 THEN '完了'
             WHEN 3 THEN '差し戻し'
           END AS status, 
+          CASE dw.dw_div2
+            WHEN 1 THEN '営業図面'
+            WHEN 2 THEN '工事図面'
+          END AS dw_div2,
           dw.dw_div1, dw.open_div,
           c.class_name, z.zkm_name, dw.size, dw.joint,
-          dw.pipe, dw.specification, dw.dw_div2, dw.upd_date
+          dw.pipe, dw.specification,  dw.upd_date
           FROM dw_management_tr dw 
           LEFT JOIN sq_class c ON c.class_code = dw.class_code
           LEFT JOIN sq_zaikoumei z ON z.class_code = dw.class_code AND z.zkm_code = dw.zkm_code
