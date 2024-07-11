@@ -37,7 +37,8 @@ function dw_management_list($class_name="", $zkm_name="", $size_name="", $joint_
   global $dept_id;
   $search_kw = [];
 
-  $sql = "SELECT dw.dw_no, dw.client, 
+  $sql = "SELECT dw.dw_no, dw.client,
+          e_client.employee_name AS client_name, 
           CASE dw.dw_status
             WHEN 1 THEN '承認待ち'
             WHEN 2 THEN '完了'
@@ -52,6 +53,7 @@ function dw_management_list($class_name="", $zkm_name="", $size_name="", $joint_
           dw.pipe, dw.specification,  dw.upd_date
           FROM dw_management_tr dw 
           LEFT JOIN sq_class c ON c.class_code = dw.class_code
+          LEFT JOIN employee e_client ON dw.client = e_client.employee_code
           LEFT JOIN sq_zaikoumei z ON z.class_code = dw.class_code AND z.zkm_code = dw.zkm_code
           WHERE 1 = 1";
   if ($dept_id !== '02' && $dept_id !== '03') {
