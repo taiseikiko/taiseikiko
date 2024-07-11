@@ -77,7 +77,7 @@ include("header1.php");
           <?php foreach ($dw_datas as $item) : ?>
             <tr>
               <td><?= $item['dw_no'] ?></td>
-              <td><?= $item['client'] ?></td>
+              <td><?= $item['client_name'] ?></td>
               <td><?= $item['status'] ?></td>
               <td><?= $item['class_name'] ?></td>
               <td><?= $item['zkm_name'] ?></td>
