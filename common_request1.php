@@ -1,7 +1,6 @@
 
 <div class="container">
 <form class="row g-3" method="POST" id="request_input_form">
-  <input type="hidden" name="private" value="<?= $private ?>">
   <table style="width:auto;">
     <tr>
         <div class="field-row">
