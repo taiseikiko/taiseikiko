@@ -62,15 +62,13 @@ include("header1.php");
           <th>材工名</th>
           <th>サイズ</th>
           <th>接合形状</th>
-          <th>仕様</th>
-          <th>工事関連図</th>
-          <th>図面</th>
+          <th>種類</th>
           <th>最終図面更新日</th>
           <th>処理</th>
         </tr>
         <?php if (!$private) { ?>
           <tr>
-            <td colspan="12">
+            <td colspan="10">
               <button type="submit" name="process" id="regBtn" value="new">新規登録</button>
             </td>
           </tr>
@@ -85,9 +83,7 @@ include("header1.php");
               <td><?= $item['zkm_name'] ?></td>
               <td><?= $item['size'] ?></td>
               <td><?= $item['joint'] ?></td>
-              <td><?= $item['specification'] ?></td>
-              <td></td>
-              <td></td>
+              <td><?= $item['dw_div2'] ?></td>
               <td><?= $item['upd_date'] ?></td>
               <td style="text-align:center">
                 <button type="submit" class="updateBtn" data-dw_no="<?= $item['dw_no'] ?>" name="process" value="update">更新</button>
