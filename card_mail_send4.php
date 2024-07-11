@@ -41,6 +41,9 @@ try {
         }
     }
 
+    //URL設定
+    $url = $base_url . 'card_input1.php';
+
     //送信内容をセットする
     $email_datas = [
         'from_email' => $from_email,     //送信者email

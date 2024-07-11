@@ -463,7 +463,7 @@
       $('#entrant').prop('disabled', true);                           //担当者
     }
     //確認画面の場合、入力関連のINPUT BOXを入力不可能にする
-    if (page == '確認') {
+    if (page == '確認' || page == '承認') {
       $('#entrant_date').prop('disabled', true);      //登録日
       $('#entrant_comments').prop('disabled', true);  //コメント
       $('#entrant_comments').css('background-color', '#e6e6e6');

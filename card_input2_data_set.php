@@ -30,7 +30,11 @@ $err = $_GET['err'] ?? '';
 
 //一覧画面から移動した場合　あるいは　戻りボタンが押された場合
 if (isset($_POST['process']) || isset($_GET['card_no'])) {
-  $process = $_POST['process'] ?? $_GET['process'];
+  //メールから来た場合
+  if (isset($_GET['send_back'])) {
+    $mail_process = 'update';
+  }
+  $process = $_POST['process'] ?? ($mail_process ?? 'approve');
 
   //ボタン名
   if ($process == 'update') {
