@@ -4,8 +4,8 @@ $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 $dept_id = getDeptId($dept_code);
 $dw_datas = [];
 $class_name = $zkm_name = $size_name = $joint_name = '';
-$dw_datas = dw_management_list();  
 $private = false;
+$search_result = '';
 
 //dept_id 02 and 03以外の部署は閲覧のみ可能
 if (!in_array($dept_id, array('02', '03'))) {
@@ -19,7 +19,17 @@ if (isset($_POST['process']) == 'search') {
   $size_name = $_POST['size_name'] ?? '';             //サイズ
   $joint_name = $_POST['joint_name'] ?? '';           //接合形状
 
-  $dw_datas = dw_management_list($class_name, $zkm_name, $size_name, $joint_name);  
+  $dw_datas = dw_management_list($class_name, $zkm_name, $size_name, $joint_name); 
+  
+  //検索後データがない場合表示するテキスト
+  if (count($dw_datas) <= 0) {
+    $search_result = "<div><h4 style='font-size: 12px;'>表示するデータがございません。</h4></div>";
+  } 
+}
+
+// クリアボタンを押下した場合
+if (isset($_POST['process']) && $_POST['process'] === 'clear') {
+  $dw_datas = [];
 }
 
 function dw_management_list($class_name="", $zkm_name="", $size_name="", $joint_name="") {
