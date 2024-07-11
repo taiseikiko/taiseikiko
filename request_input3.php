@@ -6,9 +6,6 @@ require_once('function.php');
 $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
 $title = $_GET['title'] ?? '';
 $user_code = $_SESSION['login'];
-$user_name = $_SESSION['user_name'];      //登録者
-$office_name = $_SESSION['office_name'];  //部署
-$office_position_name = $_SESSION['office_position_name'];  //役職
 include("request_input3_data_set.php");
 // ヘッダーセット
 include("header1.php");
@@ -30,27 +27,7 @@ include("header1.php");
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
-
-    let class_code = $('#classList').val();
-    if (class_code != '') {
-      fetchData(class_code, function(response) {}, function(error) {
-        console.log(error);
-      })
-    }
-
-    /**-------------------------------------------------------------------------------------------------------------- */
-
-    $("#classList").change(function() {
-      let class_code = $(this).val();
-      $('#zkm_code').val('');
-      fetchData(class_code, function(response) {
-        console.log(response);
-      }, function(error) {
-        console.log(error);
-      })
-    });
-
-    /**-------------------------------------------------------------------------------------------------------------- */
+    disableInput();
 
     //戻るボタンを押下する場合
     $("#returnBtn").click(function(event) {
@@ -77,36 +54,32 @@ include("header1.php");
         //OKDialogを呼ぶ
         openOkModal(errMessage, process);
       } else {
-        var btnName = $('#updBtn').text();
+        var btnName = $('#updBtn').text().substr(3, 2);
         //確認メッセージを書く
         var msg = btnName + "します？よろしいですか？";
         //何の処理科を書く
-        if ($.trim(btnName) == '更新') {
-          var process = "update";
-        } else {
-          var process = "approve";
-        }
+          var process = "confirm";
         $('#process').val(process);
         //確認Dialogを呼ぶ
         openConfirmModal(msg, process);
       }
     });
 
-
+    /**-------------------------------------------------------------------------------------------------------------- */
 
     //確認BOXにはいボタンを押下する場合
     $("#confirm_okBtn").click(function(event) {
       var process = $("#btnProcess").val();
       //戻る処理の場合
       if (process == "return") {
-        $("#request_input2").attr("action", "request_input1.php");
+        $("#req_rec_form3").attr("action", "request_input1.php");
       }
       //ヘッダ更新処理の場合
-      else if (process == "update" || process == "approve") {
+      else if (process == "confirm") {
         //submitしたいボタン名をセットする
         $("#confirm_okBtn").attr("name", "submit");
         //request_update.phpへ移動する
-        $("#request_input2").attr("action", "request_update.php");
+        $("#req_rec_form3").attr("action", "request_update.php");
       }
     });
 
@@ -118,7 +91,7 @@ include("header1.php");
 
       if (process == "errExec") {
         //request_input1へ移動
-        $('#request_input2').attr('action', 'request_input1.php');
+        $('#req_rec_form3').attr('action', 'request_input1.php');
       } else {
         //画面上変更なし
         $('#ok_okBtn').attr('data-dismiss', 'modal');
@@ -181,7 +154,45 @@ include("header1.php");
     });
   }
 
+  /*----------------------------------------------------------------------------------------------- */
 
+  function disableInput() {
+    //Disabled Input 
+    var inputs = document.getElementsByTagName('input');
+    for (var i = 0; i < inputs.length; i++) {
+      if (inputs[i].type.toLowerCase() !== 'hidden') {
+        inputs[i].disabled = true;
+      }
+      if (inputs[i].type.toLowerCase() == 'text') {
+        inputs[i].style.backgroundColor = '#e6e6e6';
+      }
+    }
+
+    //Disabled textarea 
+    var textareas = document.getElementsByTagName('textarea');
+    const excludeTextareas = ['comfirmor_comment'];
+    for (var j = 0; j < textareas.length; j++) {
+      if (!excludeTextareas.includes(textareas[j].id)) {
+        textareas[j].disabled = true;
+        textareas[j].style.backgroundColor = '#e6e6e6';
+      }
+    }
+
+    //Disabled select 
+    var selects = document.getElementsByTagName('select');
+    for (var k = 0; k < selects.length; k++) {
+      selects[k].disabled = true;
+    }
+
+    //Disabled button 
+    var buttons = document.getElementsByTagName('button');
+    const excludeButtons = ['returnBtn', 'okBtn', 'cancelBtn', 'returnProcessBtn', 'updRegBtn'];
+    for (var k = 0; k < buttons.length; k++) {
+      if (!excludeButtons.includes(buttons[k].className)) {
+        buttons[k].disabled = true;
+      }
+    }
+  }
   /*----------------------------------------------------------------------------------------------- */
 </script>
 <style>

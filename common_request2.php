@@ -1,11 +1,9 @@
 <div class="container">
-      <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="request_input2">
-        <input type="hidden" id="process" name="process" value="<?= $process ?>">
-        <input type="hidden" name="request_no" id="request_no" value="<?php echo htmlspecialchars($request_no); ?>">
+      <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="req_rec_form2">
         <input type="hidden" name="client" id="client" value="<?= $user_code ?>">
+        <input type="hidden" name="dept_code" id="dept_code" value="<?= $dept_code ?>">
         <?php include('dialog.php'); ?>
         <table style="width:auto;">
-          <input type="hidden" name="sq_no" id="sq_no" value="<?= $sq_no ?>">
           <tr style="height:10px; margin-top:20px"></tr>
           <tr style="height:10px;"></tr>
           <tr>
@@ -28,14 +26,14 @@
             <td>
               <div class="field-row">
                 <label class="common_label" for="class">分類 </label>
-                <select style="margin-left: 1rem;" class="dropdown-menu" id="classList" name="class_code">
+                <select style="margin-left: 1rem;" class="dropdown-menu" id="classList" name="request_class">
                   <option value="">選択して下さい。</option>
                   <?php
                   if (isset($class_datas) && !empty($class_datas)) {
                     foreach ($class_datas as $item) {
                       $code = $item['class_code'];
                       $text = $item['class_name'];
-                      $selected = ($code == $class_code) ? 'selected' : '';
+                      $selected = ($code == $request_class) ? 'selected' : '';
                       echo "<option value='$code' $selected>$text</option>";
                     }
                   }
@@ -47,8 +45,8 @@
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="comments">コメント</label>
-                <textarea id="comments" style="margin-left: 1rem;" name="comments" rows="3" cols="120" class="textarea-res"></textarea>
+                <label class="common_label" for="request_comment">コメント</label>
+                <textarea id="request_comment" style="margin-left: 1rem;" name="request_comment" rows="3" cols="120" class="textarea-res"><?= $request_comment ?></textarea>
               </div>
             </td>
           </tr>
@@ -80,7 +78,7 @@
             <th> 添付された資料 </th>
           </tr>
           <tr style="height:10px;"></tr>
-        </table>
+        </table>        
         <table>
           <tr>
             <td>
@@ -89,10 +87,11 @@
                   <button id="returnBtn" class="returnBtn">前の画面に戻る </button>
                 </div>
                 <div>
-                  <button id="updBtn" class="<?= $btn_class ?>" name="submit">依頼書登録 </button>
+                  <button id="updBtn" class="<?= $btn_class ?>" name="submit"><?= $btn_name ?></button>
+                  <input type="hidden" name="process2" value="new">
                 </div>
               </div>
-            </td>
+            </td>            
           </tr>
         </table>
       </form><!-- Vertical Form -->

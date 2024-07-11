@@ -21,21 +21,27 @@ include("header1.php");
 <script type="text/javascript">
   
 $(document).ready(function(){
+  //新規登録の場合
   $('#regBtn').click(function() {
-    $('#request_input_form').attr('action', 'request_input2.php');
+    $('#req_rec_form1').attr('action', 'request_input2.php');
   });
 
   $(document).on('click', '.updateBtn', function() {
-    var selectedId = $(this).data('request_no');
-    $('.request_no').val(selectedId);
-    $('#request_input_form').attr('action', 'request_input3.php');
+    var selectedId = $(this).data('request_form_number');
+    $('.request_form_number').val(selectedId);
+    var status_no = $(this).data('status_no');
+
+    // status1の場合、確認画面へ移動する
+    if (status_no == '1') {
+      $('#req_rec_form1').attr('action', 'request_input3.php');
+    }
+    //status2の場合、承認画面へ移動する
+    else if (status_no == '2') {
+      $('#req_rec_form1').attr('action', 'request_input4.php');
+    }
   });
 
 });
-
-/**-------------------------------------------------------------------------------------------------------------- */
-
-
 
 /**-------------------------------------------------------------------------------------------------------------- */
 </script>
