@@ -122,12 +122,12 @@ include("header1.php");
       $('#joint').val('');
       $('#resultsTableBody').empty();
       // process field を 'clear' に設定して form　submit
-      $('<input>').attr({
-        type: 'hidden',
-        name: 'process',
-        value: 'clear'
-      }).appendTo('#dw_input_form');
-      $('#dw_input_form').submit();
+      // $('<input>').attr({
+      //   type: 'hidden',
+      //   name: 'process',
+      //   value: 'clear'
+      // }).appendTo('#dw_input_form');
+      // $('#dw_input_form').submit();
     });
 
   });
