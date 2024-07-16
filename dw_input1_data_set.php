@@ -6,6 +6,8 @@ $dw_datas = [];
 $class_name = $zkm_name = $size_name = $joint_name = '';
 $private = false;
 $search_result = '';
+$dw_datas = dw_management_list();
+
 
 //dept_id 02 and 03以外の部署は閲覧のみ可能
 if (!in_array($dept_id, array('02', '03'))) {
@@ -13,26 +15,22 @@ if (!in_array($dept_id, array('02', '03'))) {
 }
 
 //検索ボタンを押下した場合
-if (isset($_POST['process']) == 'search') {
-  $class_name = $_POST['class_name']?? '';  //分類
+if (isset($_POST['process']) && $_POST['process'] === 'search') {
+  $class_name = $_POST['class_name'] ?? '';  //分類
   $zkm_name = $_POST['zkm_name'] ?? '';     //材工名
-  $size_name = $_POST['size_name'] ?? '';             //サイズ
-  $joint_name = $_POST['joint_name'] ?? '';           //接合形状
+  $size_name = $_POST['size_name'] ?? '';   //サイズ
+  $joint_name = $_POST['joint_name'] ?? ''; //接合形状
 
-  $dw_datas = dw_management_list($class_name, $zkm_name, $size_name, $joint_name); 
-  
+  $dw_datas = dw_management_list($class_name, $zkm_name, $size_name, $joint_name);
+
   //検索後データがない場合表示するテキスト
   if (count($dw_datas) <= 0) {
     $search_result = "<div><h4 style='font-size: 12px;'>表示するデータがございません。</h4></div>";
-  } 
+  }
 }
 
-// クリアボタンを押下した場合
-if (isset($_POST['process']) && $_POST['process'] === 'clear') {
-  $dw_datas = [];
-}
-
-function dw_management_list($class_name="", $zkm_name="", $size_name="", $joint_name="") {
+function dw_management_list($class_name = "", $zkm_name = "", $size_name = "", $joint_name = "")
+{
   global $pdo;
   global $dept_id;
   $search_kw = [];
@@ -60,7 +58,7 @@ function dw_management_list($class_name="", $zkm_name="", $size_name="", $joint_
     $sql .= " AND dw.open_div = '1'";
   }
   if (!empty($class_name)) {
-    $search_kw['class_name'] = '%'. $class_name . '%';
+    $search_kw['class_name'] = '%' . $class_name . '%';
     $sql .= " AND c.class_name LIKE :class_name";
   }
   if (!empty($zkm_name)) {
@@ -80,4 +78,3 @@ function dw_management_list($class_name="", $zkm_name="", $size_name="", $joint_
 
   return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
-
