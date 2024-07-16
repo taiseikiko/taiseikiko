@@ -1,13 +1,9 @@
 <div class="container">
       <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="req_rec_form3">
-        <input type="hidden" name="client" id="client" value="<?= $user_code ?>">
-        <input type="hidden" name="dept_code" id="dept_code" value="<?= $dept_code ?>">
         <input type="hidden" name="request_form_number" id="request_form_number" value="<?= $request_form_number ?>">
         <?php include('dialog.php'); ?>
         <table style="width:auto;">
-          <input type="hidden" name="sq_no" id="sq_no" value="<?= $sq_no ?>">
-          <tr style="height:10px; margin-top:20px"></tr>
-          <tr style="height:10px;"></tr>
+          <tr style="height:20px; margin-top:20px"></tr>
           <tr>
             <td>
               <div class="field-row">
@@ -99,7 +95,7 @@
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="comfirmor_comment">確認者コメント</label>
+                <label class="common_label" for="comfirmor_comment">（依頼部署）<br/>確認者コメント</label>
                 <textarea id="comfirmor_comment" style="margin-left: 1rem;" name="comfirmor_comment" rows="3" cols="120" class="textarea-res"><?= $comfirmor_comment ?></textarea>
               </div>
             </td>

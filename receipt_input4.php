@@ -9,14 +9,14 @@ $user_code = $_SESSION['login'];
 $user_name = $_SESSION['user_name'];      //登録者
 $office_name = $_SESSION['office_name'];  //部署
 $office_position_name = $_SESSION['office_position_name'];  //役職
-include("request_input4_data_set.php");
+include("receipt_data_set.php");
 // ヘッダーセット
 include("header1.php");
 ?>
 
 <main>
   <div class="pagetitle">
-    <h3>依頼書　<?= $header ?></h3>
+    <h3>依頼書　<?=$header?>処理</h3>
     <?php include('common_request4.php'); ?>
   </div>
 </main><!-- End #main -->
@@ -62,7 +62,7 @@ include("header1.php");
         //確認メッセージを書く
         var msg = btnName + "します？よろしいですか？";
         //何の処理科を書く
-        var process = "approve";
+        var process = "update";
         //確認Dialogを呼ぶ
         openConfirmModal(msg, process);
       }
@@ -75,21 +75,21 @@ include("header1.php");
       var process = $("#btnProcess").val();
       //戻る処理の場合
       if (process == "return") {
-        $("#req_rec_form4").attr("action", "request_input1.php?title=request");
+        $("#req_rec_form4").attr("action", "receipt_input1.php?title=receipt");
       }
       //ヘッダ更新処理の場合
-      else if (process == "approve") {
+      else if (process == "update") {
         //submitしたいボタン名をセットする
         $("#confirm_okBtn").attr("name", "submit");
         //request_update.phpへ移動する
-        $("#req_rec_form4").attr("action", "request_update.php");
+        $("#req_rec_form4").attr("action", "receipt_update.php");
       }
       //アプロード１処理の場合
       else if (process == "upload") {
         //submitしたいボタン名をセットする
         $("#confirm_okBtn").attr("name", "upload");
         //sales_request_update.phpへ移動する
-        uploadFile("request_attach_upload1.php");
+        uploadFile("receipt_attach_upload1.php");
       }
     });
 
@@ -223,7 +223,7 @@ include("header1.php");
 
     //Disabled textarea 
     var textareas = document.getElementsByTagName('textarea');
-    const excludeTextareas = ['approval_comment'];
+    const excludeTextareas = ['recipt_approval_comment'];
     for (var j = 0; j < textareas.length; j++) {
       if (!excludeTextareas.includes(textareas[j].id)) {
         textareas[j].disabled = true;
@@ -274,15 +274,6 @@ include("header1.php");
       }
     })
 
-  }
-
-  /**-------------------------------------------------------------------------------------------------------------- */
-
-  function saveFormData() {
-    var myForm = document.getElementById('req_rec_form2');
-    const formData = new FormData(myForm);
-    const jsonData = JSON.stringify(Object.fromEntries(formData));
-    localStorage.setItem('req_rec_form2', jsonData);
   }
 
   /**-------------------------------------------------------------------------------------------------------------- */

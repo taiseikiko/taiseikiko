@@ -30,6 +30,7 @@
         <th>担当者</th>
         <th>処理</th>
       </tr>
+      <!-- 依頼書入力の場合だけに表示する -->
       <?php if ($title == 'request') : ?>
        <tr>
         <td colspan="8">

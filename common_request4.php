@@ -1,13 +1,10 @@
 <div class="container">
       <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="req_rec_form4">
-        <input type="hidden" name="client" id="client" value="<?= $user_code ?>">
-        <input type="hidden" name="dept_code" id="dept_code" value="<?= $dept_code ?>">
         <input type="hidden" name="request_form_number" id="request_form_number" value="<?= $request_form_number ?>">
+        <input type="hidden" name="status" id="status" value="<?= $status ?>">
         <?php include('dialog.php'); ?>
         <table style="width:auto;">
-          <input type="hidden" name="sq_no" id="sq_no" value="<?= $sq_no ?>">
-          <tr style="height:10px; margin-top:20px"></tr>
-          <tr style="height:10px;"></tr>
+          <tr style="height:20px; margin-top:20px"></tr>
           <tr>
             <td>
               <div class="field-row">
@@ -54,6 +51,8 @@
           </tr>
         </table>
 
+        <!-- 依頼書入力の場合だけ表示する -->
+        <?php if ($title !== 'receipt') : ?>
         <table>
           <tr style="height:20px;"></tr>
           <tr>
@@ -75,6 +74,8 @@
             </div>
           </tr>
         </table>
+        <?php endif; ?>
+
         <table class="tab1" style="margin-left:120px; margin-top:10px;width: auto;">
           <tr>
             <th> 添付された資料 </th>
@@ -99,7 +100,7 @@
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="comfirmor_comment">確認者コメント</label>
+                <label class="common_label" for="comfirmor_comment">（依頼部署）<br/>確認者コメント</label>
                 <textarea id="comfirmor_comment" style="margin-left: 1rem;" name="comfirmor_comment" rows="3" cols="120" class="textarea-res"><?= $comfirmor_comment ?></textarea>
               </div>
             </td>
@@ -107,12 +108,100 @@
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="approval_comment">承認者コメント</label>
+                <label class="common_label" for="approval_comment">（依頼部署）<br/>承認者コメント</label>
                 <textarea id="approval_comment" style="margin-left: 1rem;" name="approval_comment" rows="3" cols="120" class="textarea-res"><?= $approval_comment ?></textarea>
               </div>
             </td>
           </tr>
+          <tr style="height:20px;"></tr>
         </table>
+        
+        <!-- 依頼受付～承認の場合だけに表示する -->
+        <?php if ($title == 'receipt') : ?>
+        <table>
+          <tr><hr></tr>          
+        </table>
+
+        <table>
+          <tr style="height:20px;"></tr>
+          <tr>
+            <td>
+              <div class="field-row" style="margin-top: 20px;">
+                <font size=3>
+                  <b>資料の添付</b>
+                </font>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <div class="field-row">
+              <td>
+                　アップロードするファイル ⇒
+                <input type="file" name="uploaded_file" id="uploaded_file">
+                <input type="submit" name="upload" id="upload" value="アップロード">
+              </td>
+            </div>
+          </tr>
+        </table>
+
+        <table class="tab1" style="margin-left:120px; margin-top:10px;width: auto;">
+          <tr>
+            <th> 添付された資料 </th>
+          </tr>
+          <?php
+            $files = glob('document/request/*.*');
+            foreach ($files as $key => $value) {
+              if($value == $recipt_form_url){
+                echo "
+                <tr>
+                  <td>
+                    <a href=".$value." target='_blank'>".$value."</a>
+                  </td>
+                </tr>";
+              }
+            }
+          ?>
+          <tr style="height:10px;"></tr>
+        </table>
+
+        <table>
+          <tr style="height:20px;"></tr>
+          <tr>
+            <td>
+              <div class="field-row">
+                <label class="common_label" for="recipi_comment">処理者コメント</label>
+                <textarea id="recipi_comment" style="margin-left: 1rem;" name="recipi_comment" rows="3" cols="120" class="textarea-res"><?= $recipi_comment ?></textarea>
+              </div>
+            </td>
+          </tr>
+          <!-- 確認と承認の場合だけに表示する -->
+          <?php if ($status == '4' || $status == '5') : ?>
+          <tr>
+            <td>
+              <div class="field-row">
+                <label class="common_label" for="recipt_comfirmor_comment">確認者コメント</label>
+                <textarea id="recipt_comfirmor_comment" style="margin-left: 1rem;" name="recipt_comfirmor_comment" rows="3" cols="120" class="textarea-res"><?= $recipt_comfirmor_comment ?></textarea>
+              </div>
+            </td>
+          </tr>
+          <?php endif; ?>
+
+          <!-- 承認の場合だけに表示する -->
+          <?php if ($status == '5') : ?>
+          <tr>
+            <td>
+              <div class="field-row">
+                <label class="common_label" for="recipt_approval_comment">承認者コメント</label>
+                <textarea id="recipt_approval_comment" style="margin-left: 1rem;" name="recipt_approval_comment" rows="3" cols="120" class="textarea-res"><?= $recipt_approval_comment ?></textarea>
+              </div>
+            </td>
+          </tr>
+          <tr style="height:20px;"></tr>
+        </table>
+        <?php endif; ?>
+
+        <?php endif; ?>
+
         <table>
           <tr>
             <td>

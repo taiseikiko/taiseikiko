@@ -1,12 +1,9 @@
 <div class="container">
       <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="req_rec_form2">
-        <input type="hidden" name="client" id="client" value="<?= $user_code ?>">
-        <input type="hidden" name="dept_code" id="dept_code" value="<?= $dept_code ?>">
         <input type="hidden" name="request_form_number" id="request_form_number" value="<?= $request_form_number ?>">
         <?php include('dialog.php'); ?>
         <table style="width:auto;">
-          <tr style="height:10px; margin-top:20px"></tr>
-          <tr style="height:10px;"></tr>
+          <tr style="height:20px; margin-top:20px"></tr>
           <tr>
             <td>
               <div class="field-row">
@@ -83,7 +80,7 @@
             foreach ($files as $key => $value) {
               $cut = str_replace('document/request/', '', $value);
               $chk = substr($cut,0,strlen($request_form_number));//get request_form_number from file name
-echo $chk;
+
               if($request_form_number == $chk){
                 echo "
                 <tr>
