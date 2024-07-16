@@ -30,11 +30,13 @@
         <th>担当者</th>
         <th>処理</th>
       </tr>
-      <tr>
+      <?php if ($title == 'request') : ?>
+       <tr>
         <td colspan="8">
           <button type="submit" name="process1" id="regBtn" value="new">新規登録</button>
         </td>
       </tr>
+      <?php endif; ?>
       <tbody>
         <?php if (!empty($request_datas) && isset($request_datas)) : 
           foreach ($request_datas as $item) :

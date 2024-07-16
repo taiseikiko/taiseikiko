@@ -5,6 +5,8 @@ $dept_id = getDeptId($dept_code);
 $request_datas = [];
 $class_name = $requester = $publish_department = '';
 
+$request_datas = request_form_list($class_name, $requester, $publish_department);
+
 //検索ボタンを押下した場合
 if (isset($_POST['process1']) == 'search') {
   $class_name = $_POST['class_name']?? '';                  //分類

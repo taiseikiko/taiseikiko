@@ -20,9 +20,7 @@ include("header1.php");
 </body>
 
 </html>
-<script src="assets/js/customer_ent.js"></script>
-<script src="assets/js/public_office_ent.js"></script>
-<script src="assets/js/sales_request_check.js"></script>
+<script src="assets/js/request_form_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
@@ -72,7 +70,7 @@ include("header1.php");
       var process = $("#btnProcess").val();
       //戻る処理の場合
       if (process == "return") {
-        $("#req_rec_form3").attr("action", "request_input1.php");
+        $("#req_rec_form3").attr("action", "request_input1.php?title=request");
       }
       //ヘッダ更新処理の場合
       else if (process == "confirm") {
@@ -80,6 +78,13 @@ include("header1.php");
         $("#confirm_okBtn").attr("name", "submit");
         //request_update.phpへ移動する
         $("#req_rec_form3").attr("action", "request_update.php");
+      }
+      //アプロード１処理の場合
+      else if (process == "upload") {
+        //submitしたいボタン名をセットする
+        $("#confirm_okBtn").attr("name", "upload");
+        //sales_request_update.phpへ移動する
+        uploadFile("request_attach_upload1.php");
       }
     });
 
@@ -91,7 +96,7 @@ include("header1.php");
 
       if (process == "errExec") {
         //request_input1へ移動
-        $('#req_rec_form3').attr('action', 'request_input1.php');
+        $('#req_rec_form3').attr('action', 'request_input1.php?title=request');
       } else {
         //画面上変更なし
         $('#ok_okBtn').attr('data-dismiss', 'modal');
@@ -155,8 +160,9 @@ include("header1.php");
   function disableInput() {
     //Disabled Input 
     var inputs = document.getElementsByTagName('input');
+    const excludeInput = ['file', 'hidden', 'submit'];
     for (var i = 0; i < inputs.length; i++) {
-      if (inputs[i].type.toLowerCase() !== 'hidden') {
+      if (!excludeInput.includes(inputs[i].type.toLowerCase())) {
         inputs[i].disabled = true;
       }
       if (inputs[i].type.toLowerCase() == 'text') {
@@ -189,7 +195,37 @@ include("header1.php");
       }
     }
   }
-  /*----------------------------------------------------------------------------------------------- */
+
+  /**-------------------------------------------------------------------------------------------------------------- */
+
+  function uploadFile(url) {
+    event.preventDefault();
+    var request_form_number = document.getElementById('request_form_number').value;
+    var uploaded_file = document.getElementById('uploaded_file').files[0];
+
+    var formData = new FormData();
+    formData.append('request_form_number', request_form_number);
+    formData.append('uploaded_file', uploaded_file);
+
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: formData,
+      processData: false, // Important: prevent jQuery from processing the data
+      contentType: false, // Important: ensure jQuery does not add a content-type header
+      success: function(response) {
+        console.log(response);
+        //reload page
+        location.reload();
+      },
+      error: function(xhr, status, error) {
+      }
+    })
+
+  }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
+
 </script>
 <style>
   .dropdown-menu {
