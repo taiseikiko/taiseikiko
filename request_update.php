@@ -2,6 +2,8 @@
 // 初期処理
 require_once('function.php');
 session_start();
+$dept_code = $_SESSION['department_code'];
+$dept_id = getDeptId($dept_code);
 // DB接続
 $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 $today = date('Y/m/d');
@@ -14,14 +16,14 @@ if (isset($_POST['submit'])) {
   $process = $_POST['process2'];  
 
   $request_datas = [
-    'request_dept' => $_POST['dept_code'] ?? '',              //依頼部署コード
+    'request_dept' => $dept_id ?? '',              //依頼部署コード
     'request_person' => $_POST['user_code'] ?? '',            //依頼担当者
     'request_class' => $_POST['request_class'] ?? '',         //分類
     'request_comment' => $_POST['request_comment'] ?? '',     //コメント
     'date' => $today
   ];
 
-  try {
+  // try {
     $pdo->beginTransaction();
     //新規の場合
     if ($process == 'new') {
@@ -72,7 +74,8 @@ if (isset($_POST['submit'])) {
     }
     //確認の場合
     else if ($process == 'confirm'){
-      $request_confirm_datas['request_form_number'] = $_POST['request_form_number'];  //依頼書No.
+      $request_form_number = $_POST['request_form_number'];
+      $request_confirm_datas['request_form_number'] = $request_form_number;  //依頼書No.
       $request_confirm_datas['status'] = '2'; //ステータス
       $request_confirm_datas['comfirmor_comment'] = $_POST['comfirmor_comment'] ?? ''; //確認者コメント
       $request_confirm_datas['comfirmor'] = $_POST['user_code']; //確認者
@@ -86,7 +89,8 @@ if (isset($_POST['submit'])) {
     }
     //承認の場合
     else if ($process == 'approve'){
-      $request_approve_datas['request_form_number'] = $_POST['request_form_number'];  //依頼書No.
+      $request_form_number = $_POST['request_form_number'];
+      $request_approve_datas['request_form_number'] = $request_form_number;  //依頼書No.
       $request_approve_datas['status'] = '3'; //ステータス
       $request_approve_datas['approval_comment'] = $_POST['approval_comment'] ?? ''; //承認者コメント
       $request_approve_datas['approver'] = $_POST['user_code']; //承認者
@@ -97,20 +101,24 @@ if (isset($_POST['submit'])) {
                       upd_date=:upd_date WHERE request_form_number=:request_form_number";
       $request_stmt = $pdo->prepare($request_sql);
       $request_stmt->execute($request_approve_datas);
+    } else {
+      // $request_datas['status'] = '1'; //ステータス
+      // $upd_sql = "UPDATE request_form_tr SET status=:status, request_dept=:request_dept, request_person=:request_person, request_class=:request_class, 
+      //           request_comment=:request_comment, request_form_url=:request_form_url WHERE request_form_number=:request_form_number";
+      // $upd_stmt = $pdo->prepare($upd_sql);
+      // $upd_stmt->execute($request_datas);
     }
     $pdo->commit();
-  } catch (PDOException $e) {
-    $success = false;
-    $pdo->rollback();
-    error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
-  }
+  // } catch (PDOException $e) {
+  //   $success = false;
+  //   $pdo->rollback();
+  //   error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
+  // }
 
   //エラーがない場合
   if ($success == true) {
-    // include('dw_mail_send1.php');
+    include('request_mail_send1.php');
   } else {
     echo "<script>window.location.href='request_input2.php?err=exceErr'</script>";
   }
-} else {
-  echo 'wrong';
 }

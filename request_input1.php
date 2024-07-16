@@ -5,6 +5,7 @@ header('Content-type: text/html; charset=utf-8');
 require_once('function.php');
 $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
 $dept_code = $_SESSION['department_code'];
+$title = $_GET['title'];
 include("request_input1_data_set.php");
 include("header1.php");
 ?>
@@ -23,7 +24,7 @@ include("header1.php");
 $(document).ready(function(){
   //新規登録の場合
   $('#regBtn').click(function() {
-    $('#req_rec_form1').attr('action', 'request_input2.php');
+    $('#req_rec_form1').attr('action', 'request_input2.php?title=request');
   });
 
   $(document).on('click', '.updateBtn', function() {
@@ -33,11 +34,13 @@ $(document).ready(function(){
 
     // status1の場合、確認画面へ移動する
     if (status_no == '1') {
-      $('#req_rec_form1').attr('action', 'request_input3.php');
+      $('#req_rec_form1').attr('action', 'request_input3.php?title=request');
     }
     //status2の場合、承認画面へ移動する
     else if (status_no == '2') {
-      $('#req_rec_form1').attr('action', 'request_input4.php');
+      $('#req_rec_form1').attr('action', 'request_input4.php?title=request');
+    } else {
+      $('#req_rec_form1').attr('action', 'request_input4.php?title=request&status=finish');
     }
   });
 
