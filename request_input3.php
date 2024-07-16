@@ -58,7 +58,7 @@ include("header1.php");
         //確認メッセージを書く
         var msg = btnName + "します？よろしいですか？";
         //何の処理科を書く
-          var process = "confirm";
+        var process = "confirm";
         $('#process').val(process);
         //確認Dialogを呼ぶ
         openConfirmModal(msg, process);
@@ -115,17 +115,13 @@ include("header1.php");
     //差し戻しボタンを押下する場合
     $('#returnProcessBtn').click(function() {
       event.preventDefault();
-      var request_no = document.getElementById('request_no').value;
+      var request_form_number = document.getElementById('request_form_number').value;
 
-      var url = "request_send_back.php" + "?request_no=" + request_no;
+      var url = "request_send_back.php" + "?request_form_number=" + request_form_number;
       window.open(url, "popupWindow", "width=900,height=260,left=100,top=50");
     })
 
-
-
-
   });
-
 
   /**-------------------------------------------------------------------------------------------------------------- */
 

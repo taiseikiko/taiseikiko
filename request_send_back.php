@@ -1,16 +1,17 @@
 <?php
-  session_start();
-  require_once('function.php');
-  header('Content-type: text/html; charset=utf-8');
-  $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
+session_start();
+require_once('function.php');
+header('Content-type: text/html; charset=utf-8');
+$_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
 
-  // ヘッダーセット
-  header_set1();  
+// ヘッダーセット
+header_set1();
 
-  include('dw_send_back_data_set.php');
+include('request_send_back_data_set.php');
 ?>
 <!DOCTYPE html>
 <html>
+
 <body>
   <div class="window active">
     <div class="title-bar">
@@ -19,22 +20,22 @@
       </div>
     </div>
     <div class="window-body has-space" style="min-height:210px; overflow:hidden;">
-      <form method="POST" action="" id="return_back_form">
+      <form method="POST" action="" id="request_back_form">
         <?php include("dialog.php") ?>
-        <input type="hidden" name="dw_no" id="dw_no" value="<?= $dw_no ?>">
+        <input type="hidden" name="request_form_number" id="request_form_number" value="<?= $request_form_number ?>">
         <div class="field-row">
           <label class="common_label" for="other">差し戻し先担当者</label>
           <select class="dropdown-menu" id="send_back_to_person" name="send_back_to_person">
             <!-- <option value="" class="">選択して下さい。</option> -->
-            <?php 
-              if (isset($employee_datas) && !empty($employee_datas)) {
-                foreach ($employee_datas as $item) {
-                  $code = $item['employee_code'];
-                  $text = $item['employee_name'];
-                  $type = $item['type'];
-                  echo "<option value='$code' id='$type'>$text</option>";
-                }
+            <?php
+            if (isset($employee_datas) && !empty($employee_datas)) {
+              foreach ($employee_datas as $item) {
+                $code = $item['employee_code'];
+                $text = $item['employee_name'];
+                $type = $item['type'];
+                echo "<option value='$code' id='$type'>$text</option>";
               }
+            }
             ?>
           </select>
           <input type="hidden" name="type" id="type">
@@ -42,7 +43,7 @@
         <div class="field-row">
           <label class="common_label" for="other">差し戻しコメント </label>
           <textarea name="restoration_comments" id="comments" rows="3" cols="120" class="textarea-res"><?= $restoration_comments ?></textarea>
-        </div> 
+        </div>
         <div class="field-row" style="margin-top: 20px; margin-left: 400px;">
           <button class="skipBtn" name="send_back" id="send_back">差し戻し処理実行 </button>
         </div>
@@ -51,14 +52,15 @@
     </div>
   </div>
 </body>
-  </div>
+</div>
 </div>
 </body>
+
 </html>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
-  $(document).ready(function(){
+  $(document).ready(function() {
 
     //差し戻し先担当者がCHANGEした場合
     var send_back = $('#send_back_to_person').val();
@@ -80,7 +82,7 @@
     }
 
     /*----------------------------------------------------------------------------------------------- */
-    
+
     //差し戻し処理実行を押下する場合
     $('#send_back').click(function() {
       //確認メッセージを書く
@@ -88,7 +90,7 @@
       //何の処理科を書く
       var process = "returnProcess";
       //確認Dialogを呼ぶ
-      openConfirmModal(msg, process);        
+      openConfirmModal(msg, process);
     })
 
     /*----------------------------------------------------------------------------------------------- */
@@ -113,7 +115,7 @@
         //submitしたいボタン名をセットする
         $("#confirm_okBtn").attr("name", "send_back");
         //card_send_back_update.phpへ移動する
-        $('#return_back_form').attr('action', 'dw_send_back_update.php');
+        $('#request_back_form').attr('action', 'request_send_back_update.php');
       }
     });
   });
@@ -126,6 +128,8 @@
     //確認メッセージをセットする
     $("#confirm-message").text(msg);
     //確認Dialogを呼ぶ
-    $("#confirm").modal({backdrop: false});
+    $("#confirm").modal({
+      backdrop: false
+    });
   }
 </script>
