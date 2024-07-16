@@ -10,11 +10,13 @@
   $request_dept = '';       //依頼部署
   $comfirmor_comment = '';  //確認者コメント
   $approval_comment = '';   //承認者コメント
+  $request_form_url = '';
   $btn_class = 'updRegBtn'; 
   $header = '承認';
   $err = $_GET['err'] ?? '';
   $btn_name = "依頼書承認";
   $class_datas = get_class_datas(); //分類プルダウンにセットするデータを取得する
+  $status = $_GET['status'] ?? '';
   
   //一覧画面から来た場合
   if (isset($_POST['process1'])) {
@@ -27,7 +29,7 @@
       //request_form_trのデータを取得する
       $request_form_datas = get_request_form_datas($request_form_number);
       if (isset($request_form_datas)) {
-        $variables = ['request_class', 'request_comment', 'request_dept', 'request_person', 'comfirmor_comment', 'approval_comment'];
+        $variables = ['request_class', 'request_comment', 'request_dept', 'request_person', 'comfirmor_comment', 'approval_comment', 'request_form_url'];
         foreach ($variables as $variable) {
           ${$variable} = $request_form_datas[$variable];
         }

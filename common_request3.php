@@ -69,8 +69,8 @@
             <div class="field-row">
               <td>
                 　アップロードするファイル ⇒
-                <input type="file" name="uploaded_file1" id="uploaded_file1">
-                <input type="submit" name="upload" id="upload1" value="アップロード">
+                <input type="file" name="uploaded_file" id="uploaded_file">
+                <input type="submit" name="upload" id="upload" class="upload" value="アップロード">
               </td>
             </div>
           </tr>
@@ -79,6 +79,19 @@
           <tr>
             <th> 添付された資料 </th>
           </tr>
+          <?php
+            $files = glob('document/request/*.*');
+            foreach ($files as $key => $value) {
+              if($value == $request_form_url){
+                echo "
+                <tr>
+                  <td>
+                    <a href=".$value." target='_blank'>".$value."</a>
+                  </td>
+                </tr>";
+              }
+            }
+          ?>
           <tr style="height:10px;"></tr>
         </table>
         <table>
