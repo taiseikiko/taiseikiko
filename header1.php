@@ -257,6 +257,7 @@
         <ul>
           <li><a href="request_input1.php?title=request">依頼書　登録</a></li>
           <li><a href="receipt_input1.php?title=receipt">依頼受付～承認</a></li>
+          <li><a href="request_item_input1.php?title=receipt">依頼案件</a></li>
         </ul>
       </details>
     </li>';
