@@ -16,10 +16,10 @@
   $btn_name = "依頼書確認";
   $class_datas = get_class_datas(); //分類プルダウンにセットするデータを取得する
   
-  //一覧画面から来た場合
-  if (isset($_POST['process1'])) {
-    $process = $_POST['process1'];
-    $request_form_number = $_POST['request_form_number'];
+  //一覧画面から来た場合 or メールから来た場合
+  if (isset($_POST['process1']) || isset($_GET['request_form_number'])) {
+    $process = $_POST['process1']?? 'update';
+    $request_form_number = $_POST['request_form_number']?? $_GET['request_form_number'];
 
     //更新の場合  
     if ($process == 'update') {
