@@ -13,7 +13,7 @@
   // ヘッダーセット
   include("header1.php");
 ?>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <main>
   <div class="pagetitle">
     <h3>図面管理　<?= $header ?></h3>
@@ -47,7 +47,7 @@
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="dw_div">区分<?= $dw_div1 ?></label>
+                <label class="common_label" for="dw_div">区分</label><i class="fa fa-asterisk" style="font-size:10px;color:red"></i>
 
                 <input type="radio" id="dw_div1_1" name="dw_div1" value="1" <?php if ($dw_div1 == '1') { echo "checked"; } ?>>
                 <label class="common_label" for="dw_div1_1" style="margin-left:35px; ">標準</label>
@@ -58,7 +58,7 @@
                 <input type="radio" id="dw_div1_3" name="dw_div1" value="3" <?php if ($dw_div1 == '3') { echo "checked"; } ?>>
                 <label class="common_label" for="dw_div1_3">鋼板製</label>
 
-                <label class="common_label" for="open_div">公開区分</label>
+                <label class="common_label" for="open_div">公開区分</label><i class="fa fa-asterisk" style="font-size:10px;color:red"></i>
 
                 <input type="radio" id="open_div1" name="open_div" value="1" <?php if ($open_div == '1') { echo "checked"; } ?>>
                 <label class="common_label" for="open_div1" style="margin-left:35px; ">公開</label>
@@ -73,7 +73,7 @@
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="class">分類 </label>
+                <label class="common_label" for="class">分類 </label><i class="fa fa-asterisk" style="font-size:10px;color:red"></i>
                 <select style="margin-left: 1rem;" class="dropdown-menu" id="classList" name="class_code">
                   <option value="">選択して下さい。</option>
                   <?php
@@ -88,7 +88,7 @@
                   ?>
                 </select>
 
-                <label class="common_label" for="zaikoumei">　　材工名 </label>
+                <label class="common_label" for="zaikoumei">　　材工名 </label><i class="fa fa-asterisk" style="font-size:10px;color:red"></i>
                 <select class="dropdown-menu" id="zaikoumeiList" name="zaikoumei">
                   <option value="" class="">選択して下さい。</option>
                 </select>
@@ -100,8 +100,8 @@
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="size">サイズ</label>
-                <select class="dropdown-menu" style="margin-left: 1rem;" name="size">
+                <label class="common_label" for="size">サイズ</label><i class="fa fa-asterisk" style="font-size:10px;color:red"></i>
+                <select class="dropdown-menu" style="margin-left: 1rem;" name="size" id="sizeList">
                   <option value="">※選択して下さい。</option>
                   <?php
                     if (!empty($sizeList)) {
@@ -114,8 +114,8 @@
                   ?>
                 </select>
 
-                <label class="common_label" for="joint">接合形状</label>
-                <select class="dropdown-menu" name="joint">
+                <label class="common_label" for="joint">接合形状</label><i class="fa fa-asterisk" style="font-size:10px;color:red"></i>
+                <select class="dropdown-menu" name="joint" id="jointList">
                   <option value="">※選択して下さい。</option>
                   <?php
                     if (!empty($jointList)) {
@@ -128,8 +128,8 @@
                   ?>
                 </select>
 
-                <label class="common_label" for="pipe">管種 </label>
-                <select class="dropdown-menu" name="pipe">
+                <label class="common_label" for="pipe">管種 </label><i class="fa fa-asterisk" style="font-size:10px;color:red"></i>
+                <select class="dropdown-menu" name="pipe" id="pipeList">
                   <option value="">※選択して下さい。</option>
                   <?php
                     if (!empty($pipeList)) {
@@ -148,7 +148,7 @@
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="specification">営業日報</label>
+                <label class="common_label" for="specification">営業日報</label><i class="fa fa-asterisk" style="font-size:10px;color:red"></i>
                 <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="specification" id="specification" value="<?= $specification ?>">
               </div>
             </td>
@@ -158,7 +158,7 @@
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="dw_div">種類</label>
+                <label class="common_label" for="dw_div">種類</label><i class="fa fa-asterisk" style="font-size:10px;color:red"></i>
 
                 <input type="radio" id="dw_div2_1" name="dw_div2" value="1" <?php if ($dw_div2 == '1') { echo "checked"; } ?>>
                 <label class="common_label" for="dw_div2_1" style="margin-left:35px; ">営業図面</label>
@@ -329,9 +329,7 @@
 </main><!-- End #main -->
 </body>
 </html>
-<script src="assets/js/customer_ent.js"></script>
-<script src="assets/js/public_office_ent.js"></script>
-<script src="assets/js/sales_request_check.js"></script>
+<script src="assets/js/dw_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
@@ -379,12 +377,14 @@
     $('#updBtn').click(function() {
       event.preventDefault();
       var errMessage = '';
-      // var errMessage = checkValidationInput2();
+      var errMessage = checkValidation();
 
       //エラーがある場合
       if (errMessage !== '') {
         //何の処理かを書く
         var process = "validate";
+        //change font color
+        $('#ok-message').css('color', 'red');
         //OKDialogを呼ぶ
         openOkModal(errMessage, process);
       } else {
