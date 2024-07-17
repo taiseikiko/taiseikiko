@@ -15,12 +15,14 @@ $success = true;
 if (isset($_POST['submit'])) {
   $status = $_POST['status'];
   $request_form_number = $_POST['request_form_number'];
-echo $_POST['recipi_comment'];
+
   try {
     $pdo->beginTransaction();
     //受付の場合
     if ($status == '3') {
       $status_n = '4';
+      $err_redirect = 'receipt_input2.php?err=exceErr&title=receipt&request_form_number=' . $request_form_number;
+
       $sql = "UPDATE request_form_tr SET status=:status, recipent=:recipent, recipent_dept=:recipent_dept, recipi_comment=:recipi_comment, recipt_date=:recipt_date,
                       upd_date=:upd_date WHERE request_form_number=:request_form_number";
       $stmt = $pdo->prepare($sql);
@@ -36,6 +38,8 @@ echo $_POST['recipi_comment'];
     //確認の場合
     else if ($status == '4'){
       $status_n = '5';
+      $err_redirect = 'receipt_input3.php?err=exceErr&title=receipt&request_form_number=' . $request_form_number;
+
       $sql = "UPDATE request_form_tr SET status=:status, recipt_comfirmor=:recipt_comfirmor, recipt_comfirmor_comment=:recipt_comfirmor_comment, recipt_comfirm_date=:recipt_comfirm_date,
                       upd_date=:upd_date WHERE request_form_number=:request_form_number";
       $stmt = $pdo->prepare($sql);
@@ -50,6 +54,8 @@ echo $_POST['recipi_comment'];
     //承認の場合
     else if ($status == '5'){
       $status_n = '6';
+      $err_redirect = 'receipt_input4.php?err=exceErr&title=receipt&request_form_number=' . $request_form_number;
+
       $sql = "UPDATE request_form_tr SET status=:status, recipt_approver=:recipt_approver, recipt_approval_comment=:recipt_approval_comment	, recipi_approval_date=:recipi_approval_date,
                       upd_date=:upd_date WHERE request_form_number=:request_form_number";
       $stmt = $pdo->prepare($sql);
@@ -61,7 +67,7 @@ echo $_POST['recipi_comment'];
       $stmt->bindParam(':upd_date', $today);
       $stmt->execute();
     }
-    // $pdo->commit();
+    $pdo->commit();
   } catch (PDOException $e) {
     $success = false;
     $pdo->rollback();
@@ -69,9 +75,9 @@ echo $_POST['recipi_comment'];
   }
 
   //エラーがない場合
-  // if ($success == true) {
-  //   include('request_mail_send1.php');
-  // } else {
-  //   echo "<script>window.location.href='request_input2.php?err=exceErr'</script>";
-  // }
+  if ($success == true) {
+    include('request_mail_send2.php');
+  } else {
+    echo "<script>window.location.href='$err_redirect'</script>";
+  }
 }
