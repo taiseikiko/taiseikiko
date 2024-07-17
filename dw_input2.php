@@ -22,6 +22,7 @@
         <input type="hidden" id="process" name="process" value="<?= $process ?>">
         <input type="hidden" name="dw_no" id="dw_no" value="<?php echo htmlspecialchars($dw_no); ?>">
         <input type="hidden" name="client" id="client" value="<?= $user_code ?>">
+        <input type="hidden" name="update" id="update" value="<?= $update ?>">
         <?php include('dialog.php'); ?>
         <table style="width:auto;">
           <input type="hidden" name="sq_no" id="sq_no" value="<?= $sq_no ?>">

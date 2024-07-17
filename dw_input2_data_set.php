@@ -25,6 +25,7 @@
   $btn_class = 'updRegBtn'; 
   $header = '入力処理';
   $err = $_GET['err'] ?? '';
+  $update = false;
 
   $class_datas = get_class_datas();                     //分類プルダウンにセットするデータを取得する
   $sizeList = getDropdownData('size');                  //サイズ
@@ -79,10 +80,15 @@
           ${$variable} = $dw_datas[$variable];
         }
         
-        if ($dw_datas['dw_status'] == '3') {
+        //status=2のレコードを一覧から更新ボタンを押したとき、一番下のボタンは「更新」とし
+        if ($dw_datas['dw_status'] == '3' || $dw_datas['dw_status'] == '2') {
           $btn_name = '更新';
           $btn_class = 'updateBtn';
           $btn_status = 'hidden';
+
+          if ($dw_datas['dw_status'] == '2') {
+            $update = true;
+          }
         }  
         
         //申請者のデータを取得する

@@ -107,33 +107,60 @@
         global $pdo;
         global $dw_no;
         global $process;
+        global $update;
         $datas = [];
 
-        //入力後dw_route_in_deptのrole=2のメンバー（承認者）へ送信
-        if ($process == 'new') {
-            
-            $sql = "SELECT e.employee_name, e.email
-                    FROM dw_route_in_dept d
-                    LEFT JOIN employee e ON d.employee_code = e.employee_code
-                    WHERE (d.department_code = '02' OR d.department_code = '03') AND d.role = '3'";
-            $stmt = $pdo->prepare($sql);
-        } 
-        //承認後clientにメール送信
-        else {
-
-            $sql = "SELECT e.employee_name, e.email
+        //承認されて完了になったレコードが更新された場合clientとprocurement_approverにメール送信
+        if ($update) {
+            $sql = "SELECT e1.employee_name AS client_name, e1.email AS client_email, e2.employee_name AS approver_name, e2.email AS approver_email
                     FROM dw_management_tr dw
-                    LEFT JOIN employee e ON dw.client = e.employee_code
+                    LEFT JOIN employee e1 ON dw.client = e1.employee_code
+                    LEFT JOIN employee e2 ON dw.approver = e2.employee_code
                     WHERE dw.dw_no = :dw_no";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':dw_no', $dw_no);
+            $stmt->execute();
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                if (isset($row['client_name'])) {
+                    $data1['name'] = $row['client_name'];
+                    $data1['email'] = $row['client_email'];
+                    $datas[] = $data1;
+                }
+                if (isset($row['approver_name'])) {
+                    $data1['name'] = $row['approver_name'];
+                    $data1['email'] = $row['approver_email'];
+                    $datas[] = $data1;
+                }                
+            }
+        } else {
+            //入力後dw_route_in_deptのrole=2のメンバー（承認者）へ送信
+            if ($process == 'new') {
+                
+                $sql = "SELECT e.employee_name, e.email
+                        FROM dw_route_in_dept d
+                        LEFT JOIN employee e ON d.employee_code = e.employee_code
+                        WHERE (d.department_code = '02' OR d.department_code = '03') AND d.role = '3'";
+                $stmt = $pdo->prepare($sql);
+            } 
+            //承認後clientにメール送信
+            else {
+    
+                $sql = "SELECT e.employee_name, e.email
+                        FROM dw_management_tr dw
+                        LEFT JOIN employee e ON dw.client = e.employee_code
+                        WHERE dw.dw_no = :dw_no";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(':dw_no', $dw_no);
+    
+            }    
 
-        }    
-        
-        $stmt->execute();
-        while ($recipient_row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $datas[] = $recipient_row;
+            $stmt->execute();
+            while ($recipient_row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $datas[] = $recipient_row;
+            }
         }
+        
+        
 
         return $datas;
     }
@@ -144,6 +171,7 @@
     function getSqMailSentence() {
         global $pdo;
         global $process;
+        global $update;
 
         $sq_mail_id = '11';
 
@@ -157,6 +185,12 @@
                 $seq_no = '2';
                 break;
         }
+
+        //承認されて完了になったレコードが更新された場合
+        if ($update) {
+            $seq_no = '3';
+        }
+
 
         $sql = "SELECT sq_mail_title, sq_mail_sentence FROM sq_mail_sentence WHERE sq_mail_id = :sq_mail_id AND seq_no = :seq_no";
         $stmt = $pdo->prepare($sql);
