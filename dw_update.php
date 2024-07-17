@@ -6,12 +6,13 @@ session_start();
 $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 $today = date('Y/m/d');
 $user_code = $_SESSION["login"];
-
+$column = '';
 $success = true;
 
 //dw_input2の登録ボタンを押下場合
 if (isset($_POST['submit'])) {
   $process = $_POST['process'];  
+  $update = $_POST['update'];
 
   $dw_datas = [
     'dw_div1' => $_POST['dw_div1'] ?? '',         //区分
@@ -82,8 +83,24 @@ if (isset($_POST['submit'])) {
     //更新または承認の場合
     else {
       $dw_datas['dw_no'] = $_POST['dw_no'];
-      $dw_datas['dw_status'] = $process == 'update' ? '1' : '2';
-      $dw_sql = "UPDATE dw_management_tr SET dw_status=:dw_status, dw_div1=:dw_div1, open_div=:open_div, class_code=:class_code, 
+      //status=2のレコードを一覧から更新ボタンを押したとき、Statusは変更されず2のまま
+      if ($update) {
+        $dw_datas['dw_status'] = '2';
+      } else {
+        //更新の場合
+        if ($process == 'update') {
+          $dw_datas['dw_status'] = '1';
+        }
+        //承認の場合
+        else {
+          $dw_datas['dw_status'] = '2';
+          $dw_datas['approver'] = $user_code;
+          $dw_datas['approve_date'] = $today;
+          $column = 'approver=:approver, approve_date=:approve_date,';
+        }
+        
+      }
+      $dw_sql = "UPDATE dw_management_tr SET $column dw_status=:dw_status, dw_div1=:dw_div1, open_div=:open_div, class_code=:class_code, 
                 zkm_code=:zkm_code, size=:size, joint=:joint, pipe=:pipe, specification=:specification, dw_div2=:dw_div2,
                 upd_date=:date 
                 WHERE dw_no=:dw_no";
