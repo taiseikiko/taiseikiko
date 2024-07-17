@@ -121,8 +121,9 @@ include("header1.php");
     $('#returnProcessBtn').click(function() {
       event.preventDefault();
       var request_form_number = document.getElementById('request_form_number').value;
+      var from = 'request';
 
-      var url = "request_send_back.php" + "?request_form_number=" + request_form_number;
+      var url = "request_send_back.php" + "?request_form_number=" + request_form_number + "&from=" + from;
       window.open(url, "popupWindow", "width=900,height=260,left=100,top=50");
     })
 
