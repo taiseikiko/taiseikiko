@@ -41,8 +41,7 @@
     //エラーがない場合、メール送信する
     if ($success) {
       //メール送信する
-      echo "Success!";
-    //   include('request_mail_send3.php');
+      include('request_mail_send3.php');
     } else {
       echo "<script>window.close();window.opener.location.href='$err_redirect';</script>";
     }

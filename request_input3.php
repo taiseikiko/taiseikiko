@@ -7,6 +7,7 @@ $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
 $title = $_GET['title'] ?? '';
 $user_code = $_SESSION['login'];
 include("request_input3_data_set.php");
+var_dump($title);
 // ヘッダーセット
 include("header1.php");
 ?>
