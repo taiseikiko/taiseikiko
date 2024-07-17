@@ -4,7 +4,15 @@ require_once('function.php');
 include('request_mail_send_select.php');
 $url = $_SERVER['HTTP_REFERER']; //メール送信する時、利用するため
 
-$redirect = './request_input1.php?title=request';
+$from = isset($_GET['from']) ? $_GET['from'] : 'request'; 
+
+if ($from == 'request'){
+  $redirect = './request_input1.php?title=request';
+  $err_redirect = 'request_input4.php?err=exceErr&title=request';
+} else{
+  $redirect = './receipt_input1.php?title=receipt';
+  $err_redirect = 'receipt_input2.php?err=exceErr&title=receipt';
+}
 
 try {
   // DB接続
@@ -40,9 +48,13 @@ try {
       $base_url = $parsed_url['scheme'] . '://' . $parsed_url['host'] . '/taisei/taiseikiko/';
     }
   }
-  $url = $base_url . 'request_input1.php?title=request';
   // $url = $base_url . 'request_input4.php?request_form_number=' . $request_form_number;
-
+  if ($from == 'request'){
+    $url = $base_url . 'request_input4.php?title=request&request_form_number=' . $request_form_number;
+  } else {
+    $url = $base_url . 'request_input1.php?title=request';
+  }
+  
   //送信内容をセットする
   $email_datas = [
     'from_email' => $from_email,     //送信者email
@@ -62,7 +74,7 @@ try {
           echo "<script>window.close(); window.opener.location.href='$redirect'  </script>";
       } 
       else {
-          echo "<script>window.close(); window.opener.location.href='request_input4.php?err=exceErr&title=request'</script>";
+          echo "<script>window.close(); window.opener.location.href='$err_redirect'</script>";
       }
   } else {
       echo "<script>window.close(); window.opener.location.href='$redirect'  </script>";

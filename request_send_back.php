@@ -3,7 +3,7 @@ session_start();
 require_once('function.php');
 header('Content-type: text/html; charset=utf-8');
 $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
-
+$from = isset($_GET['from']) ? $_GET['from'] : 'request';
 // ヘッダーセット
 header_set1();
 
@@ -115,7 +115,7 @@ include('request_send_back_data_set.php');
         //submitしたいボタン名をセットする
         $("#confirm_okBtn").attr("name", "send_back");
         //card_send_back_update.phpへ移動する
-        $('#request_back_form').attr('action', 'request_send_back_update.php');
+        $('#request_back_form').attr('action', 'request_send_back_update.php?from=<?= $from ?>');
       }
     });
   });
