@@ -4,7 +4,7 @@ require_once('function.php');
 include('request_mail_send_select.php');
 $url = $_SERVER['HTTP_REFERER']; //メール送信する時、利用するため
 
-$redirect = './request_input1.php';
+$redirect = './request_input1.php?title=request';
 
 try {
   // DB接続
@@ -40,7 +40,7 @@ try {
       $base_url = $parsed_url['scheme'] . '://' . $parsed_url['host'] . '/taisei/taiseikiko/';
     }
   }
-  $url = $base_url . 'request_input1.php';
+  $url = $base_url . 'request_input1.php?title=request';
   // $url = $base_url . 'request_input4.php?request_form_number=' . $request_form_number;
 
   //送信内容をセットする
@@ -62,7 +62,7 @@ try {
           echo "<script>window.close(); window.opener.location.href='$redirect'  </script>";
       } 
       else {
-          echo "<script>window.close(); window.opener.location.href='request_input4.php?err=exceErr'</script>";
+          echo "<script>window.close(); window.opener.location.href='request_input4.php?err=exceErr&title=request'</script>";
       }
   } else {
       echo "<script>window.close(); window.opener.location.href='$redirect'  </script>";
@@ -70,7 +70,7 @@ try {
 
 } catch (PDOException $e) {
   error_log("Error: " . $e->getMessage(), 3, "error_log.txt");
-  echo "<script>window.close(); window.opener.location.href='card_input2.php?err=exceErr'</script>";
+  echo "<script>window.close(); window.opener.location.href='card_input2.php?err=exceErr&title=request'</script>";
 }
 
 /***
