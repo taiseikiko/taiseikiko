@@ -10,7 +10,7 @@
   include("header1.php");
   include("card_input3_data_set.php");
 ?>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <main>
   <div class="pagetitle">
     <h3>技術部＆工事技術部での<?= $page ?></h3>
@@ -231,8 +231,8 @@
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="entrant">担当者</label>
-                <select name="entrant" class="input-res" id="entrant" style="margin-left: 1rem;">
+                <label class="common_label" for="entrant">担当者</label><i class="fa fa-asterisk" style="font-size:10px;color:red"></i>
+                <select name="entrant" class="input-res" id="entrant" >
                   <option value="">選択して下さい。</option>
                   <?php 
                     if (isset($entrantList) && !empty($entrantList)) {
@@ -448,6 +448,7 @@
 </main><!-- End #main -->
 </body>
 </html>
+<script src="assets/js/card_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
@@ -512,12 +513,26 @@
 
     //更新ボタンを押下する場合
     $('#updateBtn').click(function() {
-      //確認メッセージを書く
-      var msg = "更新します。よろしいですか？";
-      //何の処理かを書く
-      var process = "update";
-      //確認Dialogを呼ぶ
-      openConfirmModal(msg, process);      
+      event.preventDefault();
+      var errMessage = '';
+      var errMessage = checkValidation();
+
+      //エラーがある場合
+      if (errMessage !== '') {
+        //何の処理かを書く
+        var process = "validate";
+        //change font color
+        $('#ok-message').css('color', 'red');
+        //OKDialogを呼ぶ
+        openOkModal(errMessage, process);
+      } else {
+        //確認メッセージを書く
+        var msg = "更新します。よろしいですか？";
+        //何の処理かを書く
+        var process = "update";
+        //確認Dialogを呼ぶ
+        openConfirmModal(msg, process);      
+      }
     });
 
     /*----------------------------------------------------------------------------------------------- */
