@@ -4,6 +4,7 @@ require_once('function.php');
 session_start();
 $dept_code = $_SESSION['department_code'];
 $dept_id = getDeptId($dept_code);
+$err_redirect = '';
 // DB接続
 $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 $today = date('Y/m/d');
@@ -16,17 +17,18 @@ if (isset($_POST['submit'])) {
   $process = $_POST['process2'];  
 
   $request_datas = [
-    'request_dept' => $dept_id ?? '',              //依頼部署コード
+    'request_dept' => $dept_code ?? '',                       //依頼部署コード
     'request_person' => $_POST['user_code'] ?? '',            //依頼担当者
     'request_class' => $_POST['request_class'] ?? '',         //分類
     'request_comment' => $_POST['request_comment'] ?? '',     //コメント
     'date' => $today
   ];
 
-  // try {
+  try {
     $pdo->beginTransaction();
     //新規の場合
-    if ($process == 'new') {
+    if ($process == 'new') {  
+      $err_redirect = 'request_input2.php?err=exceErr&title=request';    
       //依頼書（request_form_number）自動採番
       /**--------------------------------------------------------------------------------------------------**/
       //システム日付の年月を採取
@@ -70,11 +72,14 @@ if (isset($_POST['submit'])) {
       $request_stmt = $pdo->prepare($request_sql);
       $request_stmt->execute($request_datas);
       /**--------------------------------------------------------------------------------------------------**/
-      $request_form_number = $request_datas['request_form_number'];
+      $request_form_number = $request_datas['request_form_number'];      
     }
     //確認の場合
     else if ($process == 'confirm'){
       $request_form_number = $_POST['request_form_number'];
+
+      $err_redirect = 'request_input3.php?err=exceErr&title=request&request_form_number=' . $request_form_number;
+      
       $request_confirm_datas['request_form_number'] = $request_form_number;  //依頼書No.
       $request_confirm_datas['status'] = '2'; //ステータス
       $request_confirm_datas['comfirmor_comment'] = $_POST['comfirmor_comment'] ?? ''; //確認者コメント
@@ -86,10 +91,14 @@ if (isset($_POST['submit'])) {
                       upd_date=:upd_date WHERE request_form_number=:request_form_number";
       $request_stmt = $pdo->prepare($request_sql);
       $request_stmt->execute($request_confirm_datas);
+      
     }
     //承認の場合
     else if ($process == 'approve'){
       $request_form_number = $_POST['request_form_number'];
+
+      $err_redirect = 'request_input4.php?err=exceErr&title=request&request_form_number=' . $request_form_number;
+      
       $request_approve_datas['request_form_number'] = $request_form_number;  //依頼書No.
       $request_approve_datas['status'] = '3'; //ステータス
       $request_approve_datas['approval_comment'] = $_POST['approval_comment'] ?? ''; //承認者コメント
@@ -100,7 +109,7 @@ if (isset($_POST['submit'])) {
       $request_sql = "UPDATE request_form_tr SET status=:status, approval_comment=:approval_comment, approver=:approver, approval_date=:approval_date,
                       upd_date=:upd_date WHERE request_form_number=:request_form_number";
       $request_stmt = $pdo->prepare($request_sql);
-      $request_stmt->execute($request_approve_datas);
+      $request_stmt->execute($request_approve_datas);      
     } else {
       // $request_datas['status'] = '1'; //ステータス
       // $upd_sql = "UPDATE request_form_tr SET status=:status, request_dept=:request_dept, request_person=:request_person, request_class=:request_class, 
@@ -109,16 +118,16 @@ if (isset($_POST['submit'])) {
       // $upd_stmt->execute($request_datas);
     }
     $pdo->commit();
-  // } catch (PDOException $e) {
-  //   $success = false;
-  //   $pdo->rollback();
-  //   error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
-  // }
+  } catch (PDOException $e) {
+    $success = false;
+    $pdo->rollback();
+    error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
+  }
 
   //エラーがない場合
   if ($success == true) {
     include('request_mail_send1.php');
   } else {
-    echo "<script>window.location.href='request_input2.php?err=exceErr'</script>";
+    echo "<script>window.location.href='$err_redirect'</script>";
   }
 }

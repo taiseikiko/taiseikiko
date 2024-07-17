@@ -21,11 +21,9 @@
   $class_datas = get_class_datas(); //分類プルダウンにセットするデータを取得する
   $status = $_GET['status'] ?? '';
   
-  //一覧画面から来た場合
-  if (isset($_POST['process1'])) {
-    $request_form_number = $_POST['request_form_number'];
-
-    
+  //一覧画面から来た場合 or メールから来た場合
+  if (isset($_POST['process1']) || isset($_GET['request_form_number'])) {
+    $request_form_number = $_POST['request_form_number']?? $_GET['request_form_number'];    
 
     //request_form_trのデータを取得する
     $request_form_datas = get_request_form_datas($request_form_number);
