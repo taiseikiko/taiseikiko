@@ -448,9 +448,11 @@
 <script type="text/javascript">
   $(document).ready(function (){
     //詳細ボタンを押下場合
-    $("#detailBtn1, #detailBtn2").click(function(){
-      $("#card_input2").attr("action", "card_input3.php");
-    });
+    for (var i = 1; i <=5; i++) {
+      $("#detailBtn" + i).click(function(){
+        $("#card_input2").attr("action", "card_input3.php");
+      });
+    }
   });
   // document.addEventListener('DOMContentLoaded', function() {
   //   var approverList = document.getElementById('approverList');

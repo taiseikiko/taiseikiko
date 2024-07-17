@@ -392,7 +392,7 @@
 
         <table>
           <!-- 確認と承認画面の場合だけ、表示する -->
-          <?php if ($page == '確認' || $page == '承認') { ?>
+          <?php if ($page == '確認' || $page == '承認' || $page == '詳細') { ?>
           <tr>
             <td>
               <div class="field-row">
@@ -403,7 +403,7 @@
           </tr>
           <?php } 
           //承認画面の場合だけ、表示する
-          if ($page == '承認') { ?>
+          if ($page == '承認' || $page == '詳細') { ?>
           <tr>
             <td>
               <div class="field-row">
@@ -472,6 +472,18 @@
     if (page == '承認') {
       $('#confirmer_comments').prop('disabled', true);  //コメント
       $('#confirmer_comments').css('background-color', '#e6e6e6');
+    }
+    //承認後の場合
+    if (page == '詳細') {
+      const ids = ['upload1', 'upload2', 'uploaded_file1', 'uploaded_file2', 'entrant_date', 'entrant', 'entrant_set_date', 'updateBtn'];
+      ids.forEach(element => {
+        $('#' + element).prop('disabled', true);
+      });
+      const comments = ['entrant_set_comments', 'entrant_comments','confirmer_comments', 'approver_comments', 'upload_comments1', 'upload_comments2'];
+      comments.forEach(element => {
+        $('#' + element).prop('disabled', true);              //担当指定者コメント
+        $('#' + element).css('background-color', '#e6e6e6');
+      });
     }
 
     /*----------------------------------------------------------------------------------------------- */

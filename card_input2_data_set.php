@@ -110,9 +110,9 @@ if (isset($_POST['process']) || isset($_GET['card_no'])) {
       ${'special_note' . $i} = $detail_data['special_note'];              //特記事項
       //データがある詳細だけ詳細ボタンを押せるようにする
       //資材部Noステータスが完了の場合も押せないようにする
-      if ($detail_data['procurement_status'] !== '4') {
+      // if ($detail_data['procurement_status'] !== '4') {
         ${'disabled_detail_btn' . $i} = '';
-      }
+      // }
     }
   }
 }
