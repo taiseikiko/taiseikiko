@@ -69,6 +69,6 @@ function sendMail($email_datas, $to_datas) {
     //     // エラーの場合
     //     error_log("Message could not be sent. Mailer Error: {$mail->ErrorInfo}", 3, 'error_log.txt');
     // }
-    // return $success;
+    return $success;
 }
 ?>
