@@ -152,7 +152,7 @@
           <th> 添付された資料 </th>
         </tr>
         <?php
-        $files = glob('document/request/*.*');
+        $files = glob('document/receipt/*.*');
         foreach ($files as $key => $value) {
           if ($value == $recipt_form_url) {
             echo "
