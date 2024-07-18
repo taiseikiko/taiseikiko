@@ -42,39 +42,43 @@ if (isset($_POST['submit'])) {
     $pdo->beginTransaction();
     //新規の場合 || 差し戻しされた場合
     if ($process == 'new' || $process == 'update') {  
-      $err_redirect = 'request_input2.php?err=exceErr&title=request';    
-      //依頼書（request_form_number）自動採番
-      /**--------------------------------------------------------------------------------------------------**/
-      //システム日付の年月を採取
-      $ym = substr(str_replace('/', '', $today), 0, 6);
-      $code_id = 'request_form_no';
+      $err_redirect = 'request_input2.php?err=exceErr&title=request';   
+      if ($process == 'new') { 
+        //依頼書（request_form_number）自動採番
+        /**--------------------------------------------------------------------------------------------------**/
+        //システム日付の年月を採取
+        $ym = substr(str_replace('/', '', $today), 0, 6);
+        $code_id = 'request_form_no';
 
-      $sql = "SELECT code_no FROM sq_code WHERE code_id = '$code_id' AND text1 = '$ym'";
-      $stmt = $pdo->prepare($sql);
-      $stmt->execute();
-      $data = $stmt->fetchAll();
+        $sql = "SELECT code_no FROM sq_code WHERE code_id = '$code_id' AND text1 = '$ym'";
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute();
+        $data = $stmt->fetchAll();
 
-      if (isset ($data) && !empty($data)) {
-        $code_no = $data[0]['code_no'];
-        $no = $code_no+1;
-        $request_form_number = $ym.$no;
-        //テーブルsq_codeへ更新する
-        $sql = "UPDATE sq_code SET code_no=:code_no WHERE code_id=:code_id AND text1=:text1";
+        if (isset ($data) && !empty($data)) {
+          $code_no = $data[0]['code_no'];
+          $no = $code_no+1;
+          $request_form_number = $ym.$no;
+          //テーブルsq_codeへ更新する
+          $sql = "UPDATE sq_code SET code_no=:code_no WHERE code_id=:code_id AND text1=:text1";
+        } else {
+          $no = '1';
+          $request_form_number = $ym.$no;
+          //テーブルsq_codeへ登録する
+          $sql = "INSERT INTO sq_code(code_id, code_no, text1) VALUES (:code_id, :code_no, :text1)";
+        }
+        $data = [
+          'code_id' => $code_id,
+          'code_no' => $no,
+          'text1' => $ym
+        ];
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($data);
+        /**--------------------------------------------------------------------------------------------------**/
       } else {
-        $no = '1';
-        $request_form_number = $ym.$no;
-        //テーブルsq_codeへ登録する
-        $sql = "INSERT INTO sq_code(code_id, code_no, text1) VALUES (:code_id, :code_no, :text1)";
+        $request_form_number = $_POST['request_form_number'];
       }
-      $data = [
-        'code_id' => $code_id,
-        'code_no' => $no,
-        'text1' => $ym
-      ];
-
-      $stmt = $pdo->prepare($sql);
-      $stmt->execute($data);
-      /**--------------------------------------------------------------------------------------------------**/
 
       //request_form_trへ登録する
       /**--------------------------------------------------------------------------------------------------**/
