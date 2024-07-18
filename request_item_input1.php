@@ -17,7 +17,7 @@ include("header1.php");
             <div class="field-row">
             <td>
               <label class="common_label" for="request_dept">分類</label>
-              <input type="text" id="request_dept" name="request_dept" value="<?= $request_dept ?>">
+              <input type="text" id="kw_request_dept" name="kw_request_dept" value="<?= $kw_request_dept ?>">
 
               <button type="submit" style="margin-left:20px;background:#80dfff;" id="searchBtn" name="process" value="search" class="search_btn">検索</button>
             </td>
