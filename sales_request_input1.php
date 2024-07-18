@@ -66,7 +66,7 @@ $result = $_GET['result'] ?? '';
           <td></td>
           <td><?= $item['employee_name'] ?></td>
           <td style="text-align:center">
-            <button type="submit" class="updateBtn" data-sq_no="<?= $item['sq_no'] ?>" name="process" value="update">更新</button>
+            <button type="submit" class="updateBtn" data-sq_no="<?= $item['sq_no'] ?>" name="process" value="update">詳細</button>
           </td>
           <input type="hidden" class="sq_no" name="sq_no" value="">
         </tr>
