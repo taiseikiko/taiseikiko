@@ -39,7 +39,12 @@ $(document).ready(function(){
     //status2の場合、承認画面へ移動する
     else if (status_no == '2') {
       $('#req_rec_form1').attr('action', 'request_input4.php?title=request');
-    } else {
+    } 
+    //status7差し戻しの場合、更新画面へ移動する
+    else if (status_no == '7') {
+      $('#req_rec_form1').attr('action', 'request_input2.php?title=request');
+    } 
+    else {
       $('#req_rec_form1').attr('action', 'request_input4.php?title=request&status=finish');
     }
   });

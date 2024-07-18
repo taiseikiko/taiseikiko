@@ -23,13 +23,12 @@ if (isset($_POST['submit'])) {
       $status_n = '4';
       $err_redirect = 'receipt_input2.php?err=exceErr&title=receipt&request_form_number=' . $request_form_number;
 
-      $sql = "UPDATE request_form_tr SET status=:status, recipent=:recipent, recipent_dept=:recipent_dept, recipi_comment=:recipi_comment, recipt_date=:recipt_date,
+      $sql = "UPDATE request_form_tr SET status=:status, recipent=:recipent, recipi_comment=:recipi_comment, recipt_date=:recipt_date,
                       upd_date=:upd_date WHERE request_form_number=:request_form_number";
       $stmt = $pdo->prepare($sql);
       $stmt->bindParam(':status', $status_n);
       $stmt->bindParam(':request_form_number', $request_form_number);
       $stmt->bindParam(':recipent', $user_code);
-      $stmt->bindParam(':recipent_dept', $dept_code);
       $stmt->bindParam(':recipi_comment', $_POST['recipi_comment']);
       $stmt->bindParam(':recipt_date', $today);
       $stmt->bindParam(':upd_date', $today);

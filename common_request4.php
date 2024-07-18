@@ -30,14 +30,15 @@
                   <?php
                   if (isset($class_datas) && !empty($class_datas)) {
                     foreach ($class_datas as $item) {
-                      $code = $item['class_code'];
-                      $text = $item['class_name'];
-                      $selected = ($code == $request_class) ? 'selected' : '';
+                      $code = $item['request_dept'] . ',' . $item['request_item_id'];
+                      $text = $item['text2'] . '　:　' . $item['request_item_name'];
+                      $selected = ($code == $recipent_dept . ',' . $request_class) ? 'selected' : '';
                       echo "<option value='$code' $selected>$text</option>";
                     }
                   }
                   ?>
                 </select>
+                <input type="hidden" name="recipent_dept" value="<?= $recipent_dept ?>">
               </div>
             </td>
           </tr>
