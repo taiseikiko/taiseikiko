@@ -3,16 +3,16 @@ require_once('function.php');
 $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 $dept_id = getDeptId($dept_code);
 $request_datas = [];
-$request_dept = '';
+$kw_request_dept = '';
 
-$request_datas = request_form_list($request_dept);
+$request_datas = request_form_list($kw_request_dept);
 
 //検索ボタンを押下した場合
-if (isset($_POST['process1']) == 'search') {
-  $request_dept = $_POST['request_dept'] ?? ''; //部署
+if (isset($_POST['process']) == 'search') {
+  $kw_request_dept = $_POST['kw_request_dept'] ?? ''; //部署
 
   //request_form_trからデータを取得する
-  $request_datas = request_form_list($request_dept);  
+  $request_datas = request_form_list($kw_request_dept);  
 }
 
 /***
