@@ -10,14 +10,21 @@ $user_code = $_SESSION["login"];
 $user_name = $_SESSION['user_name'];      //登録者
 $office_name = $_SESSION['office_name'];  //部署
 $office_position_name = $_SESSION['office_position_name'];  //役職
+$property_code = isset($_GET['property_code']) ? $_GET['property_code'] : '';
 // include("ec_ec_form2_data_set.php");
 // ヘッダーセット
 include("header1.php");
+$page_title = '';
+if ($property_code == '1') {
+    $page_title = 'IV/IVT物件情報';
+} elseif ($property_code == '2') {
+    $page_title = '穿孔工事物件情報';
+}
 ?>
 
 <main>
   <div class="pagetitle">
-    <h3>IV・IVT物件情報</h3>
+    <h3><?php echo htmlspecialchars($page_title); ?></h3>
     <div class="container">
       <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="ec_form2">
         <?php include('dialog.php'); ?>

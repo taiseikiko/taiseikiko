@@ -58,14 +58,23 @@ include("header1.php");
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
-    //検索ボタンを押下した場合
+    function setFormAction(action) {
+      var propertyCode = $("#property_code").val();
+      if (propertyCode) {
+        $("#ec_form").attr("action", action + "?property_code=" + propertyCode);
+      } else {
+        $("#ec_form").attr("action", action);
+      }
+    }
+
+    //新規ボタンを押下した場合
     $("#create").click(function() {
-      $("#ec_form").attr("action", "ec_input2.php");
+      setFormAction("ec_input2.php");
     });
 
     //更新ボタンを押下した場合
     $(document).on('click', '.updateBtn', function() {
-      $("#ec_form").attr("action", "ec_input2.php");
+      setFormAction("ec_input2.php");
     });
   });
 
