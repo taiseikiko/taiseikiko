@@ -191,7 +191,7 @@
         <label class="common_label" for="other">その他処理 </label>
         <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)">
           <option value="" class="">選択して下さい。</option>
-          <option value="1" class="">差し出し</option>
+          <option value="1" class="">差し戻し</option>
           <option value="2" class="">中止</option>
           <?php if ($showSkip) echo'<option value="3" class="">スキップ</option>'; ?>
         </select>
