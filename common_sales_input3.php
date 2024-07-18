@@ -490,8 +490,9 @@
                 if (isset($route_pattern_list) && !empty($route_pattern_list)) {
                   foreach ($route_pattern_list as $item) {
                     $code = $item['route_id'];
+                    $name = isset($route_names[$code]) ? $route_names[$code] : '';
                     $selected = ($code == $route_pattern) ? 'selected' : '';
-                    echo "<option value='$code' $selected>$code</option>";
+                    echo "<option value='$code' $selected>$name</option>";
                   }
                 }
               ?>
