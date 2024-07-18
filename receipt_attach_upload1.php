@@ -7,7 +7,7 @@
   $request_form_number = $_POST['request_form_number'] ?? '';
   $tmp_file_name = $_FILES["uploaded_file"]["tmp_name"];
   $file_name = $_FILES["uploaded_file"]["name"];
-  $uploadDir = "document/request/";
+  $uploadDir = "document/receipt/";
   $save_file_name = $request_form_number;
 
   if (!empty($tmp_file_name)) {

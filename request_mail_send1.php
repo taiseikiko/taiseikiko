@@ -42,7 +42,8 @@
         }
 
         switch ($process) {
-            case 'new':            
+            case 'new':   
+            case 'update':         
                 $url = $base_url . 'request_input3.php?title=request&request_form_number=' . $request_form_number;
                 break;
             
@@ -111,11 +112,13 @@
         global $process;
         global $dept_id;
         global $user_code;
+        global $recipent_dept;
         $datas = [];
-        
+
         switch ($process) {
             //登録後sq_route_in_deptの現所属部署のrole=1のメンバー（確認者）へ送信
             case 'new':
+            case 'update':
                 $col = 'd.confirmer';
                 break;
 
@@ -129,7 +132,7 @@
         }
 
         //入力後と確認後の場合
-        if ($process == 'new' || $process == 'confirm') {
+        if ($process !== 'approve') {
             
             $sql = "SELECT e.email
                 FROM sq_default_role d
@@ -147,13 +150,15 @@
         } 
         //承認後の場合
         else {
+            //受付部署の受付者全員を取得する
+            $receipt_dept_id = getDeptId($recipent_dept);
             $sql = "SELECT e.employee_name, e.email
                 FROM sq_route_in_dept r
                 LEFT JOIN employee e 
                 ON r.employee_code = e.employee_code
                 WHERE r.dept_id = :dept_id AND r.role = :role";
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':dept_id', $dept_id);
+            $stmt->bindParam(':dept_id', $receipt_dept_id);
             $stmt->bindParam(':role', $role);
             $stmt->execute();
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {

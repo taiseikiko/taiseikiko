@@ -127,6 +127,29 @@ include("header1.php");
       window.open(url, "popupWindow", "width=900,height=260,left=100,top=50");
     })
 
+    /*----------------------------------------------------------------------------------------------- */
+
+    //アプロードボタンを押下する場合
+    $('#upload').click(function(event) {
+      event.preventDefault();
+      var errMessage = checkValidation();
+      
+      //エラーがある場合
+      if (errMessage !== '') {
+        //何の処理かを書く
+        var process = "validate";
+        //OKDialogを呼ぶ
+        openOkModal(errMessage, process);
+      } else {
+        //何の処理かを書く
+        var process = "upload";
+        //エラーメッセージを書く
+        var msg = "アプロードします。よろしいですか？";
+        //確認Dialogを呼ぶ
+        openConfirmModal(msg, process);
+      }
+    });
+
   });
 
   /**-------------------------------------------------------------------------------------------------------------- */
