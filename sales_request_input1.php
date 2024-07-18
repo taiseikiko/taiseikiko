@@ -45,7 +45,8 @@ $result = $_GET['result'] ?? '';
       
       <table class="tab1" style="margin-top:20px;">
         <tr>
-          <th>得意先</th>
+          <th>営業依頼書No</th>
+          <th>提出先</th>
           <th>事業体</th>
           <th>件名</th>
           <th>処理状況</th>
@@ -53,20 +54,21 @@ $result = $_GET['result'] ?? '';
           <th>処理</th>
         </tr>
         <tr>
-          <td colspan="6">
+          <td colspan="7">
             <button type="submit" name="process" value="new">新規登録</button>
           </td>
         </tr>
         <tbody id="sq_data_table">
         <?php foreach ($sq_datas as $item): ?>
         <tr>
+          <td><?= $item['sq_no'] ?></td>
           <td><?= $item['cust_name'] ?></td>
           <td><?= $item['pf_name'] ?></td>
           <td><?= $item['item_name'] ?></td>
           <td></td>
           <td><?= $item['employee_name'] ?></td>
           <td style="text-align:center">
-            <button type="submit" class="updateBtn" data-sq_no="<?= $item['sq_no'] ?>" name="process" value="update">更新</button>
+            <button type="submit" class="updateBtn" data-sq_no="<?= $item['sq_no'] ?>" name="process" value="update">詳細</button>
           </td>
           <input type="hidden" class="sq_no" name="sq_no" value="">
         </tr>

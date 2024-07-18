@@ -9,7 +9,16 @@
   include("sales_request_input3_data_set.php");
   include("sales_route_input3_data_set.php");
   $route_pattern_list = [];
-  $route_pattern_list = get_route_pattern_list();  
+  $route_pattern_list = get_route_pattern_list(); 
+  $route_names = [
+    1 => '技術部→資材部→営業管理部',
+    2 => '技術部',
+    3 => '技術部→資材部→営業管理部→工事管理部',
+    4 => '営業管理部',
+    5 => '営業管理部→工事管理部',
+    6 => '技術部→資材部→工事管理部',
+    7 => '工事管理部'
+  ]; 
 ?>
 
 <main>

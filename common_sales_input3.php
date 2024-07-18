@@ -466,7 +466,7 @@
                 <label class="common_label" for="other">その他処理 </label>
                 <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)">
                   <option value="" class="">選択して下さい。</option>
-                  <option value="1" class="">差し出し</option>
+                  <option value="1" class="">差し戻し</option>
                   <option value="2" class="">中止</option>
                   <?php if ($showSkip) echo'<option value="3" class="">スキップ</option>'; ?>
                 </select>
@@ -490,8 +490,9 @@
                 if (isset($route_pattern_list) && !empty($route_pattern_list)) {
                   foreach ($route_pattern_list as $item) {
                     $code = $item['route_id'];
+                    $name = isset($route_names[$code]) ? $route_names[$code] : '';
                     $selected = ($code == $route_pattern) ? 'selected' : '';
-                    echo "<option value='$code' $selected>$code</option>";
+                    echo "<option value='$code' $selected>$name</option>";
                   }
                 }
               ?>
@@ -512,7 +513,7 @@
               <label class="common_label" for="other">その他処理 </label>
               <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)">
                 <option value="" class="">選択して下さい。</option>
-                <option value="1" class="">差し出し</option>
+                <option value="1" class="">差し戻し</option>
                 <option value="2" class="">中止</option>
                 <?php if ($showSkip) echo'<option value="3" class="">スキップ</option>'; ?>
               </select>

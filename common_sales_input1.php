@@ -5,7 +5,8 @@
       <table class="tab1">
         <thead>
           <tr>
-            <th>得意先</th>
+            <th>営業依頼書No</th>
+            <th>提出先</th>
             <th>事業体</th>
             <th>件名</th>
             <th>担当者</th>
@@ -18,6 +19,7 @@
               foreach ($sq_datas as $item) {
           ?>
           <tr>
+            <td><?= $item['sq_no'] ?></td>
             <td><?= $item['cust_name'] ?></td>
             <td><?= $item['pf_name']?></td>
             <td><?= $item['item_name']?></td>

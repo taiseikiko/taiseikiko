@@ -6,7 +6,7 @@
 
     $redirectList = [
         'input' => './sales_request_input1.php?sq_no='.$sq_no.'&process=update&title='.$title,    //入力
-        'check' => './sales_request_check1.php?sq_no='.$sq_no.'&process=update&title='.$title,    //確認
+        'check' => './sales_request_check2.php?sq_no='.$sq_no.'&process=update&title='.$title,    //確認
         'approve' => './sales_request_approve1.php?sq_no='.$sq_no.'&process=update&title='.$title,    //承認
     ];
 

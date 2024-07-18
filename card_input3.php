@@ -433,7 +433,7 @@
               if ($page == '確認' || $page == '承認') { ?>
               <div class="flex-container" style="margin-left:50rem">
                 <div>
-                  <button id="returnProcessBtn" class="returnProcessBtn">差し出し </button>
+                  <button id="returnProcessBtn" class="returnProcessBtn">差し戻し </button>
                   <button class="cancelProcessBtn" id="cancelProcessBtn">中止</button>
                 </div>
               </div>
