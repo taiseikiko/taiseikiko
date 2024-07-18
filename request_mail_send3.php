@@ -49,11 +49,8 @@ try {
     }
   }
   // $url = $base_url . 'request_input4.php?request_form_number=' . $request_form_number;
-  if ($from == 'request'){
-    $url = $base_url . 'request_input4.php?title=request&request_form_number=' . $request_form_number;
-  } else {
-    $url = $base_url . 'request_input1.php?title=request';
-  }
+  
+  $url = $base_url . 'request_input1.php?title=request';
   
   //送信内容をセットする
   $email_datas = [
