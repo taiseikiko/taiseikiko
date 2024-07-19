@@ -107,19 +107,17 @@
   {
     global $pdo;
 
-    $sql = "SELECT e.employee_name, cmd.text2 AS dept_name, cmp.text1 AS role_name, pf.pf_code AS p_office_code, pf.pf_name AS p_office_name 
-      FROM card_header_tr h
+    $sql = "SELECT e.employee_name, cmd.text2 AS dept_name, cmp.text1 AS role_name
+      FROM request_form_tr h
       LEFT JOIN employee e
-      ON e.employee_code = h.client
+      ON e.employee_code = h.request_person
       LEFT JOIN code_master cmd
       ON e.department_code = cmd.text1
       AND cmd.code_id = 'department'
       LEFT JOIN code_master cmp
       ON e.office_position_code = cmp.code_no
-      AND cmp.code_id = 'office_position'
-      LEFT JOIN public_office pf
-      ON pf.pf_code = h.p_office_no
-      WHERE h.client = :client";
+      AND cmp.code_id = 'office_position'      
+      WHERE h.request_person = :client";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':client', $client);
     $stmt->execute();

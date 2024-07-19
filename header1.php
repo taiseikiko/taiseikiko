@@ -311,7 +311,7 @@
       <details>
         <summary><a href="#components">既存工事実績</a></summary>
         <ul>
-          <li><a href="">既存工事実績　登録</a></li>
+          <li><a href="ec_article_input1.php">既存工事実績　登録</a></li>
         </ul>
       </details>
     </li>';

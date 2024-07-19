@@ -4,7 +4,7 @@ header('Program-id: estimate_entry.php');
 header('Content-type: text/html; charset=utf-8');
 require_once('function.php');
 $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
-include("ec_input1_data_set.php");
+include("ec_article_input1_data_set.php");
 include("header1.php");
 
 ?>
@@ -15,6 +15,7 @@ include("header1.php");
   </div>
   <div class="container">
     <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="ec_form">
+      <input type="hidden" id="key_number" class="key_number" name="key_number" value="">
       <table>
         <tr>
           <td>
@@ -42,8 +43,7 @@ include("header1.php");
               <th>処理</th>
             </tr>
             <tr id="createBtnRow" style="display: none;">
-              <td colspan="7" style="text-align:left"><button class="createBtn" id="create" name="process" value="create">新規作成</button></td>
-              <input type="hidden" id="" class="" name="" value="">
+              <td colspan="7" style="text-align:left"><button class="createBtn" id="create" name="process" value="new">新規作成</button></td>              
             </tr>
           </thead>
           <tbody id="propertyData">
@@ -69,19 +69,21 @@ include("header1.php");
 
     //新規ボタンを押下した場合
     $("#create").click(function() {
-      setFormAction("ec_input2.php");
+      setFormAction("ec_article_input2.php");
     });
 
     //更新ボタンを押下した場合
     $(document).on('click', '.updateBtn', function() {
-      setFormAction("ec_input2.php");
+      var selectedId = $(this).data('key_number');
+      $('#key_number').val(selectedId);
+      setFormAction("ec_article_input2.php");
     });
   });
 
   function loadPropertyData() {
     var propertyCode = $("#property_code").val();
     $.ajax({
-      url: 'ec_input1_data_set.php',
+      url: 'ec_article_input1_data_set.php',
       type: 'POST',
       data: {
         property_code: propertyCode
