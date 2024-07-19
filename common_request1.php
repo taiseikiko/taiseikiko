@@ -46,7 +46,7 @@
           <td><?= $item['request_dept_name'] ?></td>
           <td><?= $item['request_form_number'] ?></td>
           <td><?= $item['request_person_name'] ?></td>
-          <td><?= $item['class_name'] ?></td>
+          <td><?= $item['request_item_name'] ?></td>
           <td><?= $item['status'] ?></td>
           <td><?= $item['recipent_dept_name'] ?></td>
           <td><?= $item['recipent_person_name'] ?></td>

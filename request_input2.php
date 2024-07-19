@@ -240,7 +240,7 @@ include("header1.php");
 </script>
 <style>
   .dropdown-menu {
-    width: 180px;
+    width: 280px;
   }
 
   .clearfix:after {
