@@ -20,7 +20,7 @@ if (isset($_POST['submit'])) {
 
   //分類
   //$_POST['request_class']に受付部署と依頼分類がセットされているから別に分けします。
-  if(isset($_POST['request_class'])) {
+  if(isset($_POST['request_class']) && !empty($_POST['request_class'])) {
     $values = explode(',', $_POST['request_class']);
     $recipent_dept = $values[0];  //受付部署
     $request_class = $values[1];  //依頼分類

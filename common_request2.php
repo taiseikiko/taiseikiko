@@ -71,7 +71,7 @@
             </div>
           </tr>
         </table>
-        <table class="tab1" style="margin-left:120px; margin-top:10px;width: auto;">
+        <table class="tab1" style="margin-left:120px; margin-top:10px;width: auto;">          
           <tr>
             <th> 添付された資料 </th>
           </tr>
@@ -83,6 +83,7 @@
                 <tr>
                   <td>
                     <a href=".$value." target='_blank'>".$value."</a>
+                    <input type='hidden' name='hasFile' id='hasFile'>
                   </td>
                 </tr>";
               }

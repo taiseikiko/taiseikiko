@@ -43,7 +43,7 @@ include("header1.php");
     $('#updBtn').click(function() {
       event.preventDefault();
       var errMessage = '';
-      // var errMessage = checkValidationInput2();
+      // var errMessage = checkValidation();
 
       //エラーがある場合
       if (errMessage !== '') {
@@ -132,7 +132,7 @@ include("header1.php");
     //アプロードボタンを押下する場合
     $('#upload').click(function(event) {
       event.preventDefault();
-      var errMessage = checkValidation();
+      var errMessage = checkValidationFile();
       
       //エラーがある場合
       if (errMessage !== '') {
