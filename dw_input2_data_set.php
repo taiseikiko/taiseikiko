@@ -25,6 +25,7 @@
   $btn_class = 'updRegBtn'; 
   $header = '入力処理';
   $err = $_GET['err'] ?? '';
+  $update = false;
 
   $class_datas = get_class_datas();                     //分類プルダウンにセットするデータを取得する
   $sizeList = getDropdownData('size');                  //サイズ
@@ -79,10 +80,15 @@
           ${$variable} = $dw_datas[$variable];
         }
         
-        if ($dw_datas['dw_status'] == '3') {
+        //status=2のレコードを一覧から更新ボタンを押したとき、一番下のボタンは「更新」とし
+        if ($dw_datas['dw_status'] == '3' || $dw_datas['dw_status'] == '2') {
           $btn_name = '更新';
           $btn_class = 'updateBtn';
           $btn_status = 'hidden';
+
+          if ($dw_datas['dw_status'] == '2') {
+            $update = true;
+          }
         }  
         
         //申請者のデータを取得する
@@ -169,8 +175,8 @@
   {
     global $pdo;
 
-    $sql = "SELECT e.employee_name, cmd.text2 AS dept_name, cmp.text1 AS role_name, pf.pf_code AS p_office_code, pf.pf_name AS p_office_name 
-      FROM card_header_tr h
+    $sql = "SELECT e.employee_name, cmd.text2 AS dept_name, cmp.text1 AS role_name 
+      FROM dw_management_tr h
       LEFT JOIN employee e
       ON e.employee_code = h.client
       LEFT JOIN code_master cmd
@@ -179,8 +185,6 @@
       LEFT JOIN code_master cmp
       ON e.office_position_code = cmp.code_no
       AND cmp.code_id = 'office_position'
-      LEFT JOIN public_office pf
-      ON pf.pf_code = h.p_office_no
       WHERE h.client = :client";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':client', $client);

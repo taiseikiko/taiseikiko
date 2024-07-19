@@ -51,11 +51,11 @@ function request_form_list($class_name, $requester, $publish_department) {
     }
     if (!empty($requester)) {
         $search_kw['request_person'] =  '%' . $requester . '%';
-        $sql .= " AND r.request_person LIKE :request_person";
+        $sql .= " AND request_e.employee_name LIKE :request_person";
     }
     if (!empty($publish_department)) {
         $search_kw['request_dept'] =  '%' . $publish_department . '%';
-        $sql .= " AND r.request_dept LIKE :request_dept";
+        $sql .= " AND request_dept.sq_dept_name LIKE :request_dept";
     }
     $stmt = $pdo->prepare($sql);
     $stmt->execute($search_kw);

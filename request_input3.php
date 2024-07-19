@@ -43,7 +43,7 @@ include("header1.php");
     $('#updBtn').click(function() {
       event.preventDefault();
       var errMessage = '';
-      // var errMessage = checkValidationInput2();
+      // var errMessage = checkValidation();
 
       //エラーがある場合
       if (errMessage !== '') {
@@ -56,7 +56,7 @@ include("header1.php");
         //確認メッセージを書く
         var msg = btnName + "します？よろしいですか？";
         //何の処理科を書く
-          var process = "confirm";
+        var process = "confirm";
         $('#process').val(process);
         //確認Dialogを呼ぶ
         openConfirmModal(msg, process);
@@ -120,9 +120,10 @@ include("header1.php");
     //差し戻しボタンを押下する場合
     $('#returnProcessBtn').click(function() {
       event.preventDefault();
-      var request_no = document.getElementById('request_no').value;
+      var request_form_number = document.getElementById('request_form_number').value;
+      var from = 'request';
 
-      var url = "request_send_back.php" + "?request_no=" + request_no;
+      var url = "request_send_back.php" + "?request_form_number=" + request_form_number + "&from=" + from;
       window.open(url, "popupWindow", "width=900,height=260,left=100,top=50");
     })
 
@@ -131,7 +132,7 @@ include("header1.php");
     //アプロードボタンを押下する場合
     $('#upload').click(function(event) {
       event.preventDefault();
-      var errMessage = checkValidation();
+      var errMessage = checkValidationFile();
       
       //エラーがある場合
       if (errMessage !== '') {
@@ -149,31 +150,7 @@ include("header1.php");
       }
     });
 
-    /*----------------------------------------------------------------------------------------------- */
-
-    //localStorageからフォームデータをセットする
-    const formData = JSON.parse(localStorage.getItem('req_rec_form2'));
-    if (formData) {
-      var myForm = document.getElementById('req_rec_form2');
-      Object.keys(formData).forEach(key => {
-        const exceptId = ['uploaded_file'];
-        if (!exceptId.includes(key)) {
-          myForm.elements[key].value = formData[key];
-        }
-      })
-
-      //フォームにセット後、クリアする
-      localStorage.removeItem('req_rec_form2');
-    }
-
-    /*----------------------------------------------------------------------------------------------- */
-
-
-
-
-
   });
-
 
   /**-------------------------------------------------------------------------------------------------------------- */
 

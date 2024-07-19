@@ -24,11 +24,31 @@
       $datas = [
         'request_form_url' => $destination,
         'request_form_number' => $request_form_number,
+        'date' => date('Y/m/d')
       ];
 
-      $sql = "UPDATE request_form_tr SET request_form_url=:request_form_url WHERE request_form_number=:request_form_number";
-      $stmt = $pdo->prepare($sql);
-      $stmt->execute($datas);
+      try {
+        $pdo->beginTransaction();
+        $s_sql = "SELECT * FROM request_form_tr WHERE request_form_number=:request_form_number";
+        $s_stmt = $pdo->prepare($s_sql);
+        $s_stmt->bindParam(':request_form_number', $datas['request_form_number']);
+        $s_stmt->execute();
+        $row = $s_stmt->fetch(PDO::FETCH_ASSOC);
+        //なければ新規
+        if (!$row) {
+          $sql = "INSERT INTO request_form_tr(request_form_number, request_form_url, add_date) VALUES (:request_form_number, :request_form_url, :date)";
+          $stmt = $pdo->prepare($sql);
+          $stmt->execute($datas);
+        } else {
+          $sql = "UPDATE request_form_tr SET request_form_url=:request_form_url, upd_date=:date WHERE request_form_number=:request_form_number";
+          $stmt = $pdo->prepare($sql);
+          $stmt->execute($datas);
+        }
+        $pdo->commit();
+      } catch (PDOException $e) {
+        $pdo->rollback();
+        error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
+      }
 
       exit();
     } else {
@@ -36,7 +56,7 @@
       exit();
     }
   } else {
-    echo json_encode("アップロードしました。");
+    error_log("ファイルはありません。" ,3,'error_log.txt');
     exit();
   }
 

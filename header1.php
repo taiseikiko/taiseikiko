@@ -257,7 +257,7 @@
         <ul>
           <li><a href="request_input1.php?title=request">依頼書　登録</a></li>
           <li><a href="receipt_input1.php?title=receipt">依頼受付～承認</a></li>
-          <li><a href="request_item_input1.php?title=receipt">依頼案件</a></li>
+          <li><a href="request_item_input1.php">依頼案件マスター保守</a></li>
         </ul>
       </details>
     </li>';
@@ -311,7 +311,7 @@
       <details>
         <summary><a href="#components">既存工事実績</a></summary>
         <ul>
-          <li><a href="">既存工事実績　登録</a></li>
+          <li><a href="ec_article_input1.php">既存工事実績　登録</a></li>
         </ul>
       </details>
     </li>';

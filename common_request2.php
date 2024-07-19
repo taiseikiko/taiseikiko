@@ -29,9 +29,9 @@
                   <?php
                   if (isset($class_datas) && !empty($class_datas)) {
                     foreach ($class_datas as $item) {
-                      $code = $item['class_code'];
-                      $text = $item['class_name'];
-                      $selected = ($code == $request_class) ? 'selected' : '';
+                      $code = $item['request_dept'] . ',' . $item['request_item_id'];
+                      $text = $item['text2'] . '　:　' . $item['request_item_name'];
+                      $selected = ($code == $recipent_dept . ',' . $request_class) ? 'selected' : '';
                       echo "<option value='$code' $selected>$text</option>";
                     }
                   }
@@ -71,21 +71,19 @@
             </div>
           </tr>
         </table>
-        <table class="tab1" style="margin-left:120px; margin-top:10px;width: auto;">
+        <table class="tab1" style="margin-left:120px; margin-top:10px;width: auto;">          
           <tr>
             <th> 添付された資料 </th>
           </tr>
           <?php
             $files = glob('document/request/*.*');
             foreach ($files as $key => $value) {
-              $cut = str_replace('document/request/', '', $value);
-              $chk = substr($cut,0,strlen($request_form_number));//get request_form_number from file name
-
-              if($request_form_number == $chk){
+              if($value == $request_form_url){
                 echo "
                 <tr>
                   <td>
                     <a href=".$value." target='_blank'>".$value."</a>
+                    <input type='hidden' name='hasFile' id='hasFile'>
                   </td>
                 </tr>";
               }
@@ -102,7 +100,7 @@
                 </div>
                 <div>
                   <button id="updBtn" class="<?= $btn_class ?>" name="submit"><?= $btn_name ?></button>
-                  <input type="hidden" name="process2" value="new">
+                  <input type="hidden" name="process2" value=<?= $process2 ?>>
                 </div>
               </div>
             </td>            

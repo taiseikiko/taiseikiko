@@ -12,7 +12,7 @@ $client_name = $dept_name = $role_name = $p_office_code = $p_office_name = '';  
 $entrant_dept_name = $entrant_role_name = '';  //担当者の情報
 $sizeDisabled = $zaikoumeiDisabled = $pipeDisabled = $comments = $process = '';
 $err = $_GET['err'] ?? '';//エラーを取得する
-
+$page = '詳細';
 $pipeList = getDropdownData('pipe');                  //管種
 $sizeList = getDropdownData('size');                  //サイズ
 

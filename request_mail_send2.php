@@ -1,10 +1,10 @@
 <?php
     // 初期処理
     require_once('function.php');
-    include('card_mail_send_select.php');
+    include('request_mail_send_select.php');
     $url = $_SERVER['HTTP_REFERER']; //メール送信する時、利用するため
 
-    $redirect = './dw_input1.php';
+    $redirect = './receipt_input1.php?title=receipt';
 
     try {
         // DB接続
@@ -24,8 +24,8 @@
         $mail_details = getSqMailSentence();
         if (!empty($mail_details)) {
             //データベースからもらったテキストにclientとsq_noをセットする
-            $search = array("client", "dw_no");
-            $replace = array($from_name, $dw_no);
+            $search = array("client", "request_form_number");
+            $replace = array($from_name, $request_form_number);
             $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
             $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
         }
@@ -41,14 +41,18 @@
             }
         }
 
-        switch ($process) {
-            case 'new':
-            case 'update':
-                $url = $base_url . 'dw_input2.php?dw_no=' . $dw_no;
+        switch ($status) {
+            //受付の場合
+            case '3':            
+                $url = $base_url . 'receipt_input3.php?title=receipt&request_form_number=' . $request_form_number;
                 break;
-            
-            default:
-                $url = $base_url . 'dw_input1.php';
+            // 確認の場合
+            case '4':
+                $url = $base_url . 'receipt_input4.php?title=receipt&request_form_number=' . $request_form_number;
+                break;
+            //承認の場合
+            case '5':
+                $url = $base_url . 'receipt_input2.php?title=receipt&request_form_number=' . $request_form_number;
                 break;
         }
 
@@ -70,7 +74,7 @@
             if ($success) {
                 echo "<script>window.location.href='$redirect'  </script>";
             } else {
-                echo "<script>window.location.href='dw_input2.php?err=exceErr'</script>";
+                echo "<script>window.location.href='receipt_input2.php?err=exceErr&title=receipt'</script>";
             }
         } else {
             echo "<script>window.location.href='$redirect'  </script>";
@@ -78,7 +82,7 @@
 
     } catch(PDOException $e) {
         error_log("Error: " . $e->getMessage(), 3, "error_log.txt");
-        echo "<script>window.location.href='card_input2.php?err=exceErr'</script>";
+        echo "<script>window.location.href='receipt_input2.php?err=exceErr&title=receipt'</script>";
     }
 
     /***
@@ -105,62 +109,56 @@
      */
     function get_mail_recipient_data() {
         global $pdo;
-        global $dw_no;
-        global $process;
-        global $update;
+        global $status;
+        global $dept_id;
+        global $request_form_number;
         $datas = [];
+        
+        switch ($status) {
+            //受付の場合、確認者へ送信
+            case '3':
+                $role = '2';
+                break;
+            //確認の場合、承認者へ送信
+            case '4':
+                $role = '3';
+                break;
 
-        //承認されて完了になったレコードが更新された場合clientとprocurement_approverにメール送信
-        if ($update) {
-            $sql = "SELECT e1.employee_name AS client_name, e1.email AS client_email, e2.employee_name AS approver_name, e2.email AS approver_email
-                    FROM dw_management_tr dw
-                    LEFT JOIN employee e1 ON dw.client = e1.employee_code
-                    LEFT JOIN employee e2 ON dw.approver = e2.employee_code
-                    WHERE dw.dw_no = :dw_no";
+            case '5':
+                $role = '0';
+        }
+
+        //入力後と確認後の場合
+        if ($status == '3' || $status == '4') {
+            
+            $sql = "SELECT e.employee_name, e.email
+                FROM sq_route_in_dept r
+                LEFT JOIN employee e 
+                ON r.employee_code = e.employee_code
+                WHERE r.dept_id = :dept_id AND r.role = :role";
+                
             $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':dw_no', $dw_no);
+            $stmt->bindParam(':dept_id', $dept_id);
+            $stmt->bindParam(':role', $role);
             $stmt->execute();
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                if (isset($row['client_name'])) {
-                    $data1['name'] = $row['client_name'];
-                    $data1['email'] = $row['client_email'];
-                    $datas[] = $data1;
-                }
-                if (isset($row['approver_name'])) {
-                    $data1['name'] = $row['approver_name'];
-                    $data1['email'] = $row['approver_email'];
-                    $datas[] = $data1;
-                }                
+                $datas[] = $row;
             }
-        } else {
-            //入力後dw_route_in_deptのrole=2のメンバー（承認者）へ送信
-            if ($process == 'new') {
-                
-                $sql = "SELECT e.employee_name, e.email
-                        FROM dw_route_in_dept d
-                        LEFT JOIN employee e ON d.employee_code = e.employee_code
-                        WHERE (d.department_code = '02' OR d.department_code = '03') AND d.role = '3'";
-                $stmt = $pdo->prepare($sql);
-            } 
-            //承認後clientにメール送信
-            else {
-    
-                $sql = "SELECT e.employee_name, e.email
-                        FROM dw_management_tr dw
-                        LEFT JOIN employee e ON dw.client = e.employee_code
-                        WHERE dw.dw_no = :dw_no";
-                $stmt = $pdo->prepare($sql);
-                $stmt->bindParam(':dw_no', $dw_no);
-    
-            }    
-
+        } 
+        //承認後の場合
+        else {
+            $sql = "SELECT e.employee_name, e.email
+                FROM request_form_tr r
+                LEFT JOIN employee e 
+                ON r.request_person = e.employee_code
+                WHERE r.request_form_number=:request_form_number";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':request_form_number', $request_form_number);
             $stmt->execute();
-            while ($recipient_row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $datas[] = $recipient_row;
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $datas[] = $row;
             }
         }
-        
-        
 
         return $datas;
     }
@@ -170,27 +168,23 @@
      */
     function getSqMailSentence() {
         global $pdo;
-        global $process;
-        global $update;
+        global $status;
 
-        $sq_mail_id = '11';
+        $sq_mail_id = '14';
 
-        switch ($process) {
-            case 'new':
-            case 'update':
-                $seq_no = '1';
-                break;
-            
-            default:
+        switch ($status) {
+            case '3':
                 $seq_no = '2';
                 break;
-        }
 
-        //承認されて完了になったレコードが更新された場合
-        if ($update) {
-            $seq_no = '3';
-        }
+            case '4':
+                $seq_no = '3';
+                break;
 
+            case '5':
+                $seq_no = '4';
+                break;
+        }
 
         $sql = "SELECT sq_mail_title, sq_mail_sentence FROM sq_mail_sentence WHERE sq_mail_id = :sq_mail_id AND seq_no = :seq_no";
         $stmt = $pdo->prepare($sql);

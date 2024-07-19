@@ -23,7 +23,7 @@ function sendMail($email_datas, $to_datas) {
     // 文字エンコードを指定
     $mail->CharSet = 'utf-8';
 
-    // try {
+    try {
         $success = true;
         $mail->isSMTP();                          // SMTPの使用宣言
         $mail->Host       = '192.168.1.241';   // SMTPサーバーを指定
@@ -47,7 +47,7 @@ function sendMail($email_datas, $to_datas) {
 
         // 送受信先設定（第二引数は省略可）
         foreach ($to_datas as $item) {
-            $mail->addAddress($item['email'], $item['employee_name']);
+            $mail->addAddress($item['email']);
         }
 
         $body = '';
@@ -64,11 +64,11 @@ function sendMail($email_datas, $to_datas) {
         if(!$mail->send()){
             $success = false;
         }
-    // } catch (Exception) {
-    //     $success = false;
-    //     // エラーの場合
-    //     error_log("Message could not be sent. Mailer Error: {$mail->ErrorInfo}", 3, 'error_log.txt');
-    // }
-    // return $success;
+    } catch (Exception) {
+        $success = false;
+        // エラーの場合
+        error_log("Message could not be sent. Mailer Error: {$mail->ErrorInfo}", 3, 'error_log.txt');
+    }
+    return $success;
 }
 ?>

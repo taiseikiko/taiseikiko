@@ -8,6 +8,7 @@
   $request_class = '';      //分類コード
   $request_comment = '';    //コメント
   $request_dept = '';       //依頼部署
+  $recipent_dept = '';      //受付部署
   $comfirmor_comment = '';  //確認者コメント
   $approval_comment = '';   //承認者コメント
   $request_form_url = '';
@@ -21,16 +22,14 @@
   $class_datas = get_class_datas(); //分類プルダウンにセットするデータを取得する
   $status = $_GET['status'] ?? '';
   
-  //一覧画面から来た場合
-  if (isset($_POST['process1'])) {
-    $request_form_number = $_POST['request_form_number'];
-
-    
+  //一覧画面から来た場合 or メールから来た場合
+  if (isset($_POST['process1']) || isset($_GET['request_form_number'])) {
+    $request_form_number = $_POST['request_form_number']?? $_GET['request_form_number'];    
 
     //request_form_trのデータを取得する
     $request_form_datas = get_request_form_datas($request_form_number);
     if (isset($request_form_datas)) {
-      $variables = ['request_class', 'request_comment', 'request_dept', 'request_person', 'comfirmor_comment', 'approval_comment', 'request_form_url', 
+      $variables = ['request_class', 'request_comment', 'request_dept', 'request_person', 'comfirmor_comment', 'approval_comment', 'request_form_url', 'recipent_dept',
       'status', 'recipi_comment', 'recipt_comfirmor_comment', 'recipt_approval_comment', 'recipt_form_url'];
       foreach ($variables as $variable) {
         ${$variable} = $request_form_datas[$variable];
@@ -76,19 +75,17 @@
   {
     global $pdo;
 
-    $sql = "SELECT e.employee_name, cmd.text2 AS dept_name, cmp.text1 AS role_name, pf.pf_code AS p_office_code, pf.pf_name AS p_office_name 
-      FROM card_header_tr h
+    $sql = "SELECT e.employee_name, cmd.text2 AS dept_name, cmp.text1 AS role_name
+      FROM request_form_tr h
       LEFT JOIN employee e
-      ON e.employee_code = h.client
+      ON e.employee_code = h.request_person
       LEFT JOIN code_master cmd
       ON e.department_code = cmd.text1
       AND cmd.code_id = 'department'
       LEFT JOIN code_master cmp
       ON e.office_position_code = cmp.code_no
-      AND cmp.code_id = 'office_position'
-      LEFT JOIN public_office pf
-      ON pf.pf_code = h.p_office_no
-      WHERE h.client = :client";
+      AND cmp.code_id = 'office_position'      
+      WHERE h.request_person = :client";
     $stmt = $pdo->prepare($sql);
     $stmt->bindParam(':client', $client);
     $stmt->execute();
@@ -98,7 +95,10 @@
   function get_class_datas()
   {
     global $pdo;
-    $sql = "SELECT * FROM sq_class";
+    $sql = "SELECT rc.request_dept, rc.request_item_id, rc.request_item_name, d.text2
+            FROM request_m rc
+            LEFT JOIN code_master d
+            ON d.code_id = 'department' AND d.text1 = rc.request_dept";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
     $datas = $stmt->fetchAll();

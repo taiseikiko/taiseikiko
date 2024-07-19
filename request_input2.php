@@ -44,7 +44,7 @@ include("header1.php");
     $('#updBtn').click(function() {
       event.preventDefault();
       var errMessage = '';
-      // var errMessage = checkValidationInput2();
+      var errMessage = checkValidation();
 
       //エラーがある場合
       if (errMessage !== '') {
@@ -131,7 +131,7 @@ include("header1.php");
     //アプロードボタンを押下する場合
     $('#upload').click(function(event) {
       event.preventDefault();
-      var errMessage = checkValidation();
+      var errMessage = checkValidationFile();
       
       //エラーがある場合
       if (errMessage !== '') {
@@ -203,12 +203,10 @@ include("header1.php");
     event.preventDefault();
     var request_form_number = document.getElementById('request_form_number').value;
     var uploaded_file = document.getElementById('uploaded_file').files[0];
-    var upload_comments = document.getElementById('request_comment').value;
 
     var formData = new FormData();
     formData.append('request_form_number', request_form_number);
     formData.append('uploaded_file', uploaded_file);
-    formData.append('upload_comments', upload_comments);
 
     $.ajax({
       type: "POST",

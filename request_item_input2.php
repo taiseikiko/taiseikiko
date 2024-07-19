@@ -4,6 +4,7 @@ header('Program-id: estimate_entry.php');
 header('Content-type: text/html; charset=utf-8');
 require_once('function.php');
 $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
+$title = $_GET['title'] ?? '';
 $user_code = $_SESSION['login'];
 $user_name = $_SESSION['user_name'];      //登録者
 $office_name = $_SESSION['office_name'];  //部署
@@ -15,11 +16,11 @@ include("header1.php");
 
 <main>
   <div class="pagetitle">
-    <h3>依頼案件　<?= $header ?></h3>
+    <h3>依頼書　<?= $header ?></h3>
     <div class="container">
       <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="request_item_form2">
-        <?php include('dialog.php'); ?>
         <input type="hidden" name="process" value="<?= $process ?>">
+        <?php include('dialog.php'); ?>
         <table style="width:auto;">
           <tr style="height:20px; margin-top:20px"></tr>
           <tr>
@@ -38,57 +39,17 @@ include("header1.php");
             </td>
           </tr>
           <tr style="margin-top:10px"></tr>
-          
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="request_item_name">依頼案件名</label>
-                <input type="text" style="width:500px; margin-left: 1rem;" class="input-res" name="request_item_name" value="<?= $request_item_name ?>">
+                <label class="common_label" for="request_item_id">案件No </label>
+                <input type="text" style="margin-left: 1rem;" name="request_item_id" class="readonlyText input-res" value="<?= $request_item_id ?>" readonly>
+                <label class="common_label" for="request_item_name">案件名</label>
+                <input type="text" style="width:370px;" name="request_item_name" class="input-res" value="<?= $request_item_name ?>">
               </div>
             </td>
           </tr>
-        </table>
-
-        <table>
-          <tr style="height:10px;"></tr>
-          <tr>
-            <td>
-              <div class="field-row" style="margin-top: 20px;">
-                <font size=3>
-                  <b>資料の添付</b>
-                </font>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <div class="field-row">
-              <td>
-                　アップロードするファイル ⇒
-                <input type="file" name="uploaded_file" id="uploaded_file">
-                <input type="submit" name="upload" id="upload" value="アップロード">
-              </td>
-            </div>
-          </tr>
-        </table>
-        <table class="tab1" style="margin-left:120px; margin-top:10px;width: auto;">
-          <tr>
-            <th> 添付された資料 </th>
-          </tr>
-          <?php
-            $files = glob('document/request/*.*');
-            foreach ($files as $key => $value) {
-              if($value == $request_case_form_url) {
-                echo "
-                <tr>
-                  <td>
-                    <a href=".$value." target='_blank'>".$value."</a>
-                  </td>
-                </tr>";
-              }
-            }
-          ?>
-          <tr style="height:10px;"></tr>
-        </table>        
+        </table>  
         <table>
           <tr>
             <td>
@@ -98,7 +59,6 @@ include("header1.php");
                 </div>
                 <div>
                   <button id="updBtn" class="<?= $btn_class ?>" name="submit"><?= $btn_name ?></button>
-                  <input type="hidden" name="process2" value="new">
                 </div>
               </div>
             </td>            
@@ -111,7 +71,6 @@ include("header1.php");
 </body>
 
 </html>
-<script src="assets/js/request_form_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
@@ -141,7 +100,7 @@ include("header1.php");
         //OKDialogを呼ぶ
         openOkModal(errMessage, process);
       } else {
-        var btnName = $('#updBtn').text().substr(3, 2);
+        var btnName = $('#updBtn').text().substr(2, 2);
         //確認メッセージを書く
         var msg = btnName + "します？よろしいですか？";
         //何の処理科を書く        
@@ -167,13 +126,6 @@ include("header1.php");
         //request_update.phpへ移動する
         $("#request_item_form2").attr("action", "request_item_update.php");
       }
-      //アプロード１処理の場合
-      else if (process == "upload") {
-        //submitしたいボタン名をセットする
-        $("#confirm_okBtn").attr("name", "upload");
-        //sales_request_update.phpへ移動する
-        uploadFile("request_attach_upload1.php");
-      }
     });
 
     /**-------------------------------------------------------------------------------------------------------------- */
@@ -183,8 +135,8 @@ include("header1.php");
       var process = $("#btnProcess").val();
 
       if (process == "errExec") {
-        //request_input1へ移動
-        $('#request_item_form2').attr('action', 'request_input1.php');
+        //request_item_input1へ移動
+        $('#request_item_form2').attr('action', 'request_item_input1.php');
       } else {
         //画面上変更なし
         $('#ok_okBtn').attr('data-dismiss', 'modal');
@@ -203,62 +155,9 @@ include("header1.php");
       openOkModal(msg, 'errExec');
     }
 
-    /**-------------------------------------------------------------------------------------------------------------- */
-
-    //差し戻しボタンを押下する場合
-    $('#returnProcessBtn').click(function() {
-      event.preventDefault();
-      var request_no = document.getElementById('request_no').value;
-
-      var url = "request_send_back.php" + "?request_no=" + request_no;
-      window.open(url, "popupWindow", "width=900,height=260,left=100,top=50");
-    })
-
-    /*----------------------------------------------------------------------------------------------- */
-
-    //アプロードボタンを押下する場合
-    $('#upload').click(function(event) {
-      event.preventDefault();
-      var errMessage = checkValidation();
-      
-      //エラーがある場合
-      if (errMessage !== '') {
-        //何の処理かを書く
-        var process = "validate";
-        //OKDialogを呼ぶ
-        openOkModal(errMessage, process);
-      } else {
-        //何の処理かを書く
-        var process = "upload";
-        //エラーメッセージを書く
-        var msg = "アプロードします。よろしいですか？";
-        //確認Dialogを呼ぶ
-        openConfirmModal(msg, process);
-      }
-    });
-
-    /*----------------------------------------------------------------------------------------------- */
-
-    //localStorageからフォームデータをセットする
-    const formData = JSON.parse(localStorage.getItem('request_item_form2'));
-    if (formData) {
-      var myForm = document.getElementById('request_item_form2');
-      Object.keys(formData).forEach(key => {
-        const exceptId = ['uploaded_file'];
-        if (!exceptId.includes(key)) {
-          myForm.elements[key].value = formData[key];
-        }
-      })
-
-      //フォームにセット後、クリアする
-      localStorage.removeItem('request_item_form2');
-    }
-
-    /*----------------------------------------------------------------------------------------------- */
-
   });
 
-  /**-------------------------------------------------------------------------------------------------------------- */
+  /**------------------------------------------------FUNCTION-------------------------------------------------------------- */
 
   function openConfirmModal(msg, process) {
     event.preventDefault();
@@ -283,46 +182,6 @@ include("header1.php");
     $("#ok").modal({
       backdrop: false
     });
-  }
-
-  /**-------------------------------------------------------------------------------------------------------------- */
-
-  function uploadFile(url) {
-    event.preventDefault();
-    var request_form_number = document.getElementById('request_form_number').value;
-    var uploaded_file = document.getElementById('uploaded_file').files[0];
-    var upload_comments = document.getElementById('request_comment').value;
-
-    var formData = new FormData();
-    formData.append('request_form_number', request_form_number);
-    formData.append('uploaded_file', uploaded_file);
-    formData.append('upload_comments', upload_comments);
-
-    $.ajax({
-      type: "POST",
-      url: url,
-      data: formData,
-      processData: false, // Important: prevent jQuery from processing the data
-      contentType: false, // Important: ensure jQuery does not add a content-type header
-      success: function(response) {
-        //フォームデータを保存する
-        saveFormData();
-        //reload page
-        location.reload();
-      },
-      error: function(xhr, status, error) {
-      }
-    })
-
-  }
-
-  /**-------------------------------------------------------------------------------------------------------------- */
-
-  function saveFormData() {
-    var myForm = document.getElementById('request_item_form2');
-    const formData = new FormData(myForm);
-    const jsonData = JSON.stringify(Object.fromEntries(formData));
-    localStorage.setItem('request_item_form2', jsonData);
   }
 
   /**-------------------------------------------------------------------------------------------------------------- */
