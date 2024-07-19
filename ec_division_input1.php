@@ -38,7 +38,7 @@ function getEcDatasByCodeKey($code_key) {
     <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="ec_division_form">
       <div class="field-row">
         <label class="common_label" for="spec_name">仕様名</label>
-        <select name="spec_name" onchange="submit()" required>
+        <select name="spec_name" id="spec_name" onchange="submit()" required>
           <option value="">※選択して下さい。</option>
           <?php 
           foreach ($ec_names as $key => $name) {
@@ -59,7 +59,7 @@ function getEcDatasByCodeKey($code_key) {
             <th>コード名</th>
             <th>処理</th>
           </tr>
-          <tr id="createBtnRow">
+          <tr id="createBtnRow" style="display: none;">
             <td colspan="4" style="text-align:left"><button type="button" class="createBtn" id="create" name="process" value="create">新規作成</button></td>
             <input type="hidden" id="hid_spec_name" class="spec_name" name="spec_name" value="<?= $selected_code_key ?>">
           </tr>
@@ -88,26 +88,35 @@ function getEcDatasByCodeKey($code_key) {
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function(){
-    $("#create").click(function(){
-      $("#ec_division_form").append('<input type="hidden" name="process" value="create">');
-      $("#ec_division_form").attr("action", "ec_division_input2.php");
-      $("#ec_division_form").submit();
-    });
-
-    //一覧データがない場合、新規作成ボタンを非表示にする
-    if ($("#hid_spec_name").val() == '') {
-      $("#createBtnRow").hide();
+    // Check if there is a selection for spec_name
+    if ($("#spec_name").val() !== '') {
+      $("#createBtnRow").show();
     }
-    
-    $(".updateBtn").click(function(){
-      var selectedId = $(this).data('id');
-      $('.code_key').val(selectedId);
-      $("#ec_division_form").append('<input type="hidden" name="process" value="update">');
-      $("#ec_division_form").append('<input type="hidden" name="code_key" value="' + selectedId + '">');
-      $("#ec_division_form").attr("action", "ec_division_input2.php");
-      $("#ec_division_form").submit();
-    });
+  
+  $("#create").click(function(){
+    var selectedKey = $("#spec_name").val(); // Get the selected spec_name value (code_key)
+    var selectedName = $("#spec_name option:selected").text(); // Get the selected spec_name text
+    $("#ec_division_form").append('<input type="hidden" name="process" value="create">');
+    $("#ec_division_form").append('<input type="hidden" name="code_key" value="' + selectedKey + '">'); // Add the selected code_key
+    $("#ec_division_form").append('<input type="hidden" name="spec_name" value="' + selectedName + '">');
+    $("#ec_division_form").attr("action", "ec_division_input2.php");
+    $("#ec_division_form").submit();
   });
+  
+  $(".updateBtn").click(function(){
+    var selectedId = $(this).data('id');
+    var selectedRow = $(this).closest('tr');
+    var selectedCodeNo = selectedRow.find('td').eq(1).text(); // Get the code_no from the selected row
+    var selectedName = $("#spec_name option:selected").text();  // Get the selected spec_name text
+    $('.code_key').val(selectedId);
+    $("#ec_division_form").append('<input type="hidden" name="process" value="update">');
+    $("#ec_division_form").append('<input type="hidden" name="code_key" value="' + selectedId + '">');
+    $("#ec_division_form").append('<input type="hidden" name="spec_name" value="' + selectedName + '">');
+    $("#ec_division_form").append('<input type="hidden" name="code_no" value="' + selectedCodeNo + '">'); // Add the selected code_no
+    $("#ec_division_form").attr("action", "ec_division_input2.php");
+    $("#ec_division_form").submit();
+  });
+});
 </script>
 
 <style>

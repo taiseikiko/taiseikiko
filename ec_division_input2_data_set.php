@@ -6,7 +6,8 @@
 
   // 初期設定 & データセット
   $process = '';  //処理
-  $code_key = ''; //分類コード
+  $code_key = $code_no = ''; //キーコード
+  $spec_name = '';
   $code_name = $code_name_err = ''; //分類名
   $btn_name = '登録';
   $btn_class = 'approveBtn';  
@@ -19,24 +20,29 @@
     
     //新規作成の場合
     if ($process == 'create') {
-      //分類コード取得
-      $code_key = getClassCode();
+      //キーコード取得
+      $code_no = getEcCode();
+      $spec_name = $_POST['spec_name'];
+      $code_key = $_POST['code_key'];
+      
     } else {
       $btn_name = '更新';
       $btn_class = 'updateBtn';  
       $code_key = $_POST['code_key'];
-
-      //分類マスタからcode_nameを取得する
-      $datas = getClassDatasByClassCode($code_key);
+      $spec_name = $_POST['spec_name'];
+      $code_no = $_POST['code_no']; // Ensure this is set correctly
+      
+      //既存工事実績マスタからcode_nameを取得する
+      $datas = getEcDatasByClassCodeAndNo($code_key, $code_no);
       if (!empty($datas)) {
         $code_name = $datas[0]['code_name'];
       }
     }
   }
 
-  function getClassCode() {
+  function getEcCode() {
     global $pdo;
-    //分類マスタからMAXデータ取得する
+    //既存工事実績マスタからMAXデータ取得する
     $sql = "SELECT MAX(code_no) as max FROM ec_code_master";
     $stmt = $pdo->prepare($sql);
     $stmt->execute();
@@ -49,10 +55,12 @@
     return $code_key;
   }
 
-  function getClassDatasByClassCode($code_key) {
+  function getEcDatasByClassCodeAndNo($code_key, $code_no) {
     global $pdo;
-    $sql = "SELECT * FROM ec_code_master WHERE code_key = '$code_key'";
+    $sql = "SELECT * FROM ec_code_master WHERE code_key = :code_key AND code_no = :code_no";
     $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':code_key', $code_key);
+    $stmt->bindParam(':code_no', $code_no);
     $stmt->execute();
     $datas = $stmt->fetchAll();
     

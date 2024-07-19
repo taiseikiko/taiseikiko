@@ -15,21 +15,22 @@ include("header1.php");
       <form class="row g-3" method="POST" id="ec_division_form" enctype="multipart/form-data">
         <?php include("dialog.php") ?>
         <input type="hidden" name="process" id="process" value="<?= $process ?>">
-        <input type="hidden" name="success" id="success" value="<?= $success ?>">
         <table style="width:auto;">
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="class_code">既存工事仕様</label>
-                <input type="text" id="code_key" name="code_key" value="<?= $code_key ?>" class="readonlyText" readonly>
+                <label class="common_label" for="spec_name">既存工事仕様</label>
+                <input type="text" id="spec_name" name="spec_name" value="<?= $spec_name ?>" class="readonlyText" readonly>
+                <input type="hidden" id="code_key" name="code_key" value="<?= $code_key ?>" class="readonlyText" readonly>
+                <input type="hidden" id="code_no" name="code_no" value="<?= $code_no ?>" class="readonlyText" readonly>
               </div>
             </td>
           </tr>
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="class_name">コード名</label>
-                <input type="text" id="code_name" name="code_name" value="<?= $code_name ?>" maxlength="20">
+                <label class="common_label" for="code_name">コード名</label>
+                <input type="text" id="code_name" name="code_name" value="<?= $code_name ?>" maxlength="50">
               </div>
             </td>
           </tr>
@@ -50,7 +51,7 @@ include("header1.php");
     </div>
 </main><!-- End #main -->
 
-<script src="assets/js/sq_class_check.js"></script>
+<script src="assets/js/ec_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
@@ -218,7 +219,7 @@ include("header1.php");
     }
   }
 
-  #class_name {
+  #code_name {
     width: 630px;
   }
 </style>
