@@ -13,7 +13,7 @@ include("request_item_input2_data_set.php");
 // ヘッダーセット
 include("header1.php");
 ?>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <main>
   <div class="pagetitle">
     <h3>依頼書　<?= $header ?></h3>
@@ -31,7 +31,7 @@ include("header1.php");
                 <input type="hidden" name="user_code" value="<?= $_SESSION["login"] ?>">
 
                 <label class="common_label" for="office_name">　　部署</label>
-                <input type="text" style="width:370px;" name="office_name" class="readonlyText input-res" value="<?= $office_name ?>" readonly>
+                <input type="text" style="width:370px;margin-left: 1rem;" name="office_name" class="readonlyText input-res" value="<?= $office_name ?>" readonly>
 
                 <label class="common_label" for="office_position_name">　　役職</label>
                 <input type="text" style="width:100px;" class="readonlyText input-res" name="office_position_name" value="<?= $office_position_name ?>" readonly>
@@ -44,8 +44,8 @@ include("header1.php");
               <div class="field-row">
                 <label class="common_label" for="request_item_id">案件No </label>
                 <input type="text" style="margin-left: 1rem;" name="request_item_id" class="readonlyText input-res" value="<?= $request_item_id ?>" readonly>
-                <label class="common_label" for="request_item_name">案件名</label>
-                <input type="text" style="width:370px;" name="request_item_name" class="input-res" value="<?= $request_item_name ?>">
+                <label class="common_label" for="request_item_name">案件名</label><i class="fa fa-asterisk" style="font-size:10px;color:red; margin-left:-8px;"></i>
+                <input type="text" style="width:370px;margin-left: 1rem;" name="request_item_name" id="request_item_name" class="input-res" value="<?= $request_item_name ?>">
               </div>
             </td>
           </tr>
@@ -71,6 +71,7 @@ include("header1.php");
 </body>
 
 </html>
+<script src="assets/js/request_item_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
@@ -91,7 +92,7 @@ include("header1.php");
     $('#updBtn').click(function() {
       event.preventDefault();
       var errMessage = '';
-      // var errMessage = checkValidationInput2();
+      var errMessage = checkValidation();
 
       //エラーがある場合
       if (errMessage !== '') {

@@ -23,7 +23,7 @@
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="class">分類 </label>
+                <label class="common_label" for="class">分類 </label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
                 <select style="margin-left: 1rem;" class="dropdown-menu" id="classList" name="request_class">
                   <option value="">選択して下さい。</option>
                   <?php
@@ -56,7 +56,7 @@
             <td>
               <div class="field-row" style="margin-top: 20px;">
                 <font size=3>
-                  <b>資料の添付</b>
+                  <b>資料の添付</b><i class="fa fa-asterisk" style="font-size:10px;color:red;"></i>
                 </font>
               </div>
             </td>
