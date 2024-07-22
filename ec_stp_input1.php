@@ -4,8 +4,8 @@ header('Program-id: estimate_entry.php');
 header('Content-type: text/html; charset=utf-8');
 require_once('function.php');
 $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
-include("ec_stp_input1_data_set.php");
 include("header1.php");
+include("ec_stp_input1_data_set.php");
 
 ?>
 
@@ -33,7 +33,23 @@ include("header1.php");
             </tr>
           </thead>
           <tbody id="propertyData">
-            <!-- Dataがここに表示されます -->
+            <?php
+            foreach ($property_datas as $row) {
+              echo "<tr>
+                  <td>{$row['bridge']}</td>
+                  <td>{$row['renewal_date']}</td>
+                  <td>{$row['company']}</td>
+                  <td>{$row['name']}</td>
+                  <td>{$row['attendance_year']}</td>
+                  <td>{$row['footnote']}</td>
+                  <td style='text-align:center'><button class='updateBtn' data-key_number='{$row['key_number']}' id='update' name='process' value='update'>更新</button></td>
+                </tr>";
+            }
+
+            if (empty($property_datas)) {
+              echo "<tr><td colspan='7' style='text-align:center'><h4 style='font-size: 12px;'>表示するデータがございません。</h4></td></tr>";
+            }
+            ?>
           </tbody>
         </table>
       </div>
