@@ -20,10 +20,10 @@
     
     //新規作成の場合
     if ($process == 'create') {
-      //キーコード取得
-      $code_no = getEcCode();
-      $spec_name = $_POST['spec_name'];
       $code_key = $_POST['code_key'];
+      //キーコード取得
+      $code_no = getEcCode($code_key);
+      $spec_name = $_POST['spec_name'];
       
     } else {
       $btn_name = '更新';
@@ -40,19 +40,20 @@
     }
   }
 
-  function getEcCode() {
+  function getEcCode($code_key) {
     global $pdo;
     //既存工事実績マスタからMAXデータ取得する
-    $sql = "SELECT MAX(code_no) as max FROM ec_code_master";
+    $sql = "SELECT MAX(code_no) as max FROM ec_code_master WHERE code_key = :code_key";
     $stmt = $pdo->prepare($sql);
+    $stmt->bindParam(':code_key', $code_key, PDO::PARAM_STR);
     $stmt->execute();
-    $max_code_key = $stmt->fetch(PDO::FETCH_ASSOC);
-    if ($max_code_key) {
-      $code_key = $max_code_key['max'] + 1;
+    $max_code_no = $stmt->fetch(PDO::FETCH_ASSOC);
+    if ($max_code_no && $max_code_no['max']) {
+        $code_no = $max_code_no['max'] + 1;
     } else {
-      $code_key = 1;
+        $code_no = 1;
     }
-    return $code_key;
+    return $code_no;
   }
 
   function getEcDatasByClassCodeAndNo($code_key, $code_no) {
