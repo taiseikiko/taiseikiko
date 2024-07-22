@@ -4,6 +4,7 @@ require_once('function.php');
 // DB接続
 $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 //初期項目
+$key_number = '';
 $bridge = ''; //出先
 $company = '';//会社名
 $name = '';//氏名
@@ -17,12 +18,13 @@ $expiration_date = '';//有効期限
 $footnote = ''; //備考
 
 $btn_name = '登録';
+$btn_class ='approveBtn';
 $err = $_GET['err']?? '';
 
 //プルダウン「出先」のデータを取得する
 $bridgeList = getBridgeList();
 
-//プルダウン「工事件名」のデータを取得する
+//プルダウン「コード名」のデータを取得する
 $companyList = getListFrom_Ec_Code_Master('company');
 
 
@@ -38,12 +40,24 @@ if (isset($_POST['process'])) {
   //更新の場合
   else {
     $btn_name = '更新';
+    $btn_class = 'updateBtn';
     $key_number = $_POST['key_number'];
-    $datas = getDatasFromEcArticle($key_number);
+    $datas = getDatasFromEcStp($key_number);
 
     if (isset($datas) && !empty($datas)) {
-      $variables = ['bridge', 'company', 'name', 'birthday', 'attendance_year', 'elementary_number', 'advance_number', 'con_qualification', 'renewal_date', 
-                    'expiration_date', 'footnote'];
+      $variables = [
+                    'bridge', 
+                    'company', 
+                    'name', 
+                    'birthday', 
+                    'attendance_year', 
+                    'elementary_number', 
+                    'advance_number', 
+                    'con_qualification', 
+                    'renewal_date', 
+                    'expiration_date', 
+                    'footnote'
+                  ];
 
       foreach ($variables as $variable) {
         ${$variable} = $datas[$variable];
@@ -53,13 +67,13 @@ if (isset($_POST['process'])) {
 }
 
 /**
- * ec_article_detail_tr_procurementデータを取得する
+ * ec_stp_detail_tr_procurementデータを取得する
  */
-function getDatasFromEcArticle($key_number) {
+function getDatasFromEcStp($key_number) {
   global $pdo;
   $datas = [];
 
-  $sql = "SELECT * FROM ec_stp_detail_tr_procurement WHERE key_number=:key_number";
+  $sql = "SELECT * FROM ec_stp_detail_tr_procurment WHERE key_number=:key_number";
   $stmt = $pdo->prepare($sql);
   $stmt->bindParam(':key_number', $key_number);
   $stmt->execute();
@@ -75,7 +89,7 @@ function getBridgeList() {
   global $pdo;
   $datas = [];
 
-  $sql = "SELECT * FROM sq_dept";
+  $sql = "SELECT * FROM sq_dept WHERE dept_type = 1";
   $stmt = $pdo->prepare($sql);
   $stmt->execute();
   $datas = $stmt->fetchAll();
