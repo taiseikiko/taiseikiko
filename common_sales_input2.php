@@ -252,7 +252,7 @@
           <?php if ($process == 'detail') { echo '<td>'.$employee_name.'</td>'; } ?>
           <td>
             <?php if ($process == 'update') { ?>
-              <button class="updateBtn" name="process2" value="update" data-sq_line_no="<?= $item['sq_line_no'] ?>">更新</button>
+              <button class="updateBtn" name="process2" value="update" data-sq_line_no="<?= $item['sq_line_no'] ?>">詳細</button>
               <?php if ($title !== 'check' && $title !== 'approve') { ?>
               <button class="copyBtn" name="process2" value="copy" data-sq_line_no="<?= $item['sq_line_no'] ?>">コピー</button>
               <?php } ?>
