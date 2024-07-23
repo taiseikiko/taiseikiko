@@ -88,7 +88,7 @@ function checkValidation(event) {
   }
 
   if (wt_orders) {
-    if (!isErr && slant.wt_orders.length > 10) {
+    if (!isErr && wt_orders.length > 10) {
       errMessage = errMsgForLength("受注（割T）", "10");
       isErr = true;
     }
