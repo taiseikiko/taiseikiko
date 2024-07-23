@@ -38,7 +38,7 @@
             $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
             $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
         }
-        
+
         //入力画面と確認画面の場合
         if ($title !== 'approve') {
             //sq_default_roleからデータを取得する
@@ -176,11 +176,11 @@
                 FROM sq_default_role d
                 LEFT JOIN employee e1 ON e1.employee_code = d.confirmer
                 LEFT JOIN employee e2 ON e2.employee_code = d.approver
-                WHERE dept_id = :dept_id AND group_id = :group_id AND entrant = :entrant";
+                WHERE dept_id = :dept_id AND entrant = :entrant";
                 
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':dept_id', $dept_id);
-        $stmt->bindParam(':group_id', $group_id);
+        // $stmt->bindParam(':group_id', $group_id);
         $stmt->bindParam(':entrant', $entrant);
         $stmt->execute();
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
