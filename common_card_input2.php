@@ -25,8 +25,8 @@
             <label class="common_label" for="office_name">　　部署</label>
             <input type="text" style="width:370px;" name="office_name" class="readonlyText input-res" value="<?= $office_name ?>" readonly>
 
-            <label class="common_label" for="office_position_name">　　役職</label>
-            <input type="text" style="width:100px;" class="readonlyText input-res" name="office_position_name" value="<?= $office_position_name ?>" readonly>
+            <!-- <label class="common_label" for="office_position_name">　　役職</label>
+            <input type="text" style="width:100px;" class="readonlyText input-res" name="office_position_name" value="<?= $office_position_name ?>" readonly> -->
           </div>
         </td>
       </tr>
