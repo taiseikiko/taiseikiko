@@ -156,23 +156,6 @@ include("header1.php");
 
     /*----------------------------------------------------------------------------------------------- */
 
-    //localStorageからフォームデータをセットする
-    const formData = JSON.parse(localStorage.getItem('req_rec_form2'));
-    if (formData) {
-      var myForm = document.getElementById('req_rec_form2');
-      Object.keys(formData).forEach(key => {
-        const exceptId = ['uploaded_file'];
-        if (!exceptId.includes(key)) {
-          myForm.elements[key].value = formData[key];
-        }
-      })
-
-      //フォームにセット後、クリアする
-      localStorage.removeItem('req_rec_form2');
-    }
-
-    /*----------------------------------------------------------------------------------------------- */
-
 
 
   });
@@ -272,15 +255,6 @@ include("header1.php");
       }
     })
 
-  }
-
-  /**-------------------------------------------------------------------------------------------------------------- */
-
-  function saveFormData() {
-    var myForm = document.getElementById('req_rec_form2');
-    const formData = new FormData(myForm);
-    const jsonData = JSON.stringify(Object.fromEntries(formData));
-    localStorage.setItem('req_rec_form2', jsonData);
   }
 
   /**-------------------------------------------------------------------------------------------------------------- */

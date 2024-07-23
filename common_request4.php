@@ -1,7 +1,6 @@
 <div class="container">
   <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="req_rec_form4">
     <input type="hidden" name="request_form_number" id="request_form_number" value="<?= $request_form_number ?>">
-    <input type="hidden" name="status" id="status" value="<?= $status ?>">
     <?php include('dialog.php'); ?>
     <table style="width:auto;">
       <tr style="height:20px; margin-top:20px"></tr>
@@ -69,8 +68,8 @@
           <div class="field-row">
             <td>
               　アップロードするファイル ⇒
-              <input type="file" name="uploaded_file" id="uploaded_file">
-              <input type="submit" name="upload" id="upload" value="アップロード">
+              <input type="file" name="uploaded_file" id="uploaded_file" <?= $disabled ?>>
+              <input type="submit" name="upload" id="upload" value="アップロード" <?= $disabled ?>>
             </td>
           </div>
         </tr>
@@ -106,11 +105,12 @@
           </div>
         </td>
       </tr>
+      <tr style="height:20px;"></tr>
       <tr>
         <td>
           <div class="field-row">
             <label class="common_label" for="approval_comment">（依頼部署）<br />承認者コメント</label>
-            <textarea id="approval_comment" style="margin-left: 1rem;" name="approval_comment" rows="3" cols="120" class="textarea-res"><?= $approval_comment ?></textarea>
+            <textarea <?= $style ?> id="approval_comment" name="approval_comment" rows="3" cols="120" class="textarea-res" <?= $disabled ?>><?= $approval_comment ?></textarea>
           </div>
         </td>
       </tr>
@@ -213,7 +213,7 @@
             <button id="returnBtn" class="returnBtn">前の画面に戻る </button>
           </div>
           <div>
-            <button id="updBtn" class="<?= $btn_class ?>" name="submit"><?= $btn_name ?></button>
+            <button id="updBtn" class="<?= $btn_class ?>" name="submit" <?= $disabled ?>><?= $btn_name ?></button>
             <input type="hidden" name="process2" value="approve">
           </div>
         </div>
@@ -221,7 +221,7 @@
       <td>
         <div class="flex-container" style="margin-left: 50rem;">
           <div>
-            <button id="returnProcessBtn" class="returnProcessBtn">差し戻し </button>
+            <button id="returnProcessBtn" class="returnProcessBtn" <?= $disabled ?>>差し戻し </button>
           </div>
         </div>
       </td>
