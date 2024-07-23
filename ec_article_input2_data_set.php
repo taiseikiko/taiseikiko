@@ -137,7 +137,7 @@ function getBridgeList() {
   global $pdo;
   $datas = [];
 
-  $sql = "SELECT * FROM sq_dept";
+  $sql = "SELECT * FROM sq_dept WHERE dept_type='1'";
   $stmt = $pdo->prepare($sql);
   $stmt->execute();
   $datas = $stmt->fetchAll();
