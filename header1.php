@@ -316,6 +316,7 @@
         <ul>
           <li><a href="ec_article_input1.php">物件情報</a></li>
           <li><a href="ec_work_input1.php">工事実績</a></li>
+          <li><a href="ec_stp_input1.php">資格認定</a></li>
           <li><a href="ec_division_input1.php">既存工事実績マスター</a></li>
         </ul>
       </details>
