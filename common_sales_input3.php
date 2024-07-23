@@ -203,6 +203,71 @@
       <tr>
         <td>
           <div class="field-row">
+            <label class="common_label" for="size2">サイズ２ </label>
+            <?php 
+              if (!isset($sizeList) || empty($sizeList)) {
+                $sizeDisabled = 'disabled';
+              }
+            ?>
+            <select class="dropdown-menu" name="size2" <?= $sizeDisabled ?>>
+              <option value="">選択して下さい。</option>
+              <?php 
+                if (isset($sizeList) && !empty($sizeList)) {
+                  foreach($sizeList as $item) {
+                    $code = $item['zk_div_data'];
+                    $text = $item['zk_div_data'];
+                    $selected = ($code == $size2) ? 'selected' : '';
+                    echo "<option value='$code' $selected>$text</option>";
+                  }
+                }
+              ?>
+            </select>
+
+            <label class="common_label" for="joint2">接合形状２ </label>
+            <?php 
+              if (!isset($jointList) || empty($jointList)) {
+                $jointDisabled = 'disabled';
+              }
+            ?>
+            <select class="dropdown-menu" name="joint2" <?= $jointDisabled ?>>
+              <option value="">選択して下さい。</option>
+              <?php 
+                if (isset($jointList) && !empty($jointList)) {
+                  foreach ($jointList as $item) {
+                    $code = $item['zk_div_data'];
+                    $text = $item['zk_div_data'];
+                    $selected = ($code == $joint2) ? 'selected' : '';
+                    echo "<option value='$code' $selected>$text</option>";
+                  }
+                }
+              ?>
+            </select>
+
+            <label class="common_label" for="pipe2">管種２ </label>
+            <?php 
+              if (!isset($pipeList) || empty($pipeList)) {
+                $pipeDisabled = 'disabled';
+              }
+            ?>
+            <select class="dropdown-menu" name="pipe2" <?= $pipeDisabled ?>>
+              <option value="">選択して下さい。</option>
+              <?php 
+                if (isset($pipeList) && !empty($pipeList)) {
+                  foreach ($pipeList as $item) {
+                    $code = $item['zk_div_data'];
+                    $text = $item['zk_div_data'];
+                    $selected = ($code == $pipe2) ? 'selected' : '';
+                    echo "<option value='$code' $selected>$text</option>";
+                  }
+                }
+              ?>
+            </select>            
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="field-row">
             <label class="common_label" for="special_tube_od">特殊管外径 </label>
             <input style="width:60px" type="text" id="special_tube_od1" name="special_tube_od1" value="<?= $special_tube_od1 ?>">
             <label for="special_tube_od1">mm</label>

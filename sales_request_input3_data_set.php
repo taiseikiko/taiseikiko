@@ -10,6 +10,9 @@
   $size = '';                   //サイズ
   $joint = '';                  //接合形状
   $pipe = '';                   //管種
+  $size1 = '';                   //サイズ
+  $joint2 = '';                  //接合形状
+  $pipe3 = '';                   //管種
   $fluid = '';                  //管内流体
   $inner_coating = '';          //内面塗装
   $outer_coating = '';          //外面塗装
@@ -93,7 +96,7 @@
 
         $fields = ['estimate_div1', 'estimate_div2', 'specification_div', 'drawing_div', 'document_div', 'check_type', 'deadline_estimate_date', 'deadline_drawing_date', 'cad_data_div', 'const_div1',
         'const_div2', 'const_div3', 'const_div4', 'c_div', 'design_water_pressure', 'reducing_pressure_div', 'normal_water_puressure', 'water_outage', 'inner_film', 'outer_film', 'quantity', 
-        'right_quantity', 'left_quantity', 'special_note', 'size', 'joint', 'pipe', 'fluid', 'inner_coating', 'outer_coating', 'valve', 'record_div', 'class_code', 'zkm_code', 'special_tube_od1',
+        'right_quantity', 'left_quantity', 'special_note', 'size', 'joint', 'pipe', 'size2', 'joint2', 'pipe2', 'fluid', 'inner_coating', 'outer_coating', 'valve', 'record_div', 'class_code', 'zkm_code', 'special_tube_od1',
         'special_tube_od2', 'route_pattern', 'entrant_comments', 'approver_comments', 'confirmer_comments', 'status', 'confirm_date'];
 
         foreach ($fields as $field) {

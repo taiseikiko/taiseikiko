@@ -44,6 +44,9 @@
         'size' => $_POST['size'], //サイズ
         'joint' => $_POST['joint'], //接合形状
         'pipe' => $_POST['pipe'], //管種
+        'size2' => $_POST['size2'], //サイズ
+        'joint2' => $_POST['joint2'], //接合形状
+        'pipe2' => $_POST['pipe2'], //管種
         'inner_coating' => $_POST['inner_coating'], //内面塗装
         'inner_film' => $_POST['inner_film'], //内面塗装：膜厚
         'outer_coating' => $_POST['outer_coating'], //外面塗装
@@ -160,7 +163,7 @@
       
       $sql = "INSERT INTO sq_detail_tr (sq_no,sq_line_no,estimate_div1,estimate_div2,deadline_estimate_date,specification_div,check_type,drawing_div,document_div,deadline_drawing_date,
               cad_data_div,class_code,zkm_code,c_div,const_div1,const_div2,const_div3,const_div4,size,
-              joint,pipe,inner_coating,inner_film,outer_coating,outer_film,fluid,valve,o_c_direction,special_tube_od1,special_tube_od2,
+              joint,pipe,size2,joint2,pipe2,inner_coating,inner_film,outer_coating,outer_film,fluid,valve,o_c_direction,special_tube_od1,special_tube_od2,
               quantity,right_quantity,left_quantity,design_water_pressure,water_outage,normal_water_puressure,reducing_pressure_div,special_note,entrant_comments,";
       //確認画面の時だけ確認者をセットする
       if ($title == 'check') {
@@ -178,7 +181,8 @@
               VALUES(
               :sq_no,:sq_line_no,:estimate_div1,:estimate_div2,:deadline_estimate_date,:specification_div,:check_type,:drawing_div,:document_div,:deadline_drawing_date,
               :cad_data_div,:class_code,:zkm_code,:c_div,:const_div1,:const_div2,:const_div3,:const_div4,:size,
-              :joint,:pipe,:inner_coating,:inner_film,:outer_coating,:outer_film,:fluid,:valve,:o_c_direction,:special_tube_od1,:special_tube_od2,
+              :joint,:pipe,:size2,:joint2,:pipe2,
+              :inner_coating,:inner_film,:outer_coating,:outer_film,:fluid,:valve,:o_c_direction,:special_tube_od1,:special_tube_od2,
               :quantity,:right_quantity,:left_quantity,:design_water_pressure,:water_outage,:normal_water_puressure,:reducing_pressure_div,:special_note,:entrant_comments,";
       //確認画面の時だけ確認者をセットする
       if ($title == 'check') {
@@ -218,7 +222,7 @@
         $sql .= "estimate_div1=:estimate_div1,estimate_div2=:estimate_div2,deadline_estimate_date=:deadline_estimate_date,
                 specification_div=:specification_div,check_type=:check_type,drawing_div=:drawing_div,document_div=:document_div,deadline_drawing_date=:deadline_drawing_date,
                 cad_data_div=:cad_data_div,class_code=:class_code,zkm_code=:zkm_code,c_div=:c_div,const_div1=:const_div1,const_div2=:const_div2,const_div3=:const_div3,
-                const_div4=:const_div4,size=:size,joint=:joint,pipe=:pipe,inner_coating=:inner_coating,inner_film=:inner_film,outer_coating=:outer_coating,
+                const_div4=:const_div4,size=:size,joint=:joint,pipe=:pipe,size2=:size2,joint2=:joint2,pipe2=:pipe2,inner_coating=:inner_coating,inner_film=:inner_film,outer_coating=:outer_coating,
                 outer_film=:outer_film,fluid=:fluid,valve=:valve,o_c_direction=:o_c_direction,special_tube_od1=:special_tube_od1,special_tube_od2=:special_tube_od2,quantity=:quantity,right_quantity=:right_quantity,
                 left_quantity=:left_quantity,design_water_pressure=:design_water_pressure,water_outage=:water_outage,normal_water_puressure=:normal_water_puressure,
                 reducing_pressure_div=:reducing_pressure_div,special_note=:special_note,entrant_comments=:entrant_comments,record_div=:record_div,status=:status,";
