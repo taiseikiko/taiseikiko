@@ -105,7 +105,7 @@
           </div>
         </td>
       </tr>
-      <tr style="height:20px;"></tr>
+
       <tr>
         <td>
           <div class="field-row">

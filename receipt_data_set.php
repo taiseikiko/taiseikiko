@@ -13,6 +13,8 @@
   $approval_comment = '';   //承認者コメント
   $request_form_url = '';
   $recipt_form_url = '';
+  $style = 'style = "margin-left: 1rem;"';
+  $disabled = '';
   $recipi_comment = $recipt_comfirmor_comment = $recipt_approval_comment = '';
   $btn_class = 'updRegBtn'; 
   $header = '受付';
