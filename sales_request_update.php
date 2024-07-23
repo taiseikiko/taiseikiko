@@ -5,7 +5,7 @@
   $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
   $today = date('Y/m/d');
   $success = true;
-  $title = $_GET['title'] ?? '';
+  $title = $_GET['title'] ?? $title;
 
   if (isset($_POST['submit'])) {
     $process = $_POST['process'];

@@ -3,6 +3,7 @@
   require_once('function.php');
   // DB接続
   $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
+  $today = date('Y/m/d');
   //ログインユーザーの部署ID
   $dept_id1 = getDeptId($dept_code);
   // 初期設定 & データセット
@@ -109,6 +110,26 @@
           $office_position_name = $client_datas['role_name'];        //役職
         }
       }    
+    } else {
+      //営業依頼書№ 自動採番
+      //システム日付の年月を採取
+      $ym = substr(str_replace('/', '', $today), 0, 6);
+      $code_id = 'sales_request_no';
+
+      $sql = "SELECT code_no FROM sq_code WHERE code_id = '$code_id' AND text1 = '$ym'";
+      $stmt = $pdo->prepare($sql);
+      $stmt->execute();
+      $data = $stmt->fetchAll();
+
+      //営業依頼書№（sq_no）自動採番
+      if (isset ($data) && !empty($data)) {
+        $code_no = $data[0]['code_no'];
+        $no = $code_no+1;
+        $new_sq_no = $ym.$no;
+      } else {
+        $no = '1';
+        $new_sq_no = $ym.$no;
+      }
     }
   }
 

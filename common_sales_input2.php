@@ -7,6 +7,7 @@
     <input type="hidden" name="title" id="title" value="<?= $title ?>">
     <table style="width:auto;">
       <input type="hidden" name="sq_no" id="sq_no" value="<?= $sq_no ?>">
+      <input type="hidden" name="new_sq_no" id="new_sq_no" value="<?= $new_sq_no ?>">
       <tr style="height:10px; margin-top:20px"></tr>
       <tr style="height:10px;"></tr>
       <tr>

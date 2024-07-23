@@ -2,7 +2,11 @@
 
 $from = $_GET['from'] ?? '';
 $title = $_POST['title'] ?? '';
-$sq_no = $_POST['sq_no'] ?? '';
+if ($_POST['sq_no'] !== '') {
+  $sq_no = $_POST['sq_no'];
+} else {
+  $sq_no = $_POST['new_sq_no']?? '';
+}
 
 //'sq' = 【 営業依頼書：依頼入力】【アップロードボタン】
 //e1 = 【　営業依頼書：技術部　入力　】【技術員入力画面・見積処理】【見積図面のアップロードボタン】
