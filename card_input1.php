@@ -26,3 +26,6 @@
     });
   });
 </script>
+<?php
+include("footer.html");
+?>

@@ -83,11 +83,6 @@
     </div>
   </form><!-- Vertical Form -->
 </div>
-
-<?php
-// フッターセット
-footer_set();
-?>
 <style>
   .scrollable-table-container {
     width: fit-content;

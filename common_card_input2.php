@@ -84,6 +84,7 @@
         <tr style="height:10px;"></tr>
       </table>
     </table>
+    <!-- 一行目 -->
     <table style="width:auto;">
       <tr style="height:10px;"></tr>
       <tr>
@@ -99,7 +100,6 @@
           </div>
         </td>
       </tr>
-
       <tr>
         <td>
           <div class="field-row">
@@ -118,13 +118,19 @@
               ?>
             </select>
             <label class="common_label" for="zaikoumei1">　　材工名</label>
-            <select class="dropdown-menu" id="zaikoumeiList1" name="zaikoumei1">
+            <select class="dropdown-menu" id="zaikoumeiList1" name="zaikoumei1" style="margin-left: 1rem;">
               <option value="" class="">選択して下さい。</option>
             </select>
             <input type="hidden" name="zkm_code" id="zkm_code1" value="<?= $zkm_code1 ?>">
-
+          </div>
+        </td>
+      </tr>
+      <tr style="height:10px;"></tr>
+      <tr>
+        <td>
+          <div class="field-row">
             <label class="common_label" for="pipe1">管種 </label>
-            <select class="dropdown-menu" name="pipe1">
+            <select class="dropdown-menu" name="pipe1" style="margin-left: 1rem;">
               <option value="">選択して下さい。</option>
               <?php
               if (isset($pipeList) && !empty($pipeList)) {
@@ -137,29 +143,27 @@
               }
               ?>
             </select>
-
-            <button class="approveBtn" name="detail" id="detailBtn1" style="margin-left: 8rem;" value="1" <?= $disabled_detail_btn1 ?>>詳細</button>
+            <label class="common_label" for="size1">　　サイズ </label>
+            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeA1" value="<?= $sizeA1 ?>">mm　　✖
+            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeB1" value="<?= $sizeB1 ?>">mm　
           </div>
         </td>
       </tr>
-      <tr style="height:10px;"></tr>
-
       <tr>
         <td>
           <div class="field-row">
-            <label class="common_label" for="size1">　　サイズ </label>
-            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeA1" value="<?= $sizeA1 ?>">mm　　✖
-            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeB1" value="<?= $sizeB1 ?>">mm　            
-
             <label class="common_label" for="specification_no1">仕様書№</label>
             <input type="text" style="margin-left: 1rem;" class="input-res" maxlength="10" name="specification_no1" value="<?= $specification_no1 ?>">
             <label class="common_label" for="special_note1">特記事項</label>
             <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="special_note1" id="" value="<?= $special_note1 ?>">
+            <button class="approveBtn" name="detail" id="detailBtn1" style="margin-left: 10rem;" value="1" <?= $disabled_detail_btn1 ?>>詳細</button>
           </div>
         </td>
       </tr>
       <tr style="height:10px;"></tr>
     </table>
+    
+    <!-- 二行目 -->
     <table style="width:auto;">
       <tr style="height:10px;"></tr>
       <tr>
@@ -199,6 +203,16 @@
             </select>
             <input type="hidden" name="zkm_code" id="zkm_code2" value="<?= $zkm_code2 ?>">
 
+            
+
+          </div>
+        </td>
+      </tr>
+      <tr style="height:10px;"></tr>
+
+      <tr>
+        <td>
+          <div class="field-row">
             <label class="common_label" for="pipe2">管種 </label>
             <select name="pipe2" class="dropdown-menu">
               <option value="">選択して下さい。</option>
@@ -213,29 +227,27 @@
               }
               ?>
             </select>
-                        
-            <button class="approveBtn" name="detail" id="detailBtn2" style="margin-left: 8rem;" value="2" <?= $disabled_detail_btn2 ?>>詳細</button>
-          </div>
-        </td>
-      </tr>
-      <tr style="height:10px;"></tr>
-
-      <tr>
-        <td>
-          <div class="field-row">
             <label class="common_label" for="size2">　　サイズ </label>
             <input type="text" style="margin-left: 1rem; width:80px;" name="sizeA2" value="<?= $sizeA2 ?>">mm　　✖
             <input type="text" style="margin-left: 1rem; width:80px;" name="sizeB2" value="<?= $sizeB2 ?>">mm　
-
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="field-row">
             <label class="common_label" for="specification_no2">仕様書№</label>
             <input type="text" style="margin-left: 1rem;" class="input-res" maxlength="10" name="specification_no2" value="<?= $specification_no2 ?>">
             <label class="common_label" for="special_note2">特記事項</label>
             <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="special_note2" id="" value="<?= $special_note2 ?>">
+            <button class="approveBtn" name="detail" id="detailBtn2" style="margin-left: 10rem;" value="2" <?= $disabled_detail_btn2 ?>>詳細</button>
           </div>
         </td>
       </tr>
       <tr style="height:10px;"></tr>
     </table>
+
+    <!--  三行目 -->
     <table style="width:auto;">
       <tr style="height:10px;"></tr>
       <tr>
@@ -251,7 +263,6 @@
           </div>
         </td>
       </tr>
-
       <tr>
         <td>
           <div class="field-row">
@@ -274,7 +285,13 @@
               <option value="" class="">選択して下さい。</option>
             </select>
             <input type="hidden" name="zkm_code" id="zkm_code3" value="<?= $zkm_code3 ?>">
-
+          </div>
+        </td>
+      </tr>
+      <tr style="height:10px;"></tr>
+      <tr>
+        <td>
+          <div class="field-row">
             <label class="common_label" for="pipe3">管種 </label>
             <select name="pipe3" class="dropdown-menu">
               <option value="">選択して下さい。</option>
@@ -289,29 +306,26 @@
               }
               ?>
             </select>
-                        
-            <button class="approveBtn" name="detail" id="detailBtn3" style="margin-left: 8rem;" value="3" <?= $disabled_detail_btn3 ?>>詳細</button>
+            <label class="common_label" for="size3">　　サイズ </label>
+            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeA3" value="<?= $sizeA3 ?>">mm　　✖
+            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeB3" value="<?= $sizeB3 ?>">mm　            
           </div>
         </td>
       </tr>
-      <tr style="height:10px;"></tr>
-
       <tr>
         <td>
-          <div class="field-row">
-            <label class="common_label" for="size3">　　サイズ </label>
-            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeA3" value="<?= $sizeA3 ?>">mm　　✖
-            <input type="text" style="margin-left: 1rem; width:80px;" name="sizeB3" value="<?= $sizeB3 ?>">mm　
-
+          <div class="field-row">            
             <label class="common_label" for="specification_no3">仕様書№</label>
             <input type="text" style="margin-left: 1rem;" class="input-res" maxlength="10" name="specification_no3" value="<?= $specification_no3 ?>">
             <label class="common_label" for="special_note3">特記事項</label>
             <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="special_note3" id="" value="<?= $special_note3 ?>">
+            <button class="approveBtn" name="detail" id="detailBtn3" style="margin-left: 10rem;" value="3" <?= $disabled_detail_btn3 ?>>詳細</button>
           </div>
         </td>
       </tr>
       <tr style="height:10px;"></tr>
     </table>
+    <!-- 四行目 -->
     <table style="width:auto;">
       <tr style="height:10px;"></tr>
       <tr>
@@ -350,7 +364,13 @@
               <option value="" class="">選択して下さい。</option>
             </select>
             <input type="hidden" name="zkm_code" id="zkm_code4" value="<?= $zkm_code4 ?>">
-
+          </div>
+        </td>
+      </tr>
+      <tr style="height:10px;"></tr>
+      <tr>
+        <td>
+          <div class="field-row">
             <label class="common_label" for="pipe4">管種 </label>
             <select name="pipe4" class="dropdown-menu">
               <option value="">選択して下さい。</option>
@@ -364,31 +384,26 @@
                 }
               }
               ?>
-            </select>            
-            
-            <button class="approveBtn" name="detail" id="detailBtn4" style="margin-left: 8rem;" value="4" <?= $disabled_detail_btn4 ?>>詳細</button>
-          </div>
-        </td>
-      </tr>
-      <tr style="height:10px;"></tr>
-
-      <tr>
-        <td>
-          <div class="field-row">
+            </select>
             <label class="common_label" for="size4">　　サイズ </label>
             <input type="text" style="margin-left: 1rem; width:80px;" name="sizeA4" value="<?= $sizeA4 ?>">mm　　✖
             <input type="text" style="margin-left: 1rem; width:80px;" name="sizeB4" value="<?= $sizeB4 ?>">mm　
-
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <div class="field-row">            
             <label class="common_label" for="specification_no4">仕様書№</label>
             <input type="text" style="margin-left: 1rem;" class="input-res" maxlength="10" name="specification_no4" value="<?= $specification_no4 ?>">
             <label class="common_label" for="special_note4">特記事項</label>
             <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="special_note4" id="" value="<?= $special_note4 ?>">
+            <button class="approveBtn" name="detail" id="detailBtn4" style="margin-left: 10rem;" value="4" <?= $disabled_detail_btn4 ?>>詳細</button>
           </div>
         </td>
       </tr>
       <tr style="height:10px;"></tr>
     </table>
-
     <table style="width:auto;">
       <tr>
         <hr>
@@ -420,72 +435,51 @@
         </td>
       </tr>
       <tr style="height:10px;"></tr>
-      </table>
+    </table>
 
-      <table  style="margin-top:13px;">
-        <tr>
-          <td>
-            <div class="flex-container">
-              <div>            
-                <button id="returnBtn" class="returnBtn">前の画面に戻る </button>
-                <button type="submit" class="approveBtn" id="reg_updBtn" name="submit" value="update"><?= $btn_name ?></button>
-              </div>     
+    <table style="margin-top:13px;">
+      <tr>
+        <td>
+          <div class="flex-container">
+            <div>
+              <button id="returnBtn" class="returnBtn">前の画面に戻る </button>
+              <button type="submit" class="approveBtn" id="reg_updBtn" name="submit" value="update"><?= $btn_name ?></button>
             </div>
-          </td>
-          <td>
-            <div class="flex-container" style="margin-left: 50rem;">
-              <div>            
-                <button id="returnProcessBtn" class="returnProcessBtn" >差し戻し </button>
-                <button id="cancelProcessBtn" class="cancelProcessBtn" >中止</button>
-              </div> 
+          </div>
+        </td>
+        <td>
+          <div class="flex-container" style="margin-left: 30rem;">
+            <div>
+              <button id="returnProcessBtn" class="returnProcessBtn">差し戻し </button>
+              <button id="cancelProcessBtn" class="cancelProcessBtn">中止</button>
             </div>
-          </td>
-        </tr>          
-      </table>    
+          </div>
+        </td>
+      </tr>
+    </table>
   </form><!-- Vertical Form -->
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script type="text/javascript">
-  $(document).ready(function (){
+  $(document).ready(function() {
     //詳細ボタンを押下場合
-    for (var i = 1; i <=5; i++) {
-      $("#detailBtn" + i).click(function(){
+    for (var i = 1; i <= 5; i++) {
+      $("#detailBtn" + i).click(function() {
         $("#card_input2").attr("action", "card_input3.php");
       });
     }
-  });
-  // document.addEventListener('DOMContentLoaded', function() {
-  //   var approverList = document.getElementById('approverList');
-  //   var submitButton = document.getElementById('reg_updBtn');
-  //   var approverComments = document.getElementById('approver_comments');
-    
-  //   // approverComments.disabled = true;
-
-  //   approverList.addEventListener('change', function() {
-  //     var selectedValue = this.value;
-
-  //     if (selectedValue) {
-  //       submitButton.innerText = '承認';
-  //       submitButton.classList.add('approveBtn');
-  //       // approverComments.disabled = false;
-  //     } else {
-  //       submitButton.innerText = '<?= $btn_name ?>';
-  //       submitButton.classList.remove('approveBtn');
-  //       // approverComments.disabled = true;
-  //     }
-  //   });
-  // });
+  });  
 </script>
 <style>
   .flex-container {
-    display: flex;    
+    display: flex;
   }
 
-  .flex-container > div {
+  .flex-container>div {
     margin: 20px 5px;
   }
+
+  .dropdown-menu {
+    margin-left: 1rem;
+  }
 </style>
-<?php
-// フッターセット
-footer_set();
-?>
