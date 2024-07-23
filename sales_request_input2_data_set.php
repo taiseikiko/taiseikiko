@@ -30,6 +30,7 @@
   $daily_report_url = '';           //営業日報URL
   $client = '';                     //依頼者
   $sq_no = '';                      //営業依頼書№
+  $new_sq_no = '';
   $process = '';                    //処理
   $regBtnDisabled = '';
   $lock_header = false;
@@ -56,7 +57,7 @@
       $sq_no = $_POST['sq_no']; //営業依頼書№
     } else if (!empty($from_mail_sq_no)) {
       //メールからURLをクリックして来た場合
-      if ($title == 'check' || $title == 'confirm' || $title == 'approve') {
+      if ($title == 'input' || $title == 'check' || $title == 'confirm' || $title == 'approve') {
         //確認画面と承認画面の場合更新処理を行う
         $process = 'update';
       } else {

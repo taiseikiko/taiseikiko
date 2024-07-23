@@ -169,7 +169,7 @@
                 $i = 0;
                 //メール送信する時、渡すURLを設定する
                 //登録画面へ移動する
-                $url = 'sales_request_input1.php?title=input';
+                $url = 'sales_request_input2.php?from=mail&title=input&sq_no=' . $sq_no;
                 //確認画面の場合
                 if ($title == 'check') {
                     //clientへメール送信する
@@ -195,7 +195,7 @@
                 $i = 0;
                 //メール送信する時、渡すURLを設定する
                 //登録画面へ移動する
-                $url = 'sales_request_input1.php?title=input';
+                $url = 'sales_request_input2.php?from=mail&title=input&sq_no=' . $sq_no;
                 //自部署以前の全ての担当者へ送信する
                 foreach ($sq_route_mail as $item) {
                     $indexs = ['receipt_ad', 'entrant_ad', 'confirmer_ad', 'approver_ad'];
