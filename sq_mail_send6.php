@@ -22,8 +22,8 @@ try {
   $mail_details = getSqMailSentence();
   if (!empty($mail_details)) {
     //データベースからもらったテキストにclientとsq_no、URLをセットする
-    $search = array("client", "sq_no");
-    $replace = array($from_name, $sq_no);
+    $search = array("client", "sq_no", "comments");
+    $replace = array($from_name, $sq_no, $comments);
     $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
     $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
   }
