@@ -86,7 +86,7 @@
     }
 
     if ($process2 == 'update' || $process2 == 'copy' || $process2 == 'detail') {
-      $sq_line_no = $_GET['line'];
+      $sq_line_no = $_GET['line']?? $_POST['sq_line_no'];
 
       $sq_detail_datas = get_sq_detail_datas($sq_no, $sq_line_no);
       if (isset($sq_detail_datas) && !empty($sq_detail_datas)) {

@@ -521,6 +521,18 @@
           </div>
         </td>
       </tr>
+      <?php } 
+      // 検索画面(sales_request_search_input)の場合だけに表示させる
+      if ($title == 'search') { ?>
+      <tr>
+        <td>
+          <div class="flex-container">
+            <div>
+              <button id="returnBtn" class="returnBtn">前の画面に戻る </button>
+            </div>
+          <div>
+      </td>
+      </tr>
       <?php } ?>
       <tr style="height:10px;"></tr>
     </table>

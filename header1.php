@@ -141,6 +141,9 @@
         <ul>
           <li><a href="sq_default_role.php">部署内初期ルート設定</a></li>
         </ul>
+        <ul>
+          <li><a href="sales_request_search_input1.php">営業依頼書：検索画面</a></li>
+        </ul>
       </details>
     </li>';
     echo $s_menu1;}
