@@ -134,7 +134,7 @@ include("header1.php");
     //アプロードボタンを押下する場合
     $('#upload').click(function(event) {
       event.preventDefault();
-      var errMessage = checkValidation();
+      var errMessage = checkValidationFile();
       
       //エラーがある場合
       if (errMessage !== '') {
