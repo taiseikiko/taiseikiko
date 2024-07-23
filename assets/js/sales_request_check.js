@@ -8,7 +8,7 @@ function errMsgForEmpty(name) {
 
 function checkValidationInput2() {
   var isErr = false;
-  var errMessage = '';
+  var errMessage = "";
   var item_name = document.getElementById("item_name").value; //件名
   var cust_dept = document.getElementById("cust_dept").value; //担当部署
   var cust_pic = document.getElementById("cust_pic").value; //担当者
@@ -42,8 +42,8 @@ function checkValidationInput2() {
     isErr = true;
   }
 
-  if (!isErr && daily_report_url.length > 50) {
-    errMessage = errMsgForLength("営業日報", "50");
+  if (!isErr && daily_report_url.length > 200) {
+    errMessage = errMsgForLength("営業日報", "200");
     isErr = true;
   }
 
