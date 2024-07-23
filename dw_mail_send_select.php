@@ -48,14 +48,17 @@ function sendMail($email_datas, $to_datas) {
         // 送受信先設定（第二引数は省略可）
         
         foreach ($to_datas as $item) {
-            $mail->addAddress($item['email'], $item['employee_name']);
+            $mail->addAddress($item['email'], '');
         }
+
+        //add bcc recipients
+        $mail->addBCC('r-higashimura@taiseikiko.com', '東村 凌太');
 
         $body = '';
         $body = $email_datas['body'] . "<br>"; // Add a line break before the link;
         $body .= "<a href='" . $email_datas['url'] . "'>" . $email_datas['url'] . "</a>";
         $mail->setFrom($email_datas['from_email'], $email_datas['from_name']); // 送信者
-        $mail->addReplyTo('peacefullife4497@gmail.com', 'HTET HTET'); // 返信先
+        $mail->addReplyTo($email_datas['from_email'], $email_datas['from_name']); // 返信先
         $mail->Sender = $email_datas['from_email']; // Return-path
 
         // 送信内容設定        

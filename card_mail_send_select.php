@@ -51,6 +51,9 @@ function sendMail($email_datas, $to_datas) {
             $mail->addAddress($item['email'], '');
         }
 
+        //add bcc recipients
+        $mail->addBCC('r-higashimura@taiseikiko.com', '東村 凌太');
+
         $body = '';
         $body = $email_datas['body'] . "<br>"; // Add a line break before the link;
         $body .= "<a href='" . $email_datas['url'] . "'>" . $email_datas['url'] . "</a>";
