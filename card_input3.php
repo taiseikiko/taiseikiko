@@ -485,15 +485,14 @@
             </td>
             <!-- 確認画面と承認画面の場合だけ、表示する------------------------　開始 ------------------------------------------>
             <td>
-              <?php
-              if ($page == '確認' || $page == '承認') { ?>
               <div class="flex-container" style="margin-left:50rem">
                 <div>
                   <button id="returnProcessBtn" class="returnProcessBtn">差し戻し </button>
+                  <?php if ($page !== '入力' && $page !== '受付') { ?>
                   <button class="cancelProcessBtn" id="cancelProcessBtn">中止</button>
+                  <?php } ?>
                 </div>
               </div>
-              <?php } ?>
             </td>
             <!-- 確認画面と承認画面の場合だけ、表示する------------------------　完了 ------------------------------------------>
           </tr>
@@ -688,10 +687,13 @@
       event.preventDefault();
       var sq_card_no = document.getElementById('sq_card_no').value;
       var sq_card_line_no = document.getElementById('sq_card_line_no').value;
+      var page = document.getElementById('page').value;
+
       var from = 'other_dept';
 
       var url = "card_send_back.php" + "?sq_card_no=" + sq_card_no + 
       "&sq_card_line_no=" + sq_card_line_no +
+      "&page=" + page +
       "&from=" + from;
       window.open(url, "popupWindow", "width=900,height=260,left=100,top=50");
     })

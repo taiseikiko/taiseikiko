@@ -98,9 +98,11 @@
         global $from;
         global $card_no;
         global $sq_card_line_no;
+        global $send_back_to_person;
         global $type;
         $header = [];
         $detail = [];
+        $receipt = [];
         $datas = [];
 
         //headerからclientデータを取得する
@@ -115,7 +117,7 @@
             $header[] = $row;
         }
 
-        //detailからentrantデータを取得する
+        //detailからentrantを取得する
         $sql_d = "SELECT e.employee_code, e.employee_name, e.email
                 FROM card_detail_tr d
                 LEFT JOIN employee e ON d.entrant = e.employee_code                
@@ -144,7 +146,20 @@
                     $datas = $header;
                 }
             }
-            //同部署内での差し戻しの場合
+            //同部署内で受付者ロールの人に差し戻しの場合
+            else if ($type == 'receipt') {
+                $sql = "SELECT e.employee_code, e.employee_name, e.email
+                            FROM employee e
+                            WHERE e.employee_code = :employee_code";
+                $stmt = $pdo->prepare($sql);
+                $stmt->bindParam(':employee_code', $send_back_to_person);
+                $stmt->execute();
+                while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $receipt[] = $row;
+                }
+                $datas = $receipt;
+            }
+            //同部署内で入力者に差し戻しの場合
             else {
                 //detailのentrantにメール送信
                 if (!empty($detail)) {

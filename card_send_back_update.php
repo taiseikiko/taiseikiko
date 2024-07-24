@@ -111,7 +111,18 @@
             confirmer=:confirmer, confirm_date=:confirm_date, confirmer_comments=:confirmer_comments, approver=:approver, 
             approve_date=:approve_date, approver_comments=:approver_comments, upd_date=:upd_date
             WHERE sq_card_no=:sq_card_no AND sq_card_line_no=:sq_card_line_no';
-    } else {
+    } 
+    //同部署内 入力者（detailのentrant）が受付者ロールの人に差し戻し
+    else if ($type == 'receipt') {
+      $data['sq_card_line_no'] = $sq_card_line_no;
+      $data['procurement_status'] = '5';  //資材部Noステータス
+      $data['upd_date'] = $today;
+
+      //更新する
+      $sql = 'UPDATE card_detail_tr SET procurement_status=:procurement_status, upd_date=:upd_date
+            WHERE sq_card_no=:sq_card_no AND sq_card_line_no=:sq_card_line_no';
+    }
+    else {
       if ($from == 'procurement') {
         //資材部以外の部署の場合、headerのclientに差し戻したらdetailテーブルから、該当のレコードを削除する
         $sql = 'DELETE FROM card_detail_tr WHERE sq_card_no=:sq_card_no';
