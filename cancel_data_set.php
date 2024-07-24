@@ -12,7 +12,7 @@
   $route_pattern = $_GET['route_pattern'] ?? '';
   $e_title = substr($title, 3);
 
-  if (($e_title == 'confirm') || ($e_title == 'approve')) {
+  if (($e_title == 'confirm') || ($e_title == 'approve') || ($e_title == 'receipt') || ($title == 'check') || ($title == 'approve')) {
     $disabled_btn = '';
   }
 ?>

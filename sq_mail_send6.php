@@ -29,15 +29,31 @@ try {
   }
 
   // baseurl を設定する
-  // $parsed_url = parse_url($url);
+  $parsed_url = parse_url($url);
 
-  // if ($parsed_url !== false) {
-  //   if (isset($parsed_url['port'])) {
-  //     $base_url = $parsed_url['scheme'] . '://' . $parsed_url['host'] . ':' . $parsed_url['port'] . '/';
-  //   } else {
-  //     $base_url = $parsed_url['scheme'] . '://' . $parsed_url['host'] . '/taisei/taiseikiko/';
-  //   }
-  // }
+  if ($parsed_url !== false) {
+    if (isset($parsed_url['port'])) {
+      $base_url = $parsed_url['scheme'] . '://' . $parsed_url['host'] . ':' . $parsed_url['port'] . '/';
+    } else {
+      $base_url = $parsed_url['scheme'] . '://' . $parsed_url['host'] . '/taisei/taiseikiko/';
+    }
+  }
+
+  switch ($title) {
+    //入力画面の場合確認画面へ移動出来るように設定する
+    case 'input':
+        $url = $base_url . "sales_request_check2.php?from=mail&title=check&sq_no=".$sq_no;
+        break;
+    //確認画面の場合承認画面へ移動出来るように設定する
+    case 'check':
+        $url = $base_url . "sales_request_approve2.php?from=mail&title=approve&sq_no=".$sq_no;
+        break;
+    //承認画面の場合ルート設定画面へ移動するように設定する
+    case 'approve':
+        $url = $base_url . "sales_route_input2.php?from=mail&title=set_route&sq_no=".$sq_no;
+        break;
+  }
+
   $email_datas = [
     'from_email' => $from_email,     //送信者email
     'from_name' => $from_name,       //送信者name
@@ -52,6 +68,7 @@ try {
   if ($route_mail_datas) {
     //メール送信処理を行う
     $success_mail = sendMail($email_datas, $route_mail_datas);
+    //<script>window.close();window.opener.location.href='$redirect';</script>
   } else {
     $success_mail = false;
   }
@@ -93,8 +110,9 @@ function get_sq_route_mail_datas($sq_no, $sq_line_no, $dept_id)
             e3.employee_name AS approver_name, e3.email AS approver_email
             FROM sq_header_tr h
             LEFT JOIN employee e1 ON e1.employee_code = h.client
-            LEFT JOIN employee e2 ON e2.employee_code = h.confirmer
-            LEFT JOIN employee e3 ON e3.employee_code = h.approver
+            LEFT JOIN sq_default_role r ON r.dept_id = '$dept_id' AND r.entrant = h.client
+            LEFT JOIN employee e2 ON e2.employee_code = r.confirmer
+            LEFT JOIN employee e3 ON e3.employee_code = r.approver
             WHERE h.sq_no='$sq_no'";
   $stmt = $pdo->prepare($sql);
   $stmt->execute();
