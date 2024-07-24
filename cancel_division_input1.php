@@ -43,7 +43,50 @@
   $(document).ready(function(){
     //スキップ処理実行を押下する場合
     $('#cancel').click(function() {
-        $('#cancel_form').attr('action', 'cancel_update.php');
+        // $('#cancel_form').attr('action', 'cancel_update.php');
+        //確認メッセージを書く
+      var msg = "中止処理を実行します。よろしいですか？";
+      //何の処理科を書く
+      var process = "cancel";
+      //確認Dialogを呼ぶ
+      openConfirmModal(msg, process);
     })
+     /*----------------------------------------------------------------------------------------------- */
+
+    //エラーがあるかどうか確認する
+    var err = '<?= $err ?>';
+    //エラーがある場合
+    if (err !== '') {
+      //OKメッセージを書く
+      var msg = "登録処理にエラーがありました。係員にお知らせください。";
+      //OKDialogを呼ぶ
+      openOkModal(msg, 'error');
+    }
+
+    /*----------------------------------------------------------------------------------------------- */
+
+    //確認BOXに"はい"ボタンを押下する場合
+    $("#confirm_okBtn").click(function(event) {
+      var process = $("#btnProcess").val();
+      //ヘッダ更新処理の場合
+      if (process == "cancel") {
+        //submitしたいボタン名をセットする
+        $("#confirm_okBtn").attr("name", "cancel");
+        //cancel_update.phpへ移動する
+        $('#cancel_form').attr('action', 'cancel_update.php');
+      }
+    });
   });
+  /*--------------------------------------FUNCTION--------------------------------------------------------- */
+  function openConfirmModal(msg, process) {
+    event.preventDefault();
+    //何の処理かをセットする
+    $("#btnProcess").val(process);
+    //確認メッセージをセットする
+    $("#confirm-message").text(msg);
+    //確認Dialogを呼ぶ
+    $("#confirm").modal({
+      backdrop: false
+    });
+  }
 </script>
