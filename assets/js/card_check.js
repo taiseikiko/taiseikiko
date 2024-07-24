@@ -6,6 +6,10 @@ function errMsgForEmpty(name) {
   return "「" + name + "」は必須項目です。";
 }
 
+function errMsgForEmptySelect(name) {
+  return "「" + name + "」を選択してください。";
+}
+
 function checkEmptyForRadio(item) {
   var checked = false;
   for (var i = 0; i < item.length; i++) {
@@ -27,5 +31,19 @@ function checkValidation() {
     errMessage = errMsgForEmpty("担当者");
     isErr = true;
   }
+  return errMessage;
+}
+
+function checkValidationFile(file) {
+  var isErr = false;
+  var errMessage = "";
+
+  if (file) {
+    if (!isErr && file.value == "") {
+      errMessage = errMsgForEmptySelect("ファイル");
+      isErr = true;
+    }
+  }
+
   return errMessage;
 }

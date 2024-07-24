@@ -20,6 +20,9 @@
         <input type="hidden" name="sq_card_no" id="sq_card_no" value="<?= $sq_card_no ?>">
         <input type="hidden" name="sq_card_line_no" id="sq_card_line_no" value="<?= $sq_card_line_no ?>">
         <input type="hidden" name="page" id="page" value="<?= $page ?>">
+        <input type="hidden" name="hid_sq_card_no" id="hid_sq_card_no">
+        <input type="hidden" name="hid_sq_card_line_no" id="hid_sq_card_line_no">
+        <input type="hidden" name="hid_file_name" id="hid_file_name">
         <table style="width:auto;">
           <tr style="height:10px; margin-top:20px"></tr>
           <tr style="height:10px;"></tr>
@@ -231,7 +234,7 @@
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="entrant">担当者</label><i class="fa fa-asterisk" style="font-size:10px;color:red"></i>
+                <label class="common_label" for="entrant">担当者</label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:1px;"></i>
                 <select name="entrant" class="input-res" id="entrant" >
                   <option value="">選択して下さい。</option>
                   <?php 
@@ -293,8 +296,10 @@
           <tr>
             <th> 添付された資料 </th>
             <th style="width:450px;"> コメント </th>
+            <th style="width:40px;"> 処理 </th>
           </tr>
           <?php
+            $i = 0;
             $files = glob('document/card_engineering/*.*');
             foreach ($files as $key => $value) {            
               $cut = str_replace('document/card_engineering/', '', $value);
@@ -309,6 +314,9 @@
                   //見つかったら、そのKEYのファイルコメントをセットする
                   if ($search !== false) {
                     $comments = $item['file_comments'];
+                    $tb_sq_card_no = $item['sq_card_no'];
+                    $tb_sq_card_line_no = $item['sq_card_line_no'];
+                    $tb_file_name = $item['file_name'];
                   }
                 }
               }
@@ -322,7 +330,15 @@
                   <td>
                     $comments
                   </td>
+                  <td>
+                    <button class='cancelProcessBtn' id='delBtn" . $i . "' name='delete'
+                    data-file_name=" . $tb_file_name . "
+                    data-sq_card_no=" . $tb_sq_card_no . "
+                    data-sq_card_line_no=" . $tb_sq_card_line_no . "
+                    >削除</button>
+                  </td>
                 </tr>";
+                $i++;
               }
             }
           ?>
@@ -354,8 +370,10 @@
           <tr>
             <th> 添付された資料 </th>
             <th style="width:450px;"> コメント </th>
+            <th style="width:40px;"> 処理 </th>
           </tr>
           <?php
+            $i = 0;
             $files = glob('document/card_engineering/*.*');
             foreach ($files as $key => $value) {
               $cut = str_replace('document/card_engineering/', '', $value);
@@ -370,6 +388,9 @@
                   //見つかったら、そのKEYのファイルコメントをセットする
                   if ($search !== false) {
                     $comments = $item['file_comments'];
+                    $tb_sq_card_no = $item['sq_card_no'];
+                    $tb_sq_card_line_no = $item['sq_card_line_no'];
+                    $tb_file_name = $item['file_name'];
                   }
                 }
               }
@@ -383,8 +404,16 @@
                   <td>
                     $comments
                   </td>
+                  <td>
+                    <button class='cancelProcessBtn' id='delBtnTwo" . $i . "' name='delete'
+                    data-file_name=" . $tb_file_name . "
+                    data-sq_card_no=" . $tb_sq_card_no . "
+                    data-sq_card_line_no=" . $tb_sq_card_line_no . "
+                    >削除</button>
+                  </td>
                 </tr>";
-              }
+                $i++;
+              }              
             }
           ?>
           <tr style="height:10px;"></tr>
@@ -562,12 +591,24 @@
           //OKDialogを呼ぶ
           openOkModal(errMsg, process);
         } else {
-          //何の処理かを書く
-          var process = "upload1";
-          //エラーメッセージを書く
-          var msg = "アプロードします。よろしいですか？";
-          //確認Dialogを呼ぶ
-          openConfirmModal(msg, process);
+          event.preventDefault();
+          var uploaded_file = document.getElementById("uploaded_file1"); //ファイル
+          var errMessage = checkValidationFile(uploaded_file);
+          
+          //エラーがある場合
+          if (errMessage !== '') {
+            //何の処理かを書く
+            var process = "validate";
+            //OKDialogを呼ぶ
+            openOkModal(errMessage, process);
+          } else {
+            //何の処理かを書く
+            var process = "upload1";
+            //エラーメッセージを書く
+            var msg = "アプロードします。よろしいですか？";
+            //確認Dialogを呼ぶ
+            openConfirmModal(msg, process);
+          }          
         }
       }).catch(function(error) {
         console.error("Error checking duplicate:", error);
@@ -589,12 +630,24 @@
           //OKDialogを呼ぶ
           openOkModal(errMsg, process);
         } else {
-          //何の処理かを書く
-          var process = "upload2";
-          //エラーメッセージを書く
-          var msg = "アプロードします。よろしいですか？";
-          //確認Dialogを呼ぶ
-          openConfirmModal(msg, process);
+          event.preventDefault();
+          var uploaded_file = document.getElementById("uploaded_file2"); //ファイル
+          var errMessage = checkValidationFile(uploaded_file);
+          
+          //エラーがある場合
+          if (errMessage !== '') {
+            //何の処理かを書く
+            var process = "validate";
+            //OKDialogを呼ぶ
+            openOkModal(errMessage, process);
+          } else {
+            //何の処理かを書く
+            var process = "upload2";
+            //エラーメッセージを書く
+            var msg = "アプロードします。よろしいですか？";
+            //確認Dialogを呼ぶ
+            openConfirmModal(msg, process);
+          }          
         }
       }).catch(function(error) {
         console.error("Error checking duplicate:", error);
@@ -631,6 +684,43 @@
     })
 
     /*----------------------------------------------------------------------------------------------- */
+    //削除処理   
+    var i = <?= $i ?>;
+    for (var x = 0; x < i; x++) {
+      $('#delBtn' + x).click(function () {
+        var sq_card_no = $(this).data('sq_card_no');
+        var sq_card_line_no = $(this).data('sq_card_line_no');
+        var file_name = $(this).data('file_name');
+        $('#hid_sq_card_no').val(sq_card_no);
+        $('#hid_sq_card_line_no').val(sq_card_line_no);
+        $('#hid_file_name').val(file_name);
+
+        event.preventDefault();
+        //何の処理かを書く
+        var process = "delete";
+        //エラーメッセージを書く
+        var msg = "削除します。よろしいですか？";
+        //確認Dialogを呼ぶ
+        openConfirmModal(msg, process);
+      })
+
+      $('#delBtnTwo' + x).click(function () {
+        var sq_card_no = $(this).data('sq_card_no');
+        var sq_card_line_no = $(this).data('sq_card_line_no');
+        var file_name = $(this).data('file_name');
+        $('#hid_sq_card_no').val(sq_card_no);
+        $('#hid_sq_card_line_no').val(sq_card_line_no);
+        $('#hid_file_name').val(file_name);
+
+        event.preventDefault();
+        //何の処理かを書く
+        var process = "delete";
+        //エラーメッセージを書く
+        var msg = "削除します。よろしいですか？";
+        //確認Dialogを呼ぶ
+        openConfirmModal(msg, process);
+      })
+    }
 
     //localStorageからフォームデータをセットする
     const formData = JSON.parse(localStorage.getItem('card_input3'));
@@ -689,6 +779,13 @@
         $("#confirm_okBtn").attr("name", "upload");
         //sales_request_update.phpへ移動する
         uploadFile("card_attach_upload1.php?from=input3_2", "2", "_資料_");
+      }
+      //ファイル削除処理の場合
+      else if (process == "delete") {
+        //submitしたいボタン名をセットする
+        $("#confirm_okBtn").attr("name", "delete");
+        //sales_request_update.phpへ移動する
+        deleteFile("card_attach_delete1.php");
       }
     });
 
@@ -796,6 +893,38 @@
       processData: false, // Important: prevent jQuery from processing the data
       contentType: false, // Important: ensure jQuery does not add a content-type header
       success: function(response) {
+        //フォームデータを保存する
+        saveFormData();
+        //reload page
+        location.reload();
+      },
+      error: function(xhr, status, error) {
+      }
+    })
+
+  }
+
+  /*----------------------------------------------------------------------------------------------- */
+
+  function deleteFile(url) {
+    event.preventDefault();
+    var sq_card_no = document.getElementById('hid_sq_card_no').value;
+    var sq_card_line_no = document.getElementById('hid_sq_card_line_no').value;
+    var file_name = document.getElementById('hid_file_name').value;
+
+    var formData = new FormData();
+    formData.append('sq_card_no', sq_card_no);
+    formData.append('sq_card_line_no', sq_card_line_no);
+    formData.append('file_name', file_name);
+
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: formData,
+      processData: false, // Important: prevent jQuery from processing the data
+      contentType: false, // Important: ensure jQuery does not add a content-type header
+      success: function(response) {
+        console.log(response);
         //フォームデータを保存する
         saveFormData();
         //reload page

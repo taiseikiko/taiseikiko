@@ -11,6 +11,7 @@ $entrant_date = $entrant_comments = $confirmer_comments = $approver_comments = '
 $client_name = $dept_name = $role_name = $p_office_code = $p_office_name = '';  //登録者の情報
 $entrant_dept_name = $entrant_role_name = '';  //担当者の情報
 $sizeDisabled = $zaikoumeiDisabled = $pipeDisabled = $comments = $process = '';
+$tb_sq_card_no = $tb_sq_card_line_no = $tb_file_name = '';
 $err = $_GET['err'] ?? '';//エラーを取得する
 $page = '詳細';
 $pipeList = getDropdownData('pipe');                  //管種
