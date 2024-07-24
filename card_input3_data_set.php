@@ -7,7 +7,7 @@ $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 $sq_card_no = $client = $size = ''; //header
 $sq_card_line_no = $procurement_no = $maker = $zkm_code = $pipe = $sizeA = $sizeB = $class_code = $specification_no = $special_note =  
 $entrant = $entrant_set_date = $entrant_set_comments = 
-$entrant_date = $entrant_comments = $confirmer_comments = $approver_comments = '';//detail
+$entrant_date = $entrant_comments = $confirmer_comments = $approver_comments = $confirmer = $confirm_date = $approver = $approve_date = '';//detail
 $client_name = $dept_name = $role_name = $p_office_code = $p_office_name = '';  //登録者の情報
 $entrant_dept_name = $entrant_role_name = '';  //担当者の情報
 $sizeDisabled = $zaikoumeiDisabled = $pipeDisabled = $comments = $process = '';
@@ -84,12 +84,18 @@ if (isset($_POST['detail']) || isset($_GET['sq_card_no'])) {
   if (isset($card_detail_list) && !empty($card_detail_list)) {
     //資材部No、製造メーカー、材工名、管種、仕様書No、特記事項、担当者、担当指定日、担当指定コメント
     $variable_names = ['procurement_no', 'maker', 'zkm_code', 'pipe', 'sizeA', 'sizeB', 'class_code', 'specification_no', 'special_note', 'entrant', 'entrant_set_date', 'entrant_set_comments',
-                        'entrant_comments', 'entrant_date', 'confirmer_comments', 'approver_comments'];
+                        'entrant_comments', 'entrant_date', 'confirmer_comments', 'approver_comments', 'confirmer', 'confirm_date', 'approver', 'approve_date'];
     foreach ($variable_names as $variable_name) {
-      if ($variable_name == 'entrant_date' || $variable_name == 'entrant_set_date') {
-        ${$variable_name} = date('Y-m-d');  //登録日
-      } else {
-        ${$variable_name} = $card_detail_list[$variable_name];
+      ${$variable_name} = $card_detail_list[$variable_name];
+
+      if ($page == '受付') {
+        $entrant_set_date = date('Y-m-d');  //登録日
+      }
+      if ($page == '入力') {
+        $entrant_date = date('Y-m-d');  //登録日
+      }
+      if ($variable_name == 'confirm_date' || $variable_name == 'approve_date') {
+        ${$variable_name} = str_replace('/', '-', $card_detail_list[$variable_name]);
       }
     }
 
