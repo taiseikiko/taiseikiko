@@ -12,7 +12,8 @@
     <input type="hidden" name="dept_id" id="dept_id" value="<?= $dept_id ?>">
     <input type="hidden" name="title" id="title" value="<?= $title ?>">
     <input type="hidden" name="user_code" value="<?= $_SESSION["login"] ?>">
-    <input type="hidden" name="status" id="status" value="<?= $status ?>">
+    <input type="hidden" name="processing_status" id="processing_status" value="<?= $processing_status ?>">
+    <!-- <?= 'prcessing status = '. $processing_status?> -->
     <table style="width:auto;">
       <tr style="height:10px;"></tr>
       <tr style="height:10px; margin-top:20px"></tr>
@@ -514,7 +515,7 @@
               <!-- 入力画面の場合だけに表示させる -->
               <?php if($e_title == 'receipt') { ?>
                 <div>
-                  <button id="updBtn" class="setEmp" style="background:#80dfff;" name="submit" onclick="person_in_charge(event)">担当者設定</button>
+                  <button id="updBtn" class="setEmp" style="background:#80dfff;" name="submit" onclick="person_in_charge(event)" <?php if ($processing_status == '0') {echo 'disabled';}?>>担当者設定</button>
                 </div>                
               <?php } else {
                 // 確認画面の場合、ボタン名を「営業依頼書　明細の確認」,
@@ -523,13 +524,13 @@
                 else if ($title == 'approve') { $btn_name = '営業依頼書　明細の承認'; }
                 else { $btn_name = '営業依頼書 明細の作成・更新'; }?>
                 <div>
-                  <button id="updBtn" class="createOrUpdate" style="background:#80dfff;" name="submit"><?= $btn_name ?></button>
+                  <button id="updBtn" class="createOrUpdate" style="background:#80dfff;" name="submit" <?php if ($processing_status == '0') {echo 'disabled';}?> ><?= $btn_name ?></button>
                 </div>
               <?php } 
                 if ($title !== 'input') { ?>
               <div style="margin-top:13px; margin-left:435px">            
                 <label class="common_label" for="other">その他処理 </label>
-                <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)">
+                <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)" <?php if ($processing_status == '0') {echo 'disabled';}?>>
                   <option value="" class="">選択して下さい。</option>
                   <option value="1" class="">差し戻し</option>
                   <option value="2" class="">中止</option>
@@ -549,7 +550,7 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="route_pattern">ルート設定 </label>
-            <select class="dropdown-menu" id="route_no" name="route_pattern" <?php if (!empty($route_pattern)) { echo 'disabled'; } ?>>
+            <select class="dropdown-menu" id="route_no" name="route_pattern" <?php if (!empty($route_pattern)) { echo 'disabled'; } ?> <?php if ($processing_status == '0') {echo 'disabled';}?>>
               <option value="">選択して下さい。</option>
               <?php 
                 if (isset($route_pattern_list) && !empty($route_pattern_list)) {
@@ -572,11 +573,11 @@
               <button id="returnBtn" class="returnBtn">前の画面に戻る </button>
             </div>
             <div>
-              <button id="updBtn" class="setRoute" style="background:#80dfff;" name="submit">ルート設定 </button>
+              <button id="updBtn" class="setRoute" style="background:#80dfff;" name="submit" <?php if ($processing_status == '0') {echo 'disabled';}?>>ルート設定 </button>
             </div>
             <div style="margin-top:13px; margin-left:435px">            
               <label class="common_label" for="other">その他処理 </label>
-              <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)">
+              <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)" <?php if ($processing_status == '0') {echo 'disabled';}?>>
                 <option value="" class="">選択して下さい。</option>
                 <option value="1" class="">差し戻し</option>
                 <option value="2" class="">中止</option>
