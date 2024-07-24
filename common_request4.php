@@ -1,6 +1,7 @@
 <div class="container">
   <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="req_rec_form4">
     <input type="hidden" name="request_form_number" id="request_form_number" value="<?= $request_form_number ?>">
+    <input type="hidden" name="status" id="status" value="<?= $status ?>">
     <?php include('dialog.php'); ?>
     <table style="width:auto;">
       <tr style="height:20px; margin-top:20px"></tr>
