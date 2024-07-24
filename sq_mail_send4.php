@@ -106,9 +106,10 @@
                 e2.employee_name AS confirmer_name, e2.email AS confirmer_email, 
                 e3.employee_name AS approver_name, e3.email AS approver_email
                 FROM sq_header_tr h
-                LEFT JOIN employee e1 ON e1.employee_code = h.client
-                LEFT JOIN employee e2 ON e2.employee_code = h.confirmer
-                LEFT JOIN employee e3 ON e3.employee_code = h.approver
+                LEFT JOIN employee e1 ON e1.employee_code = h.client                
+                LEFT JOIN sq_default_role dr ON dr.dept_id = '$dept_id' AND dr.entrant = h.client
+                LEFT JOIN employee e2 ON e2.employee_code = dr.confirmer
+                LEFT JOIN employee e3 ON e3.employee_code = dr.approver
                 WHERE h.sq_no='$sq_no'";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();

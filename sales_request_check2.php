@@ -43,12 +43,6 @@
       $("#input2").attr("action", "sales_request_check3.php?line="+selected+"&title=<?= $title ?>");
     });
 
-    //アップロードボタンを押下する場合
-    $("#upload").click(function(){
-      //sq_attach_upload1.phpへ移動する
-      $("#input2").attr("action", "sq_attach_upload1.php?from=sr");
-    })
-
     //確認ボタンを押下する場合
     $(".approveBtn").click(function(){
       event.preventDefault();

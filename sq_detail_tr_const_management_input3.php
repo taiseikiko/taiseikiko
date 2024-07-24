@@ -21,6 +21,7 @@
 <script type="text/javascript"></script>
 <script src="assets/js/inquiry_ent.js"></script>
 <script src="assets/js/inquiry_ent_check.js"></script>
+<script src="assets/js/sales_request_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">

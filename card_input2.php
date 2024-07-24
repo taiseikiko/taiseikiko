@@ -284,3 +284,6 @@
     width: 180px;
   }
 </style>
+<?php
+include("footer.html");
+?>

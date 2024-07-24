@@ -87,7 +87,7 @@
       <div class="field-row" style="margin-top: 10px;">
         <label class="common_label" style="text-align:center;" for="mitsumori">原価計算書 </label>
         <label for="upload">アップロードするファイル ⇒  </label>
-        <input type="file" name="uploaded_file1">
+        <input type="file" name="uploaded_file1" id="uploaded_file1">
         <input type="submit" name="submit_entrant" id="submit_upload1" value="アップロード">
       </div>
     </td>
@@ -115,7 +115,7 @@
       <div class="field-row" style="margin-top: 10px;">
         <label class="common_label" style="text-align:center;" for="mitsumori">資料 </label>
         <label for="upload">アップロードするファイル ⇒  </label>
-        <input type="file" name="uploaded_file2">
+        <input type="file" name="uploaded_file2" id="uploaded_file2">
         <input type="submit" name="submit_entrant" id="submit_upload2" value="アップロード">
       </div>
     </td>
@@ -215,16 +215,56 @@
       openConfirmModal(msg, process);
     })
 
+    /**-------------------------------------------------------------------------------------------------------------- */
+
     //見積原価のアップロードボタンを押下する場合
     $("#submit_upload1").click(function(){
-      //sq_attach_upload1.phpへ移動する
-      $("#input3").attr("action", "sq_attach_upload1.php?from=pc1");
+      event.preventDefault();
+      var uploaded_file = document.getElementById("uploaded_file1"); //ファイル
+      var errMessage = checkValidationFile(uploaded_file);
+      
+      //エラーがある場合
+      if (errMessage !== '') {
+        //何の処理かを書く
+        var process = "validate";
+        //OKDialogを呼ぶ
+        openOkModal(errMessage, process);
+      } else {
+        //何の処理かを書く
+        var process = "upload1";
+        //エラーメッセージを書く
+        var msg = "アプロードします。よろしいですか？";
+        //確認Dialogを呼ぶ
+        openConfirmModal(msg, process);
+      }
     })
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
     //見積定価のアップロードボタンを押下する場合
     $("#submit_upload2").click(function(){
-      //sq_attach_upload1.phpへ移動する
-      $("#input3").attr("action", "sq_attach_upload1.php?from=pc2");
+      event.preventDefault();
+      var uploaded_file = document.getElementById("uploaded_file2"); //ファイル
+      var errMessage = checkValidationFile(uploaded_file);
+      
+      //エラーがある場合
+      if (errMessage !== '') {
+        //何の処理かを書く
+        var process = "validate";
+        //OKDialogを呼ぶ
+        openOkModal(errMessage, process);
+      } else {
+        //何の処理かを書く
+        var process = "upload2";
+        //エラーメッセージを書く
+        var msg = "アプロードします。よろしいですか？";
+        //確認Dialogを呼ぶ
+        openConfirmModal(msg, process);
+      }
     })
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
     //確認BOXにはいボタンを押下する場合
     $("#confirm_okBtn").click(function(event) {
       var process = $("#btnProcess").val();
@@ -235,8 +275,41 @@
         //sales_request_update.phpへ移動する
         $("#input3").attr("action", "sq_detail_tr_procurement_update.php");
       }
+      //アプロード１処理の場合
+      else if (process == "upload1") {
+        //submitしたいボタン名をセットする
+        $("#confirm_okBtn").attr("name", "submit_upload1");
+        //sq_attach_upload1.phpへ移動する
+        uploadFile("sq_attach_upload1.php?from=pc1", "uploaded_file1");
+      }
+      //アプロード１処理の場合
+      else if (process == "upload2") {
+        //submitしたいボタン名をセットする
+        $("#confirm_okBtn").attr("name", "submit_upload2");
+        //sq_attach_upload1.phpへ移動する
+        uploadFile("sq_attach_upload1.php?from=pc2", "uploaded_file2");
+      }
     });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    //localStorageからフォームデータをセットする
+    const formData = JSON.parse(localStorage.getItem('input3'));
+    if (formData) {
+      var myForm = document.getElementById('input3');
+      Object.keys(formData).forEach(key => {
+        const exceptId = ['uploaded_file1', 'uploaded_file2'];
+        if (!exceptId.includes(key)) {
+          myForm.elements[key].value = formData[key];
+        }
+      })
+
+      //フォームにセット後、クリアする
+      localStorage.removeItem('input3');
+    }
   });
+
+  /**-------------------------------------------------------------------------------------------------------------- */
 
   function openConfirmModal(msg, process) {
     event.preventDefault();
@@ -246,6 +319,47 @@
     $("#confirm-message").text(msg);
     //確認Dialogを呼ぶ
     $("#confirm").modal({backdrop: false});
+  }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
+
+  function uploadFile(url, file) {
+    event.preventDefault();
+    var sq_no = document.getElementById('sq_no').value;
+    var uploaded_file = document.getElementById(file).files[0];
+    var title = document.getElementById('title').value;
+
+    var formData = new FormData();
+    formData.append('sq_no', sq_no);
+    formData.append('title', title);
+    formData.append('uploaded_file', uploaded_file);
+
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: formData,
+      processData: false, // Important: prevent jQuery from processing the data
+      contentType: false, // Important: ensure jQuery does not add a content-type header
+      success: function(response) {
+        console.log(response);
+        //フォームデータを保存する
+        saveFormData();
+        //reload page
+        location.reload();
+      },
+      error: function(xhr, status, error) {
+      }
+    })
+
+  }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
+
+  function saveFormData() {
+    var myForm = document.getElementById('input3');
+    const formData = new FormData(myForm);
+    const jsonData = JSON.stringify(Object.fromEntries(formData));
+    localStorage.setItem('input3', jsonData);
   }
 
 </script>
