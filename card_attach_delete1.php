@@ -27,7 +27,7 @@
   }
 
   if ($success) {
-    $directory = 'document/card_engineering/';
+    $directory = 'document/card_engineering/card_detail_no' . $sq_card_line_no . '/';
     $dirHandle = opendir($directory);
     while ($file = readdir($dirHandle)) {
       if ($file_name == $file) {

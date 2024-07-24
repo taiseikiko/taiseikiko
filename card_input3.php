@@ -300,9 +300,9 @@
           </tr>
           <?php
             $i = 0;
-            $files = glob('document/card_engineering/*.*');
+            $files = glob('document/card_engineering/card_detail_no' . $sq_card_line_no . '/*.*');
             foreach ($files as $key => $value) {            
-              $cut = str_replace('document/card_engineering/', '', $value);
+              $cut = str_replace('document/card_engineering/card_detail_no' . $sq_card_line_no . '/', '', $value);
               $chk = substr($cut,0,strlen($sq_card_no));//get sq_card_no from file name
               $type = mb_substr($cut,strlen($sq_card_no)+1,4);
 
@@ -322,6 +322,7 @@
               }
               
               if($sq_card_no == $chk && $type == '制作図面'){
+                $i++;
                 echo "
                 <tr>
                   <td>
@@ -337,8 +338,7 @@
                     data-sq_card_line_no=" . $tb_sq_card_line_no . "
                     >削除</button>
                   </td>
-                </tr>";
-                $i++;
+                </tr>";                
               }
             }
           ?>
@@ -374,9 +374,9 @@
           </tr>
           <?php
             $z = 0;
-            $files = glob('document/card_engineering/*.*');
+            $files = glob('document/card_engineering/card_detail_no' . $sq_card_line_no . '/*.*');
             foreach ($files as $key => $value) {
-              $cut = str_replace('document/card_engineering/', '', $value);
+              $cut = str_replace('document/card_engineering/card_detail_no' . $sq_card_line_no . '/', '', $value);
               $chk = substr($cut,0,strlen($sq_card_no));//get sq_card_no from file name
               $type = mb_substr($cut,strlen($sq_card_no)+1,2);
 
@@ -396,6 +396,7 @@
               }
 
               if($sq_card_no == $chk && $type == '資料'){
+                $z++;
                 echo "
                 <tr>
                   <td>
@@ -411,8 +412,7 @@
                     data-sq_card_line_no=" . $tb_sq_card_line_no . "
                     >削除</button>
                   </td>
-                </tr>";
-                $z++;
+                </tr>";                
               }              
             }
           ?>
@@ -686,7 +686,7 @@
     /*----------------------------------------------------------------------------------------------- */
     //削除処理   
     var i = <?= $i ?>;
-    for (var x = 0; x < i; x++) {
+    for (var x = 1; x <= i; x++) {
       $('#delBtn' + x).click(function () {
         var sq_card_no = $(this).data('sq_card_no');
         var sq_card_line_no = $(this).data('sq_card_line_no');
@@ -706,7 +706,7 @@
     }
 
     var z = <?= $z ?>;
-    for (var x = 0; x < i; x++) {
+    for (var x = 1; x <= z; x++) {
       $('#delBtnTwo' + x).click(function () {
         var sq_card_no = $(this).data('sq_card_no');
         var sq_card_line_no = $(this).data('sq_card_line_no');
