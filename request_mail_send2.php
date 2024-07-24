@@ -52,7 +52,7 @@
                 break;
             //承認の場合
             case '5':
-                $url = $base_url . 'receipt_input2.php?title=receipt&request_form_number=' . $request_form_number;
+                $url = $base_url . 'request_input1.php?title=request';
                 break;
         }
 

@@ -14,6 +14,7 @@
   $request_form_url = '';
   $style = 'style = "margin-left: 1rem;"';
   $disabled = '';
+  $status = '';
   $btn_class = 'updRegBtn'; 
   $header = '承認';
   $err = $_GET['err'] ?? '';
