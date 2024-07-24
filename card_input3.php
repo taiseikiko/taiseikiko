@@ -505,11 +505,11 @@
     }
     //承認後の場合
     if (page == '詳細') {
-      const ids = ['upload1', 'upload2', 'uploaded_file1', 'uploaded_file2', 'entrant_date', 'entrant', 'entrant_set_date', 'updateBtn'];
+      const ids = ['entrant_date', 'entrant', 'entrant_set_date'];
       ids.forEach(element => {
         $('#' + element).prop('disabled', true);
       });
-      const comments = ['entrant_set_comments', 'entrant_comments','confirmer_comments', 'approver_comments', 'upload_comments1', 'upload_comments2'];
+      const comments = ['entrant_set_comments', 'entrant_comments','confirmer_comments', 'approver_comments'];
       comments.forEach(element => {
         $('#' + element).prop('disabled', true);              //担当指定者コメント
         $('#' + element).css('background-color', '#e6e6e6');

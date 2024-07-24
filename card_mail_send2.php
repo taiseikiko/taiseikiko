@@ -153,6 +153,7 @@
                 break;
 
             case '入力':
+            case '詳細':
                 $seq_no = '2';
                 break;
 

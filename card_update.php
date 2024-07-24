@@ -127,6 +127,12 @@ if (isset($_POST['update'])) {
         $datas['approve_date'] = $today;
         $datas['approver_comments'] = $approver_comments;
         break;
+
+      case '詳細':
+        //procurement_statusに2をセット
+        $procurement_status = '2';
+        $column_names = '';
+        break;
     }
     $datas['procurement_status'] = $procurement_status; //資材部Noステータス
 
