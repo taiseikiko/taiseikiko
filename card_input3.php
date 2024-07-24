@@ -373,7 +373,7 @@
             <th style="width:40px;"> 処理 </th>
           </tr>
           <?php
-            $i = 0;
+            $z = 0;
             $files = glob('document/card_engineering/*.*');
             foreach ($files as $key => $value) {
               $cut = str_replace('document/card_engineering/', '', $value);
@@ -405,14 +405,14 @@
                     $comments
                   </td>
                   <td>
-                    <button class='cancelProcessBtn' id='delBtnTwo" . $i . "' name='delete'
+                    <button class='cancelProcessBtn' id='delBtnTwo" . $z . "' name='delete'
                     data-file_name=" . $tb_file_name . "
                     data-sq_card_no=" . $tb_sq_card_no . "
                     data-sq_card_line_no=" . $tb_sq_card_line_no . "
                     >削除</button>
                   </td>
                 </tr>";
-                $i++;
+                $z++;
               }              
             }
           ?>
@@ -702,8 +702,11 @@
         var msg = "削除します。よろしいですか？";
         //確認Dialogを呼ぶ
         openConfirmModal(msg, process);
-      })
+      })      
+    }
 
+    var z = <?= $z ?>;
+    for (var x = 0; x < i; x++) {
       $('#delBtnTwo' + x).click(function () {
         var sq_card_no = $(this).data('sq_card_no');
         var sq_card_line_no = $(this).data('sq_card_line_no');
@@ -719,7 +722,7 @@
         var msg = "削除します。よろしいですか？";
         //確認Dialogを呼ぶ
         openConfirmModal(msg, process);
-      })
+      })      
     }
 
     //localStorageからフォームデータをセットする
