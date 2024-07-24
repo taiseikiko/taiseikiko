@@ -175,7 +175,7 @@
         <div class="field-row">
           <td>
             アップロードするファイル ⇒ 
-            <input type="file" name="uploaded_file">
+            <input type="file" name="uploaded_file" id="uploaded_file">
             <input type="submit" name="submit" id="upload" value="アップロード">
           </td>
         </div>
@@ -186,7 +186,10 @@
           <th> 添付された資料 </th>
         </tr>
         <?php        
-        if (!empty($sq_no)) {
+        if (!empty($sq_no) || !empty($new_sq_no)) {
+          if (empty($sq_no)) {
+            $sq_no = $new_sq_no;
+          }
           $files = glob('document/sales_management/*.*');
           foreach ($files as $key => $value) {
             $cut = str_replace('document/sales_management/', '', $value);

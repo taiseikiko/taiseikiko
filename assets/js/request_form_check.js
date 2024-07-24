@@ -3,6 +3,10 @@ function errMsgForLength(name, max) {
 }
 
 function errMsgForEmpty(name) {
+  return "「" + name + "」を入力してください。";
+}
+
+function errMsgForEmptySelect(name) {
   return "「" + name + "」を選択してください。";
 }
 
@@ -11,7 +15,7 @@ function checkValidationFile() {
   var errMessage = "";
   var uploaded_file = document.getElementById("uploaded_file").value; //ルート設定
 
-  if (!isErr && uploaded_file == "") {
+  if (!isErr && errMsgForEmptySelect == "") {
     errMessage = errMsgForEmpty("ファイル");
     isErr = true;
   }
@@ -31,7 +35,7 @@ function checkValidation() {
   }
 
   if (!isErr && (!hasFile)) {
-    errMessage = errMsgForEmpty("ファイル");
+    errMessage = errMsgForEmptySelect("ファイル");
     isErr = true;
   }
 

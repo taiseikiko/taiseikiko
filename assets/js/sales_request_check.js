@@ -2,8 +2,13 @@ function errMsgForLength(name, max) {
   return "「" + name + "」は文字数「" + max + "」以下で入力してください。";
 }
 
+
 function errMsgForEmpty(name) {
   return "「" + name + "」を入力してください。";
+}
+
+function errMsgForEmptySelect(name) {
+  return "「" + name + "」を選択してください。";
 }
 
 function checkValidationInput2() {
@@ -109,6 +114,20 @@ function checkValidationInput3() {
   if (!isErr && special_note.length > 80) {
     errMessage = errMsgForLength("特記仕様", "80");
     isErr = true;
+  }
+
+  return errMessage;
+}
+
+function checkValidationFile(file) {
+  var isErr = false;
+  var errMessage = "";
+
+  if (file) {
+    if (!isErr && file.value == "") {
+      errMessage = errMsgForEmptySelect("ファイル");
+      isErr = true;
+    }
   }
 
   return errMessage;

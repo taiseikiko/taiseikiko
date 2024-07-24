@@ -55,11 +55,27 @@
 
     /**-------------------------------------------------------------------------------------------------------------- */
 
-    //アップロードボタンを押下する場合
-    $("#upload").click(function(){
-      //sq_attach_upload1.phpへ移動する
-      $("#input2").attr("action", "sq_attach_upload1.php?from=sr");
-    })
+    //アプロードボタンを押下する場合
+    $('#upload').click(function(event) {
+      event.preventDefault();
+      var uploaded_file = document.getElementById("uploaded_file"); //ファイル
+      var errMessage = checkValidationFile(uploaded_file);
+      
+      //エラーがある場合
+      if (errMessage !== '') {
+        //何の処理かを書く
+        var process = "validate";
+        //OKDialogを呼ぶ
+        openOkModal(errMessage, process);
+      } else {
+        //何の処理かを書く
+        var process = "upload";
+        //エラーメッセージを書く
+        var msg = "アプロードします。よろしいですか？";
+        //確認Dialogを呼ぶ
+        openConfirmModal(msg, process);
+      }
+    });
 
     /**-------------------------------------------------------------------------------------------------------------- */
 
@@ -112,6 +128,13 @@
         //sales_request_update.phpへ移動する
         $("#input2").attr("action", "sales_request_update.php?title=<?= $title ?>");
       }
+      //アプロード１処理の場合
+      else if (process == "upload") {
+        //submitしたいボタン名をセットする
+        $("#confirm_okBtn").attr("name", "upload");
+        //sales_request_update.phpへ移動する
+        uploadFile("sq_attach_upload1.php?from=sr");
+      }
     });
 
     /**-------------------------------------------------------------------------------------------------------------- */
@@ -139,6 +162,23 @@
       var msg = "処理にエラーがありました。係員にお知らせください。";
       //OKDialogを呼ぶ
       openOkModal(msg, 'errExec');
+    }
+
+    /*----------------------------------------------------------------------------------------------- */
+
+    //localStorageからフォームデータをセットする
+    const formData = JSON.parse(localStorage.getItem('input2'));
+    if (formData) {
+      var myForm = document.getElementById('input2');
+      Object.keys(formData).forEach(key => {
+        const exceptId = ['uploaded_file'];
+        if (!exceptId.includes(key)) {
+          myForm.elements[key].value = formData[key];
+        }
+      })
+
+      //フォームにセット後、クリアする
+      localStorage.removeItem('input2');
     }
   });
   /**---------------------------------------------Javascript----------------------------------------------------------------- */
@@ -200,6 +240,48 @@
         buttons[k].disabled = true;
       }
     }
+  }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
+
+  function uploadFile(url) {
+    event.preventDefault();
+    var sq_no = document.getElementById('sq_no').value;
+    var new_sq_no = document.getElementById('new_sq_no').value;
+    var uploaded_file = document.getElementById('uploaded_file').files[0];
+    var title = document.getElementById('title').value;
+
+    var formData = new FormData();
+    formData.append('sq_no', sq_no);
+    formData.append('new_sq_no', new_sq_no);
+    formData.append('title', title);
+    formData.append('uploaded_file', uploaded_file);
+
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: formData,
+      processData: false, // Important: prevent jQuery from processing the data
+      contentType: false, // Important: ensure jQuery does not add a content-type header
+      success: function(response) {
+        //フォームデータを保存する
+        saveFormData();
+        //reload page
+        location.reload();
+      },
+      error: function(xhr, status, error) {
+      }
+    })
+
+  }
+
+  /**-------------------------------------------------------------------------------------------------------------- */
+
+  function saveFormData() {
+    var myForm = document.getElementById('input2');
+    const formData = new FormData(myForm);
+    const jsonData = JSON.stringify(Object.fromEntries(formData));
+    localStorage.setItem('input2', jsonData);
   }
 </script>
 <?php
