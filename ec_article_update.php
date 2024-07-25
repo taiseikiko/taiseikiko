@@ -16,6 +16,7 @@ if (isset($_POST['submit'])) {
   $datas = [
     'ec_property' => $_POST['ec_property'] ?? '',     //物件種別
     'bridge' => $_POST['bridge'] ?? '',               //出先
+    'sq_no' => $_POST['sq_no'] ?? '',                 //営業依頼書No
     'add_date' => $_POST['add_date'] ?? '',           //登録日
     'ec_name' => $_POST['ec_name'] ?? 0,             //工事件名
     'pipe' => $_POST['pipe'] ?? 0,                   //管種
@@ -100,11 +101,11 @@ if (isset($_POST['submit'])) {
       $key_number = $ym . sprintf('%02d', $no);
       $datas['key_number'] = $key_number;//連番キー
 
-      $sql = "INSERT INTO ec_article_detail_tr_procurement(key_number, ec_property, bridge, add_date, ec_name, pipe, size, valve, maker, 
+      $sql = "INSERT INTO ec_article_detail_tr_procurement(key_number, ec_property, bridge, sq_no, add_date, ec_name, pipe, size, valve, maker, 
               bifurcation, mpa, supplier, card_no, ec_no, contact, estimate_date, cost_date, card_date, construction_date, 
               footnote, con_listprice, t_listprice, con_cost, t_cost, con_orders, t_orders, con_partition, t_partition, 
               con_grossprofit, t_grossprofit $insert_cols)
-              VALUES (:key_number, :ec_property, :bridge, :add_date, :ec_name, :pipe, :size, :valve, :maker, 
+              VALUES (:key_number, :ec_property, :bridge, :sq_no, :add_date, :ec_name, :pipe, :size, :valve, :maker, 
               :bifurcation, :mpa, :supplier, :card_no, :ec_no, :contact, :estimate_date, :cost_date, :card_date, :construction_date, 
               :footnote, :con_listprice, :t_listprice, :con_cost, :t_cost, :con_orders, :t_orders, :con_partition, :t_partition, 
               :con_grossprofit, :t_grossprofit $insert_vals)";
@@ -126,7 +127,7 @@ if (isset($_POST['submit'])) {
       $datas['key_number'] = $_POST['key_number'];//連番キー
 
       $sql = "UPDATE ec_article_detail_tr_procurement 
-              SET ec_property=:ec_property, bridge=:bridge, add_date=:add_date, ec_name=:ec_name, pipe=:pipe, size=:size, valve=:valve, maker=:maker, 
+              SET ec_property=:ec_property, bridge=:bridge, sq_no=:sq_no, add_date=:add_date, ec_name=:ec_name, pipe=:pipe, size=:size, valve=:valve, maker=:maker, 
               bifurcation=:bifurcation, mpa=:mpa, supplier=:supplier, card_no=:card_no, ec_no=:ec_no, contact=:contact, estimate_date=:estimate_date, 
               cost_date=:cost_date, card_date=:card_date, construction_date=:construction_date, footnote=:footnote, con_listprice=:con_listprice, 
               t_listprice=:t_listprice, con_cost=:con_cost, t_cost=:t_cost, con_orders=:con_orders, t_orders=:t_orders, con_partition=:con_partition, 

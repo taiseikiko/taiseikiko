@@ -48,8 +48,10 @@ if ($property_code == '1') {
                 </select>
 
                 <label class="common_label" for="sq_no" style="margin-left: 4rem;">営業依頼書№ </label>
-                <input type="text"  id="sq_no" name="sq_no" value="" class="readonlyText input-res" readonly>
-                <button class="search_btn" onclick="">営業依頼書検索</button>
+                <input type="text" id="sq_no" name="sq_no" value="<?= $sq_no ?>" class="readonlyText input-res" readonly>
+                <input type="hidden" name="sq_line_no" id="sq_line_no">
+                <button class="search_btn" onclick="sales_request_open(event)">営業依頼書検索</button>
+                <button class="approveBtn" id="detail_btn">閲覧</button>
 
                 <label class="common_label" for="add_date" style="margin-left: 5rem;">登録日 </label>
                 <input type="date" min="2023-01-01" max="2028-12-31" name="add_date" id="add_date" value="<?= $add_date ?>" class="input-res" />
@@ -423,11 +425,15 @@ if ($property_code == '1') {
 </body>
 
 </html>
+<script src="assets/js/sales_request_ent.js"></script>
+<script src="assets/js/sales_request_detail_ent.js"></script>
 <script src="assets/js/ec_article_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
   $(document).ready(function() {
+    handleViewBtn();
+
     //戻るボタンを押下する場合
     $("#returnBtn").click(function(event) {
       //確認メッセージを書く
@@ -464,6 +470,15 @@ if ($property_code == '1') {
         //確認Dialogを呼ぶ
         openConfirmModal(msg, process);
       }
+    });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
+    //閲覧ボタンを押下する場合
+    $("#detail_btn").click(function(event) {
+      var sq_no = $('#sq_no').val();
+      var sq_line_no = $('#sq_line_no').val();
+      sales_request_detail_open(event, sq_no, sq_line_no);
     });
 
     /**-------------------------------------------------------------------------------------------------------------- */
@@ -698,6 +713,18 @@ if ($property_code == '1') {
     let t_cost = parseFloat($('#t_cost').val(), 10);      //原価（計）
     var t_grossprofit = ((t_orders - t_cost) / t_orders).toFixed(2);
     $('#t_grossprofit').val(t_grossprofit); //粗利(計)
+  }
+
+   /**-------------------------------------------------------------------------------------------------------------- */
+  // 営業依頼書検索子画面呼び出し画面から戻った場合
+  function handleViewBtn() {
+    //営業依頼書№がセットされている場合だけ表示する
+    var sq_no = $('#sq_no').val();
+    if (sq_no !== '') {
+      $('#detail_btn').attr('disabled', false);
+    } else {
+      $('#detail_btn').attr('disabled', true);
+    }
   }
 
     /**-------------------------------------------------------------------------------------------------------------- */

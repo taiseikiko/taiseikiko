@@ -31,7 +31,7 @@
 
       //clientへ差し戻しする場合だけ、headerを更新する
       //テーブルID : card_header_tr
-      if ($type == 'client') {
+      if ($from == 'procurement') {
         cu_card_header_tr();
       }
 
@@ -116,10 +116,12 @@
     else if ($type == 'receipt') {
       $data['sq_card_line_no'] = $sq_card_line_no;
       $data['procurement_status'] = '5';  //資材部Noステータス
+      $data['entrant_set_date'] = NULL;   //受付日
+      $data['entrant_set_comments'] = NULL;//受付者コメント
       $data['upd_date'] = $today;
 
       //更新する
-      $sql = 'UPDATE card_detail_tr SET procurement_status=:procurement_status, upd_date=:upd_date
+      $sql = 'UPDATE card_detail_tr SET procurement_status=:procurement_status, entrant_set_date=:entrant_set_date, entrant_set_comments=:entrant_set_comments, upd_date=:upd_date
             WHERE sq_card_no=:sq_card_no AND sq_card_line_no=:sq_card_line_no';
     }
     else {
