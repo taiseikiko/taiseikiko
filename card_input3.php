@@ -333,9 +333,9 @@
                   </td>
                   <td>
                     <button class='cancelProcessBtn' id='delBtn" . $i . "' name='delete'
-                    data-file_name=" . $tb_file_name . "
-                    data-sq_card_no=" . $tb_sq_card_no . "
-                    data-sq_card_line_no=" . $tb_sq_card_line_no . "
+                    data-file_name='$tb_file_name'
+                    data-sq_card_no='$tb_sq_card_no'
+                    data-sq_card_line_no='$tb_sq_card_line_no'
                     >削除</button>
                   </td>
                 </tr>";                
@@ -407,9 +407,9 @@
                   </td>
                   <td>
                     <button class='cancelProcessBtn' id='delBtnTwo" . $z . "' name='delete'
-                    data-file_name=" . $tb_file_name . "
-                    data-sq_card_no=" . $tb_sq_card_no . "
-                    data-sq_card_line_no=" . $tb_sq_card_line_no . "
+                    data-file_name='$tb_file_name'
+                    data-sq_card_no='$tb_sq_card_no'
+                    data-sq_card_line_no='$tb_sq_card_line_no'
                     >削除</button>
                   </td>
                 </tr>";                

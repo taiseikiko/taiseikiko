@@ -299,9 +299,13 @@
     $s_menu5 = '
     <li>
       <details>
-        <summary><a href="#components">見学・立会・研修依頼</a></summary>
+        <summary><a href="#components">工場見学・立会検査・技術研修</a></summary>
         <ul>
-          <li><a href="">見学・立会・研修依頼　登録</a></li>
+          <li><a href="">仮予約</a></li>
+          <li><a href="">日程調整、確認</a></li>
+          <li><a href="">本予約</a></li>
+          <li><a href="">確認、承認</a></li>
+          <li><a href="">予約不可</a></li>
         </ul>
       </details>
     </li>';
