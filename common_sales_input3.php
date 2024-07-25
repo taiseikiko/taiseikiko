@@ -469,7 +469,8 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="entrant_comments">作成者コメント</label>
-            <textarea id="entrant_comment" name="entrant_comments" rows="3" cols="120" class="textarea-res"><?= $entrant_comments ?></textarea>
+            <textarea id="entrant_comment" name="entrant_comments" rows="3" cols="120" class="textarea-res"
+            <?php if ($processing_status == '0') {echo 'disabled style="background-color: #e6e6e6;"';}?>><?= $entrant_comments ?></textarea>
           </div>
         </td>
       </tr>
@@ -483,7 +484,8 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="confirmer_comments">確認者コメント</label>
-            <textarea id="confirmer_comment" name="confirmer_comments" rows="3" cols="120" class="textarea-res"><?= $confirmer_comments ?></textarea>
+            <textarea id="confirmer_comment" name="confirmer_comments" rows="3" cols="120" class="textarea-res"
+            <?php if ($processing_status == '0') {echo 'disabled style="background-color: #e6e6e6;"';}?>><?= $confirmer_comments ?></textarea>
           </div>
         </td>
       </tr>
@@ -497,7 +499,8 @@
         <td>
           <div class="field-row">
             <label class="common_label" for="approver_comments">承認者コメント</label>
-            <textarea id="approver_comment" name="approver_comments" rows="3" cols="120" class="textarea-res"><?= $approver_comments ?></textarea>
+            <textarea id="approver_comment" name="approver_comments" rows="3" cols="120" class="textarea-res"
+            <?php if ($processing_status == '0') {echo 'disabled style="background-color: #e6e6e6;"';}?>><?= $approver_comments ?></textarea>
           </div>
         </td>
       </tr>
