@@ -88,7 +88,7 @@
         <label class="common_label" style="text-align:center;" for="mitsumori">原価計算書 </label>
         <label for="upload">アップロードするファイル ⇒  </label>
         <input type="file" name="uploaded_file1" id="uploaded_file1">
-        <input type="submit" name="submit_entrant" id="submit_upload1" value="アップロード">
+        <input type="submit" name="submit_entrant" id="submit_upload1" value="アップロード" <?php if ($processing_status == '0') {echo 'disabled';}?>>
       </div>
     </td>
   </tr>
@@ -116,7 +116,7 @@
         <label class="common_label" style="text-align:center;" for="mitsumori">資料 </label>
         <label for="upload">アップロードするファイル ⇒  </label>
         <input type="file" name="uploaded_file2" id="uploaded_file2">
-        <input type="submit" name="submit_entrant" id="submit_upload2" value="アップロード">
+        <input type="submit" name="submit_entrant" id="submit_upload2" value="アップロード" <?php if ($processing_status == '0') {echo 'disabled';}?>>
       </div>
     </td>
   </tr>
@@ -143,7 +143,8 @@
       <div class="field-row" style="margin-top: 10px;">
         <label class="common_label" for="entrant_comments">作成者コメント</label>
         <textarea id="entrant_comments" name="entrant_comments" rows="3" cols="120" class="textarea-res"
-        <?php if ($title !== 'pc_entrant') { echo 'disabled style="background-color: #e6e6e6;"'; } ?>><?= $entrant_comments ?></textarea>
+        <?php if ($title !== 'pc_entrant') { echo 'disabled style="background-color: #e6e6e6;"'; } ?>
+        <?php if ($processing_status == '0') {echo 'disabled style="background-color: #e6e6e6;"';}?>><?= $entrant_comments ?></textarea>
       </div>
     </td>
   </tr>
@@ -155,7 +156,8 @@
       <div class="field-row" style="margin-top: 10px;">
         <label class="common_label" for="confirmer_comments">確認者コメント</label>
         <textarea id="confirmer_comments" name="confirmer_comments" rows="3" cols="120" class="textarea-res"
-        <?php if ($title !== 'pc_confirm') { echo 'disabled style="background-color: #e6e6e6;"'; } ?>><?= $confirmer_comments ?></textarea>
+        <?php if ($title !== 'pc_confirm') { echo 'disabled style="background-color: #e6e6e6;"'; } ?>
+        <?php if ($processing_status == '0') {echo 'disabled style="background-color: #e6e6e6;"';}?>><?= $confirmer_comments ?></textarea>
       </div>
     </td>
   </tr>
@@ -169,7 +171,8 @@
     <td>
       <div class="field-row" style="margin-top: 10px;">
         <label class="common_label" for="approver_comments">承認者コメント</label>
-        <textarea id="approver_comments" name="approver_comments" rows="3" cols="120" class="textarea-res"><?= $approver_comments ?></textarea>
+        <textarea id="approver_comments" name="approver_comments" rows="3" cols="120" class="textarea-res"
+        <?php if ($processing_status == '0') {echo 'disabled style="background-color: #e6e6e6;"';}?>><?= $approver_comments ?></textarea>
       </div>
     </td>
   </tr>
@@ -183,13 +186,13 @@
         <button id="returnBtn" class="returnBtn">前の画面に戻る </button>
       </div>
       <div>
-        <button id="updBtn" style="background:#80dfff;" class="update" name="submit_entrant" value="update">更新 </button>
+        <button id="updBtn" style="background:#80dfff;" class="update" name="submit_entrant" value="update" <?php if ($processing_status == '0') {echo 'disabled';}?>>更新 </button>
       </div>
       <?php
       if ($title == 'pc_confirm' || $title == 'pc_approve') { ?>
       <div style="margin-top:13px; margin-left:435px">            
         <label class="common_label" for="other">その他処理 </label>
-        <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)">
+        <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)" <?php if ($processing_status == '0') {echo 'disabled';}?>>
           <option value="" class="">選択して下さい。</option>
           <option value="1" class="">差し戻し</option>
           <option value="2" class="">中止</option>

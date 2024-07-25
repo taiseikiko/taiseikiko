@@ -282,7 +282,7 @@
             <button class="approveBtn" name="submit" value="update">営業依頼書の入力</button>
           </div>
           <?php } ?>
-          <?php if (strpos($title, 'confirm') !== false || strpos($title, 'approve') !== false): ?>
+          <!-- <?php if (strpos($title, 'confirm') !== false || strpos($title, 'approve') !== false): ?>
             <div style="margin-top:13px; margin-left:435px">            
               <label class="common_label" for="other">その他処理 </label>
               <select class="dropdown-menu" id="otherProcess" name="otherProcess" onchange="other_process(event)">
@@ -290,7 +290,7 @@
                 <option value="2" class="">中止</option>
               </select>
             </div>
-          <?php endif; ?>
+          <?php endif; ?> -->
         </div>
       </tr>          
     </table>        
@@ -319,12 +319,12 @@
     // }
     
     //中止処理の場合
-    if (process == 2) {
-      var url = "cancel_division_input1.php" + "?sq_no=" + sq_no + 
-      "&dept_id=" + dept_id +
-      "&title=" + title;
-      window.open(url, "popupWindow", "width=900,height=200,left=100,top=50");
-    }
+    // if (process == 2) {
+    //   var url = "cancel_division_input1.php" + "?sq_no=" + sq_no + 
+    //   "&dept_id=" + dept_id +
+    //   "&title=" + title;
+    //   window.open(url, "popupWindow", "width=900,height=200,left=100,top=50");
+    // }
 
   }
 </script>

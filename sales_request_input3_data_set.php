@@ -65,6 +65,7 @@
   $mitsumori_disabled = false;
   $err = $_GET['err'] ?? '';
   $showSkip = false;
+  $processing_status = $processing_dept = '';
 
   $class_datas = get_class_datas();                     //分類プルダウンにセットするデータを取得する
   $sizeList = getDropdownData('size');                  //サイズ
@@ -92,6 +93,11 @@
       $sq_line_no = $_GET['line']?? $_POST['sq_line_no'];
 
       $sq_detail_datas = get_sq_detail_datas($sq_no, $sq_line_no);
+
+      $processing_dept = $sq_detail_datas['processing_dept'] ?? '2';
+      $processing_status = $sq_detail_datas['processing_status'] ?? '2';
+
+
       if (isset($sq_detail_datas) && !empty($sq_detail_datas)) {
 
         $fields = ['estimate_div1', 'estimate_div2', 'specification_div', 'drawing_div', 'document_div', 'check_type', 'deadline_estimate_date', 'deadline_drawing_date', 'cad_data_div', 'const_div1',

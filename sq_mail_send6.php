@@ -3,6 +3,8 @@
 require_once('function.php');
 include('sq_mail_send_select.php');
 $url = $_SERVER['HTTP_REFERER']; //メール送信する時、利用するため
+$s_title = substr($title, 0, 2);
+$e_title = substr($title, 3);
 
 try {
   // DB接続
@@ -29,15 +31,35 @@ try {
   }
 
   // baseurl を設定する
-  // $parsed_url = parse_url($url);
+  $parsed_url = parse_url($url);
 
-  // if ($parsed_url !== false) {
-  //   if (isset($parsed_url['port'])) {
-  //     $base_url = $parsed_url['scheme'] . '://' . $parsed_url['host'] . ':' . $parsed_url['port'] . '/';
-  //   } else {
-  //     $base_url = $parsed_url['scheme'] . '://' . $parsed_url['host'] . '/taisei/taiseikiko/';
-  //   }
-  // }
+  if ($parsed_url !== false) {
+    if (isset($parsed_url['port'])) {
+      $base_url = $parsed_url['scheme'] . '://' . $parsed_url['host'] . ':' . $parsed_url['port'] . '/';
+    } else {
+      $base_url = $parsed_url['scheme'] . '://' . $parsed_url['host'] . '/taisei/taiseikiko/';
+    }
+  }  
+
+  //各部署の入力画面へ移動する
+  $redirectList = [
+    '02' => 'sq_detail_tr_engineering_input2.php?from=mail&title=' .$s_title . '_confirm&sq_no=' . $sq_no,        //技術部
+    '05' => 'sq_detail_tr_sales_management_input2.php?from=mail&title=' . $s_title .'_confirm&sq_no=' . $sq_no,   //営業管理部
+    '06' => 'sq_detail_tr_const_management_input2.php?from=mail&title=' . $s_title .'_confirm&sq_no=' . $sq_no,   //工事管理部
+    '04' => 'sq_detail_tr_procurement_input2.php?from=mail&title=' . $s_title .'_confirm&sq_no=' . $sq_no         //資材部
+  ];
+
+  
+  if($title == 'check' || $title == 'approve'){
+    if($title == 'check'){
+      $url = $base_url .'sales_request_check2.php?from=mail&title=' . $title .'&sq_no=' . $sq_no;
+    }else if ($title == 'approve'){
+      $url = $base_url .'sales_request_approve2.php?from=mail&title=' . $title .'&sq_no=' . $sq_no;      
+    }
+  } else{
+    $url = $base_url . $redirectList[$dept_id];
+  }
+ 
   $email_datas = [
     'from_email' => $from_email,     //送信者email
     'from_name' => $from_name,       //送信者name
@@ -48,10 +70,10 @@ try {
   ];
 
   $route_mail_datas = get_sq_route_mail_datas($sq_no, $sq_line_no, $dept_id);
-
   if ($route_mail_datas) {
     //メール送信処理を行う
     $success_mail = sendMail($email_datas, $route_mail_datas);
+    // <script>window.close();window.opener.location.href='$redirect';</script>
   } else {
     $success_mail = false;
   }
@@ -93,8 +115,9 @@ function get_sq_route_mail_datas($sq_no, $sq_line_no, $dept_id)
             e3.employee_name AS approver_name, e3.email AS approver_email
             FROM sq_header_tr h
             LEFT JOIN employee e1 ON e1.employee_code = h.client
-            LEFT JOIN employee e2 ON e2.employee_code = h.confirmer
-            LEFT JOIN employee e3 ON e3.employee_code = h.approver
+            LEFT JOIN sq_default_role r ON r.dept_id = '$dept_id' AND r.entrant = h.client
+            LEFT JOIN employee e2 ON e2.employee_code = r.confirmer
+            LEFT JOIN employee e3 ON e3.employee_code = r.approver
             WHERE h.sq_no='$sq_no'";
   $stmt = $pdo->prepare($sql);
   $stmt->execute();
