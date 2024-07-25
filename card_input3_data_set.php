@@ -11,6 +11,7 @@ $entrant_date = $entrant_comments = $confirmer_comments = $approver_comments = $
 $client_name = $dept_name = $role_name = $p_office_code = $p_office_name = '';  //登録者の情報
 $entrant_dept_name = $entrant_role_name = '';  //担当者の情報
 $sizeDisabled = $zaikoumeiDisabled = $pipeDisabled = $comments = $process = '';
+$confirmer_name = $approver_name = '';
 $tb_sq_card_no = $tb_sq_card_line_no = $tb_file_name = '';
 $i = $z = 0;
 $err = $_GET['err'] ?? '';//エラーを取得する
@@ -113,6 +114,14 @@ if (isset($_POST['detail']) || isset($_GET['sq_card_no'])) {
         $entrant_dept_name = $entrant_datas['dept_name'];        //部署名
         $entrant_role_name = $entrant_datas['role_name'];        //役割
       }
+    }
+
+    if ($confirmer !== '') {
+      $confirmer_name = get_empname($confirmer);
+    }
+
+    if ($approver !== '') {
+      $approver_name = get_empname($approver);
     }
   }
 
@@ -304,6 +313,21 @@ function get_card_header_datas($card_no)
   $stmt->execute();
   $row = $stmt->fetch(PDO::FETCH_ASSOC);
   return $row;
+}
+
+function get_empname($employee_code) {
+  global $pdo;
+  $employee_name = '';
+  $sql = "SELECT employee_name FROM employee WHERE employee_code = :employee_code";
+  $stmt = $pdo->prepare($sql);
+  $stmt->bindParam(':employee_code', $employee_code);
+  $stmt->execute();
+  $row = $stmt->fetch(PDO::FETCH_ASSOC);
+  if ($row) {
+    $employee_name = $row['employee_name'];
+  }
+
+  return $employee_name;
 }
 
 

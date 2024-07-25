@@ -452,7 +452,7 @@
             <td>
               <div class="field-row">
                 <label class="common_label" for="confirmer">確認者</label>
-                <input type="text" style="margin-left: 7px;" id="confirmer" name="confirmer" value="<?= $confirmer ?>" class="readonlyText" readonly>
+                <input type="text" style="margin-left: 7px;" id="confirmer" name="confirmer" value="<?= $confirmer_name ?>" class="readonlyText" readonly>
 
                 <label class="common_label" for="confirm_date">確認日</label>
                 <input type="date" min="2023-01-01" max="2028-12-31" name="confirm_date" id="confirm_date" value="<?= $confirm_date ?>" class="input-res" />
@@ -464,7 +464,7 @@
             <td>
               <div class="field-row">
                 <label class="common_label" for="approver">承認者</label>
-                <input type="text" style="margin-left: 7px;" id="approver" name="approver" value="<?= $approver ?>" class="readonlyText" readonly>
+                <input type="text" style="margin-left: 7px;" id="approver" name="approver" value="<?= $approver_name ?>" class="readonlyText" readonly>
 
                 <label class="common_label" for="approve_date">承認日</label>
                 <input type="date" min="2023-01-01" max="2028-12-31" name="approve_date" id="approve_date" value="<?= $approve_date ?>" class="input-res" />
