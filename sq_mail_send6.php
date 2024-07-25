@@ -3,6 +3,8 @@
 require_once('function.php');
 include('sq_mail_send_select.php');
 $url = $_SERVER['HTTP_REFERER']; //メール送信する時、利用するため
+$s_title = substr($title, 0, 2);
+$e_title = substr($title, 3);
 
 try {
   // DB接続
@@ -37,33 +39,27 @@ try {
     } else {
       $base_url = $parsed_url['scheme'] . '://' . $parsed_url['host'] . '/taisei/taiseikiko/';
     }
-  }
+  }  
 
   //各部署の入力画面へ移動する
   $redirectList = [
-    '02' => 'sq_detail_tr_engineering_input2.php?from=mail&title=' .$s_title . '_entrant&sq_no=' . $sq_no,        //技術部
-    '05' => 'sq_detail_tr_sales_management_input2.php?from=mail&title=' . $s_title .'_entrant&sq_no=' . $sq_no,   //営業管理部
-    '06' => 'sq_detail_tr_const_management_input2.php?from=mail&title=' . $s_title .'_entrant&sq_no=' . $sq_no,   //工事管理部
-    '04' => 'sq_detail_tr_procurement_input2.php?from=mail&title=' . $s_title .'_entrant&sq_no=' . $sq_no         //資材部
+    '02' => 'sq_detail_tr_engineering_input2.php?from=mail&title=' .$s_title . '_confirm&sq_no=' . $sq_no,        //技術部
+    '05' => 'sq_detail_tr_sales_management_input2.php?from=mail&title=' . $s_title .'_confirm&sq_no=' . $sq_no,   //営業管理部
+    '06' => 'sq_detail_tr_const_management_input2.php?from=mail&title=' . $s_title .'_confirm&sq_no=' . $sq_no,   //工事管理部
+    '04' => 'sq_detail_tr_procurement_input2.php?from=mail&title=' . $s_title .'_confirm&sq_no=' . $sq_no         //資材部
   ];
 
-  $url = $redirectList[$dept_id];
-
-  // switch ($title) {
-  //   //入力画面の場合確認画面へ移動出来るように設定する
-  //   case 'receipt':
-  //       $url = $base_url . "sales_request_check3.php?from=mail&title=check&sq_no=".$sq_no;
-  //       break;
-  //   //確認画面の場合承認画面へ移動出来るように設定する
-  //   case 'check':
-  //       $url = $base_url . "sales_request_approve3.php?from=mail&title=approve&sq_no=".$sq_no;
-  //       break;
-  //   //承認画面の場合ルート設定画面へ移動するように設定する
-  //   case 'approve':
-  //       $url = $base_url . "sales_route_input3.php?from=mail&title=set_route&sq_no=".$sq_no;
-  //       break;
-  // }
-
+  
+  if($title == 'check' || $title == 'approve'){
+    if($title == 'check'){
+      $url = $base_url .'sales_request_check2.php?from=mail&title=' . $title .'&sq_no=' . $sq_no;
+    }else if ($title == 'approve'){
+      $url = $base_url .'sales_request_approve2.php?from=mail&title=' . $title .'&sq_no=' . $sq_no;      
+    }
+  } else{
+    $url = $base_url . $redirectList[$dept_id];
+  }
+ 
   $email_datas = [
     'from_email' => $from_email,     //送信者email
     'from_name' => $from_name,       //送信者name
@@ -74,7 +70,6 @@ try {
   ];
 
   $route_mail_datas = get_sq_route_mail_datas($sq_no, $sq_line_no, $dept_id);
-
   if ($route_mail_datas) {
     //メール送信処理を行う
     $success_mail = sendMail($email_datas, $route_mail_datas);

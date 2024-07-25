@@ -14,6 +14,22 @@ $route_pattern = $_POST['route_pattern'] ?? '';
 $comments = $_POST['comments'] ?? ''; //中止コメント
 $success = true;
 
+$s_title = substr($title, 0, 2);
+  $e_title = substr($title, 3);
+  
+
+  //処理後、移動する画面を指定する
+  $redirectList = [
+      'ch' => './sales_request_check1.php?title=' . $title,        //確認
+      'ap' => './sales_request_approve1.php?title=' . $title,        //承認
+      'td' => './sq_detail_tr_engineering_input1.php?title=' . $title,        //技術部
+      'sm' => './sq_detail_tr_sales_management_input1.php?title=' . $title,   //営業管理部
+      'cm' => './sq_detail_tr_const_management_input1.php?title=' . $title,   //工事管理部
+      'pc' => './sq_detail_tr_procurement_input1.php?title=' . $title         //資材部
+  ];
+
+  $redirect = $redirectList[$s_title];
+
 if (isset($_POST['cancel'])) {
   try {
     $pdo->beginTransaction();
@@ -44,7 +60,7 @@ if (isset($_POST['cancel'])) {
   if ($success) {
     include('sq_mail_send6.php');
     delete_sq_route_records($sq_no, $sq_line_no);
-    echo '<script type="text/javascript">window.close();</script>';
+    echo "<script>window.close();window.opener.location.href='$redirect';</script>";
     exit;
   }
 }
