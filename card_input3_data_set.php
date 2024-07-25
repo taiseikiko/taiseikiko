@@ -95,7 +95,9 @@ if (isset($_POST['detail']) || isset($_GET['sq_card_no'])) {
         $entrant_date = date('Y-m-d');  //登録日
       }
       if ($variable_name == 'confirm_date' || $variable_name == 'approve_date') {
-        ${$variable_name} = str_replace('/', '-', $card_detail_list[$variable_name]);
+        if (isset($card_detail_list[$variable_name])) {
+          ${$variable_name} = str_replace('/', '-', $card_detail_list[$variable_name]);
+        }
       }
     }
 
