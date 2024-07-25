@@ -48,6 +48,7 @@ $valve_grossprofit = 0; //粗利(バルブ)
 $con_grossprofit = 0; //粗利(工事)
 $t_grossprofit = 0; //粗利(計)
 $footnote = ''; //備考
+$sq_no = ''; //営業依頼書No
 $add_date = date('Y-m-d');
 $btn_name = '登録';
 $err = $_GET['err']?? '';
@@ -100,7 +101,7 @@ if (isset($_POST['process'])) {
     $datas = getDatasFromEcArticle($key_number);
 
     if (isset($datas) && !empty($datas)) {
-      $variables = ['bridge', 'add_date', 'ec_name', 'pipe', 'size', 'valve', 'maker', 'bifurcation', 'tank', 
+      $variables = ['bridge', 'sq_no', 'add_date', 'ec_name', 'pipe', 'size', 'valve', 'maker', 'bifurcation', 'tank', 
                     'wt_bifurcation', 'mpa', 'supplier', 'card_no', 'ec_no', 'contact', 'estimate_date', 'cost_date', 'card_date', 
                     'construction_date', 'footnote', 'm_listprice', 'wt_listprice', 'valve_listprice', 'con_listprice', 't_listprice', 
                     'm_cost', 'wt_cost', 'valve_cost', 'con_cost', 't_cost', 'm_orders', 'wt_orders', 'valve_orders', 'con_orders', 

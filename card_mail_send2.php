@@ -20,12 +20,16 @@
             $from_email = $userdatas[0]['email'];
         }
 
+        //card_details_trデータを取得する
+        $details_datas = get_card_detail($sq_card_no, $sq_card_line_no);
+
         //メールの内容を取得する
         $mail_details = getSqMailSentence();
         if (!empty($mail_details)) {
             //データベースからもらったテキストにclientとsq_noをセットする
-            $search = array("client", "card_no");
-            $replace = array($from_name, $sq_card_no);
+            $search = array("client", "card_no", "procurement_no", "p_office_no", "zkm_code", "pipe", "sizeA", "specification_no");
+            $replace = array($from_name, $sq_card_no, $details_datas['procurement_no'], $details_datas['pf_name'], $details_datas['zkm_name'], 
+                        $details_datas['pipe'], $details_datas['sizeA'], $details_datas['specification_no']);
             $subject = str_replace($search, $replace, $mail_details['sq_mail_title']); //subject
             $body = str_replace($search, $replace, $mail_details['sq_mail_sentence']); //body
         }
@@ -149,6 +153,7 @@
                 break;
 
             case '入力':
+            case '詳細':
                 $seq_no = '2';
                 break;
 
@@ -230,6 +235,27 @@
         }
 
         return $emailList;
+    }
+
+      /**
+     * card_detail_trテーブルから取得する
+     */
+    function get_card_detail($card_no, $card_line_no)
+    {
+        global $pdo;
+
+        $sql = "SELECT pf.pf_name, d.procurement_no, z.zkm_name, d.pipe, d.sizeA, d.specification_no 
+                FROM card_header_tr h
+                LEFT JOIN card_detail_tr d ON h.card_no = d.sq_card_no AND d.sq_card_line_no=:sq_card_line_no 
+                LEFT JOIN public_office pf ON pf.pf_code = h.p_office_no
+                LEFT JOIN sq_zaikoumei z ON z.class_code = d.class_code AND z.zkm_code = d.zkm_code
+                WHERE sq_card_no = :sq_card_no";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':sq_card_no', $card_no);
+        $stmt->bindParam(':sq_card_line_no', $card_line_no);
+        $stmt->execute();
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $row;
     }
     
 ?>

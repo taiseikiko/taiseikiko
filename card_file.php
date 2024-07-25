@@ -42,13 +42,14 @@
     global $today;
     global $sq_card_no;
     global $sq_card_line_no;
+    global $save_file_name;
     global $file_name;
     global $file_comments;
 
     $datas = [
       'sq_card_no' => $sq_card_no,
       'sq_card_line_no' => $sq_card_line_no,
-      'file_name' => $file_name,
+      'file_name' => $save_file_name . $file_name,
       'file_comments' => $file_comments,
       'add_date' => $today,
     ];

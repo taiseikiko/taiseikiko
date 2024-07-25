@@ -16,7 +16,7 @@
   switch ($from) {
     case 'input3_1':
     case 'input3_2':
-      $uploadDir = "document/card_engineering/";
+      $uploadDir = "document/card_engineering/card_detail_no" . $sq_card_line_no . "/";
       $include_file = "card_file.php";
       break;
     case 'input2':

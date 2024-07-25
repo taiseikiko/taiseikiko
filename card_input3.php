@@ -20,6 +20,9 @@
         <input type="hidden" name="sq_card_no" id="sq_card_no" value="<?= $sq_card_no ?>">
         <input type="hidden" name="sq_card_line_no" id="sq_card_line_no" value="<?= $sq_card_line_no ?>">
         <input type="hidden" name="page" id="page" value="<?= $page ?>">
+        <input type="hidden" name="hid_sq_card_no" id="hid_sq_card_no">
+        <input type="hidden" name="hid_sq_card_line_no" id="hid_sq_card_line_no">
+        <input type="hidden" name="hid_file_name" id="hid_file_name">
         <table style="width:auto;">
           <tr style="height:10px; margin-top:20px"></tr>
           <tr style="height:10px;"></tr>
@@ -231,7 +234,7 @@
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="entrant">担当者</label><i class="fa fa-asterisk" style="font-size:10px;color:red"></i>
+                <label class="common_label" for="entrant">担当者</label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:1px;"></i>
                 <select name="entrant" class="input-res" id="entrant" >
                   <option value="">選択して下さい。</option>
                   <?php 
@@ -293,11 +296,13 @@
           <tr>
             <th> 添付された資料 </th>
             <th style="width:450px;"> コメント </th>
+            <th style="width:40px;"> 処理 </th>
           </tr>
           <?php
-            $files = glob('document/card_engineering/*.*');
+            $i = 0;
+            $files = glob('document/card_engineering/card_detail_no' . $sq_card_line_no . '/*.*');
             foreach ($files as $key => $value) {            
-              $cut = str_replace('document/card_engineering/', '', $value);
+              $cut = str_replace('document/card_engineering/card_detail_no' . $sq_card_line_no . '/', '', $value);
               $chk = substr($cut,0,strlen($sq_card_no));//get sq_card_no from file name
               $type = mb_substr($cut,strlen($sq_card_no)+1,4);
 
@@ -309,11 +314,15 @@
                   //見つかったら、そのKEYのファイルコメントをセットする
                   if ($search !== false) {
                     $comments = $item['file_comments'];
+                    $tb_sq_card_no = $item['sq_card_no'];
+                    $tb_sq_card_line_no = $item['sq_card_line_no'];
+                    $tb_file_name = $item['file_name'];
                   }
                 }
               }
               
               if($sq_card_no == $chk && $type == '制作図面'){
+                $i++;
                 echo "
                 <tr>
                   <td>
@@ -322,7 +331,14 @@
                   <td>
                     $comments
                   </td>
-                </tr>";
+                  <td>
+                    <button class='cancelProcessBtn' id='delBtn" . $i . "' name='delete'
+                    data-file_name=" . $tb_file_name . "
+                    data-sq_card_no=" . $tb_sq_card_no . "
+                    data-sq_card_line_no=" . $tb_sq_card_line_no . "
+                    >削除</button>
+                  </td>
+                </tr>";                
               }
             }
           ?>
@@ -354,11 +370,13 @@
           <tr>
             <th> 添付された資料 </th>
             <th style="width:450px;"> コメント </th>
+            <th style="width:40px;"> 処理 </th>
           </tr>
           <?php
-            $files = glob('document/card_engineering/*.*');
+            $z = 0;
+            $files = glob('document/card_engineering/card_detail_no' . $sq_card_line_no . '/*.*');
             foreach ($files as $key => $value) {
-              $cut = str_replace('document/card_engineering/', '', $value);
+              $cut = str_replace('document/card_engineering/card_detail_no' . $sq_card_line_no . '/', '', $value);
               $chk = substr($cut,0,strlen($sq_card_no));//get sq_card_no from file name
               $type = mb_substr($cut,strlen($sq_card_no)+1,2);
 
@@ -370,11 +388,15 @@
                   //見つかったら、そのKEYのファイルコメントをセットする
                   if ($search !== false) {
                     $comments = $item['file_comments'];
+                    $tb_sq_card_no = $item['sq_card_no'];
+                    $tb_sq_card_line_no = $item['sq_card_line_no'];
+                    $tb_file_name = $item['file_name'];
                   }
                 }
               }
 
               if($sq_card_no == $chk && $type == '資料'){
+                $z++;
                 echo "
                 <tr>
                   <td>
@@ -383,8 +405,15 @@
                   <td>
                     $comments
                   </td>
-                </tr>";
-              }
+                  <td>
+                    <button class='cancelProcessBtn' id='delBtnTwo" . $z . "' name='delete'
+                    data-file_name=" . $tb_file_name . "
+                    data-sq_card_no=" . $tb_sq_card_no . "
+                    data-sq_card_line_no=" . $tb_sq_card_line_no . "
+                    >削除</button>
+                  </td>
+                </tr>";                
+              }              
             }
           ?>
           <tr style="height:10px;"></tr>
@@ -404,6 +433,7 @@
           <?php } 
           //承認画面の場合だけ、表示する
           if ($page == '承認' || $page == '詳細') { ?>
+          <table  style="margin-top:13px;">
           <tr>
             <td>
               <div class="field-row">
@@ -416,6 +446,32 @@
         </table>
         <?php } ?>
         <!-- 受付画面の場合、表示しない------------------------　完了 ------------------------------------------>
+
+        <table>
+          <tr>
+            <td>
+              <div class="field-row">
+                <label class="common_label" for="confirmer">確認者</label>
+                <input type="text" style="margin-left: 7px;" id="confirmer" name="confirmer" value="<?= $confirmer ?>" class="readonlyText" readonly>
+
+                <label class="common_label" for="confirm_date">確認日</label>
+                <input type="date" min="2023-01-01" max="2028-12-31" name="confirm_date" id="confirm_date" value="<?= $confirm_date ?>" class="input-res" />
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <div class="field-row">
+                <label class="common_label" for="approver">承認者</label>
+                <input type="text" style="margin-left: 7px;" id="approver" name="approver" value="<?= $approver ?>" class="readonlyText" readonly>
+
+                <label class="common_label" for="approve_date">承認日</label>
+                <input type="date" min="2023-01-01" max="2028-12-31" name="approve_date" id="approve_date" value="<?= $approve_date ?>" class="input-res" />
+              </div>
+            </td>
+          </tr>
+        </table>
         
         <table  style="margin-top:13px;">
           <tr>
@@ -429,15 +485,14 @@
             </td>
             <!-- 確認画面と承認画面の場合だけ、表示する------------------------　開始 ------------------------------------------>
             <td>
-              <?php
-              if ($page == '確認' || $page == '承認') { ?>
               <div class="flex-container" style="margin-left:50rem">
                 <div>
                   <button id="returnProcessBtn" class="returnProcessBtn">差し戻し </button>
+                  <?php if ($page !== '入力' && $page !== '受付') { ?>
                   <button class="cancelProcessBtn" id="cancelProcessBtn">中止</button>
+                  <?php } ?>
                 </div>
               </div>
-              <?php } ?>
             </td>
             <!-- 確認画面と承認画面の場合だけ、表示する------------------------　完了 ------------------------------------------>
           </tr>
@@ -476,11 +531,11 @@
     }
     //承認後の場合
     if (page == '詳細') {
-      const ids = ['upload1', 'upload2', 'uploaded_file1', 'uploaded_file2', 'entrant_date', 'entrant', 'entrant_set_date', 'updateBtn'];
+      const ids = ['entrant_date', 'entrant', 'entrant_set_date'];
       ids.forEach(element => {
         $('#' + element).prop('disabled', true);
       });
-      const comments = ['entrant_set_comments', 'entrant_comments','confirmer_comments', 'approver_comments', 'upload_comments1', 'upload_comments2'];
+      const comments = ['entrant_set_comments', 'entrant_comments','confirmer_comments', 'approver_comments'];
       comments.forEach(element => {
         $('#' + element).prop('disabled', true);              //担当指定者コメント
         $('#' + element).css('background-color', '#e6e6e6');
@@ -562,12 +617,24 @@
           //OKDialogを呼ぶ
           openOkModal(errMsg, process);
         } else {
-          //何の処理かを書く
-          var process = "upload1";
-          //エラーメッセージを書く
-          var msg = "アプロードします。よろしいですか？";
-          //確認Dialogを呼ぶ
-          openConfirmModal(msg, process);
+          event.preventDefault();
+          var uploaded_file = document.getElementById("uploaded_file1"); //ファイル
+          var errMessage = checkValidationFile(uploaded_file);
+          
+          //エラーがある場合
+          if (errMessage !== '') {
+            //何の処理かを書く
+            var process = "validate";
+            //OKDialogを呼ぶ
+            openOkModal(errMessage, process);
+          } else {
+            //何の処理かを書く
+            var process = "upload1";
+            //エラーメッセージを書く
+            var msg = "アプロードします。よろしいですか？";
+            //確認Dialogを呼ぶ
+            openConfirmModal(msg, process);
+          }          
         }
       }).catch(function(error) {
         console.error("Error checking duplicate:", error);
@@ -589,12 +656,24 @@
           //OKDialogを呼ぶ
           openOkModal(errMsg, process);
         } else {
-          //何の処理かを書く
-          var process = "upload2";
-          //エラーメッセージを書く
-          var msg = "アプロードします。よろしいですか？";
-          //確認Dialogを呼ぶ
-          openConfirmModal(msg, process);
+          event.preventDefault();
+          var uploaded_file = document.getElementById("uploaded_file2"); //ファイル
+          var errMessage = checkValidationFile(uploaded_file);
+          
+          //エラーがある場合
+          if (errMessage !== '') {
+            //何の処理かを書く
+            var process = "validate";
+            //OKDialogを呼ぶ
+            openOkModal(errMessage, process);
+          } else {
+            //何の処理かを書く
+            var process = "upload2";
+            //エラーメッセージを書く
+            var msg = "アプロードします。よろしいですか？";
+            //確認Dialogを呼ぶ
+            openConfirmModal(msg, process);
+          }          
         }
       }).catch(function(error) {
         console.error("Error checking duplicate:", error);
@@ -608,10 +687,13 @@
       event.preventDefault();
       var sq_card_no = document.getElementById('sq_card_no').value;
       var sq_card_line_no = document.getElementById('sq_card_line_no').value;
+      var page = document.getElementById('page').value;
+
       var from = 'other_dept';
 
       var url = "card_send_back.php" + "?sq_card_no=" + sq_card_no + 
       "&sq_card_line_no=" + sq_card_line_no +
+      "&page=" + page +
       "&from=" + from;
       window.open(url, "popupWindow", "width=900,height=260,left=100,top=50");
     })
@@ -631,6 +713,46 @@
     })
 
     /*----------------------------------------------------------------------------------------------- */
+    //削除処理   
+    var i = <?= $i ?>;
+    for (var x = 1; x <= i; x++) {
+      $('#delBtn' + x).click(function () {
+        var sq_card_no = $(this).data('sq_card_no');
+        var sq_card_line_no = $(this).data('sq_card_line_no');
+        var file_name = $(this).data('file_name');
+        $('#hid_sq_card_no').val(sq_card_no);
+        $('#hid_sq_card_line_no').val(sq_card_line_no);
+        $('#hid_file_name').val(file_name);
+
+        event.preventDefault();
+        //何の処理かを書く
+        var process = "delete";
+        //エラーメッセージを書く
+        var msg = "削除します。よろしいですか？";
+        //確認Dialogを呼ぶ
+        openConfirmModal(msg, process);
+      })      
+    }
+
+    var z = <?= $z ?>;
+    for (var x = 1; x <= z; x++) {
+      $('#delBtnTwo' + x).click(function () {
+        var sq_card_no = $(this).data('sq_card_no');
+        var sq_card_line_no = $(this).data('sq_card_line_no');
+        var file_name = $(this).data('file_name');
+        $('#hid_sq_card_no').val(sq_card_no);
+        $('#hid_sq_card_line_no').val(sq_card_line_no);
+        $('#hid_file_name').val(file_name);
+
+        event.preventDefault();
+        //何の処理かを書く
+        var process = "delete";
+        //エラーメッセージを書く
+        var msg = "削除します。よろしいですか？";
+        //確認Dialogを呼ぶ
+        openConfirmModal(msg, process);
+      })      
+    }
 
     //localStorageからフォームデータをセットする
     const formData = JSON.parse(localStorage.getItem('card_input3'));
@@ -689,6 +811,13 @@
         $("#confirm_okBtn").attr("name", "upload");
         //sales_request_update.phpへ移動する
         uploadFile("card_attach_upload1.php?from=input3_2", "2", "_資料_");
+      }
+      //ファイル削除処理の場合
+      else if (process == "delete") {
+        //submitしたいボタン名をセットする
+        $("#confirm_okBtn").attr("name", "delete");
+        //sales_request_update.phpへ移動する
+        deleteFile("card_attach_delete1.php");
       }
     });
 
@@ -796,6 +925,38 @@
       processData: false, // Important: prevent jQuery from processing the data
       contentType: false, // Important: ensure jQuery does not add a content-type header
       success: function(response) {
+        //フォームデータを保存する
+        saveFormData();
+        //reload page
+        location.reload();
+      },
+      error: function(xhr, status, error) {
+      }
+    })
+
+  }
+
+  /*----------------------------------------------------------------------------------------------- */
+
+  function deleteFile(url) {
+    event.preventDefault();
+    var sq_card_no = document.getElementById('hid_sq_card_no').value;
+    var sq_card_line_no = document.getElementById('hid_sq_card_line_no').value;
+    var file_name = document.getElementById('hid_file_name').value;
+
+    var formData = new FormData();
+    formData.append('sq_card_no', sq_card_no);
+    formData.append('sq_card_line_no', sq_card_line_no);
+    formData.append('file_name', file_name);
+
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: formData,
+      processData: false, // Important: prevent jQuery from processing the data
+      contentType: false, // Important: ensure jQuery does not add a content-type header
+      success: function(response) {
+        console.log(response);
         //フォームデータを保存する
         saveFormData();
         //reload page
