@@ -119,7 +119,7 @@
         }
 
         //技術部、工事技術部の担当者が入力した後に、その担当者の承認ルートを見て確認者（confirmor）へメール送信
-        else if ($page == '入力') {
+        else if ($page == '入力' || $page == '詳細') {
             $column = 'confirmer';
             $datas = get_mail_receiver_from_sq_default_role($column);
         }

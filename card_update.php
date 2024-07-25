@@ -131,7 +131,11 @@ if (isset($_POST['update'])) {
       case '詳細':
         //procurement_statusに2をセット
         $procurement_status = '2';
-        $column_names = '';
+        $datas['confirmer'] = NULL;
+        $datas['confirm_date'] = NULL;
+        $datas['approver'] = NULL;
+        $datas['approve_date'] = NULL;
+        $column_names = 'confirmer=:confirmer, confirm_date=:confirm_date, approver=:approver, approve_date=:approve_date,';
         break;
     }
     $datas['procurement_status'] = $procurement_status; //資材部Noステータス
