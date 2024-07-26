@@ -42,11 +42,11 @@
                 <input type="text" style="margin-left: 1rem;" class="input-res" name="user_name" value="<?= $client_name ?>">
                 <input type="hidden" name="user_code" value="<?= $_SESSION["login"] ?>">
 
-                <label class="common_label" for="office_name">部署</label>
+                <label class="common_label" for="office_name" style="margin-left: 3rem;">部署</label>
                 <input type="text" style="width:370px;margin-left: 1rem;" name="office_name" class="input-res" value="<?= $dept_name ?>">
 
-                <label class="common_label" for="office_position_name">役職</label>
-                <input type="text" style="width:100px;margin-left: 1rem;" class="input-res" name="office_position_name" value="<?= $role_name ?>">
+                <!-- <label class="common_label" for="office_position_name">役職</label>
+                <input type="text" style="width:100px;margin-left: 1rem;" class="input-res" name="office_position_name" value="<?= $role_name ?>"> -->
               </div>
             </td>
           </tr>
@@ -111,10 +111,10 @@
           </tr>
           <tr>
             <td>
-              <div class="field-row">
+              <div class="field-row" style="display: flex; align-items: center;">
                 <label class="common_label" for="procurement_no">資材部№</label>
                 <input type="text" style="margin-left: 1rem;" class="input-res" name="procurement_no" value="<?= $procurement_no ?>">
-                <label class="common_label" for="maker">製造メーカー</label>
+                <label class="common_label" for="maker" style="margin-left: 4rem;">製造メーカー</label>
                 <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="maker" id="" value="<?= $maker ?>">
               </div>
             </td>
@@ -122,7 +122,7 @@
 
           <tr>
             <td>
-              <div class="field-row">
+              <div class="field-row" style="display: flex; align-items: center;">
                 <label class="common_label" for="class4">分類 </label>
                 <select style="margin-left: 1rem;" class="dropdown-menu" id="classList4" name="class_code4">
                   <option value="">選択して下さい。</option>
@@ -138,7 +138,7 @@
                   ?>
                 </select>
 
-                <label class="common_label" for="zkm_code">材工名 </label>
+                <label class="common_label" for="zkm_code" style="margin-left: 5.5rem;">材工名 </label>
                 <?php 
                   if (!isset($zaikoumeiList) || empty($zaikoumeiList)) {
                     $zaikoumeiDisabled = 'disabled';
@@ -158,7 +158,13 @@
                   ?>
                 </select>
                 <input type="hidden" name="zkm_code" id="zkm_code" value="<?= $zkm_code ?>">
-
+              </div>
+            </td>
+          </tr>
+          
+          <tr>
+            <td>
+              <div class="field-row" style="display: flex; align-items: center;">
                 <label class="common_label" for="pipe">管種</label>
                 <?php 
                   if (!isset($pipeList) || empty($pipeList)) {
@@ -188,10 +194,10 @@
 
           <tr>
             <td>
-              <div class="field-row">
+              <div class="field-row" style="display: flex; align-items: center;">
                 <label class="common_label" for="specification_no">仕様書№</label>
                 <input type="text" style="margin-left: 1rem;" class="input-res" name="specification_no" value="<?= $specification_no ?>">
-                <label class="common_label" for="special_note">特記事項</label>
+                <label class="common_label" for="special_note" style="margin-left: 4rem;">特記事項</label>
                 <input type="text" style="margin-left: 1rem;" class="business_daily_report" name="special_note" id="" value="<?= $special_note ?>">
               </div>
             </td>
@@ -213,8 +219,8 @@
                 <label class="common_label" for="office_name">部署</label>
                 <input type="text" style="width:370px;margin-left: 1rem;" name="office_name" class="input-res" value="<?= $_SESSION['office_name'] ?>">
 
-                <label class="common_label" for="office_position_name">役職</label>
-                <input type="text" style="width:100px;margin-left: 1rem;" class="input-res" name="office_position_name" value="<?= $_SESSION['office_position_name'] ?>">
+                <!-- <label class="common_label" for="office_position_name">役職</label>
+                <input type="text" style="width:100px;margin-left: 1rem;" class="input-res" name="office_position_name" value="<?= $_SESSION['office_position_name'] ?>"> -->
               </div>
             </td>
           </tr>
@@ -250,11 +256,11 @@
                 </select>
                 <input type="hidden" name="hid_entrant" value="<?= $entrant ?>">
 
-                <label class="common_label" for="office_name">部署</label>
+                <label class="common_label" for="office_name" style="margin-left: 3rem;">部署</label>
                 <input type="text" style="width:370px;margin-left: 1rem;" name="entrant_dept_name" id="entrant_dept_name" class="input-res" value="<?= $entrant_dept_name ?>">
 
-                <label class="common_label" for="office_position_name">　　役職</label>
-                <input type="text" style="width:100px;margin-left: 1rem;" class="input-res" id="entrant_role_name" name="entrant_role_name" value="<?= $entrant_role_name ?>">
+                <!-- <label class="common_label" for="office_position_name">　　役職</label>
+                <input type="text" style="width:100px;margin-left: 1rem;" class="input-res" id="entrant_role_name" name="entrant_role_name" value="<?= $entrant_role_name ?>"> -->
               </div>
             </td>
           </tr>
