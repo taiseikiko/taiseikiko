@@ -632,8 +632,4 @@
     width: 630px;
   }
 </style>
-<?php
 
-// フッターセット
-footer_set();
-?>
