@@ -228,7 +228,7 @@
         </tr>
         <tr>
           <?php 
-            if ($sq_no == '') {
+            if ($process == 'new') {
               $regBtnDisabled = 'disabled';
             }
           ?>
