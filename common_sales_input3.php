@@ -103,7 +103,7 @@
             <label class="common_label" for="cad_data">CADデータ</label>
             <input type="checkbox" id="cad_data_div" name="cad_data_div" value="1" <?php if ($cad_data_div == '1') {echo 'checked';} ?>>
             <label for="cad_data_div">CADデータ必要</label>
-          </div>
+          </div>  
         </td>
       </tr>
       <tr>
