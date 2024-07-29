@@ -301,7 +301,7 @@
       <details>
         <summary><a href="#components">工場見学・立会検査・技術研修</a></summary>
         <ul>
-          <li><a href="">仮予約</a></li>
+          <li><a href="index_calendar.php">仮予約</a></li>
           <li><a href="">日程調整、確認</a></li>
           <li><a href="">本予約</a></li>
           <li><a href="">確認、承認</a></li>
