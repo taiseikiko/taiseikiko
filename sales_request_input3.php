@@ -17,19 +17,26 @@
 </main><!-- End #main -->
 </body>
 </html>
-<script type="text/javascript"></script>
+<!-- <script type="text/javascript"></script> -->
+<!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="assets/chosen/js/jquery-3.2.1.min.js"></script>
+<script src="assets/chosen/js/chosen.jquery.js"></script>
 <script src="assets/js/inquiry_ent.js"></script>
 <script src="assets/js/inquiry_ent_check.js"></script>
 <script src="assets/js/sales_request_check.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
 <script type="text/javascript">
+  $(".dropdown-menu").chosen();
+
   $(document).ready(function(){
     //営業で入力が完了して確認、または承認まで進んでいるdetailのレコードは
     //登録画面の一覧から閲覧はできるが、更新はできないようにする
     var confirm_date = '<?= $confirm_date ?>';
     var process2 = '<?= $process2 ?>';
-    if (confirm_date !== '' && process2 !== 'copy') {
+    var processing_status = '<?= $processing_status ?>';
+    if (processing_status === 0 || confirm_date !== '' && process2 !== 'copy') {
       disabledForm();
     }
     
@@ -163,44 +170,62 @@
   }
 
   /**-------------------------------------------------------------------------------------------------------------- */
-
   function fetchData(class_code) {
-    $('#zaikoumeiList option:not(:first-child)').remove();
+    $('#zaikoumeiList_chosen .chosen-drop ul.chosen-results').empty(); // Clear existing options
+    $('#zaikoumeiList').find('option:not(:first-child)').remove(); // Remove existing options from original select
+
     $.ajax({
-      url: "sales_request_input3_data_set.php",
-      type: "POST",
-      data: {
-        function_name: "get_zaikoumei_datas",
-        class_code: class_code
-      },
-      success: function(response){
-        var zaikoumeiList = JSON.parse(response);
-        var selected = $('#zkm_code').val();
-        let i = 1;
-        $.each(zaikoumeiList, function(index, item) {
-          $('#zaikoumeiList').append($('<option>', {
-            value: item.zkm_code,
-            text: item.zkm_name,
-            id: 'val'+i,
-            class: item.code_no+','+item.text1
-          }));
-          if (item.zkm_code == selected) {
-            $('#val'+i).prop('selected', true);
-          }
-          i++;
-        });
-        set_c_div();
-      },
-      error: function(xhr, status, error) {
-        console.log('error')
-      }
+        url: "sales_request_input3_data_set.php",
+        type: "POST",
+        data: {
+            function_name: "get_zaikoumei_datas",
+            class_code: class_code
+        },
+        success: function(response) {
+            var zaikoumeiList = JSON.parse(response);
+            let i = 0;
+            var selected = $('#zkm_code').val();
+            $.each(zaikoumeiList, function(index, item) {
+                // Append new <option> elements to the original select
+                $('#zaikoumeiList').append(
+                    $('<option>', {
+                        value: item.zkm_code,
+                        text: item.zkm_name,
+                        id: 'val'+i,                        
+                        'data-c_div': item.code_no+','+item.text1
+                    })
+                );
+                // Append new <li> elements to the Chosen dropdown
+                $('#zaikoumeiList_chosen .chosen-drop ul.chosen-results').append(
+                    $('<li>', {
+                        class: 'active-result',
+                        'data-option-array-index': item.zkm_code,
+                        text: item.zkm_name,
+                        id: 'val'+i,                        
+                        'data-c_div': item.code_no+','+item.text1
+                    })
+                );
+                if (item.zkm_code == selected) {
+                  $('#val'+i).prop('selected', true);
+                }
+                i++;
+            });
+            set_c_div();
+
+            // Trigger Chosen update to refresh the list
+            $('#zaikoumeiList').trigger("chosen:updated");
+        },
+        error: function(xhr, status, error) {
+            console.log('error');
+        }
     });
-  }
+}
+
 
   function set_c_div() {
-    let c_div = $('#zaikoumeiList option:selected').attr('class');
+    let c_div = $('#zaikoumeiList option:selected').attr('data-c_div');
 
-    if (c_div !== '') {
+    if (c_div !== undefined) {
       //カンマを区切り文字として使用して文字列を配列に分割します
       var c_div_array = c_div.split(',');
       let code = c_div_array[0];
@@ -263,6 +288,10 @@
     for (var k = 0; k < selects.length; k++) {
       if (selects[k].id !== 'otherProcess') {
         selects[k].disabled = true;
+        // Disable the Chosen select
+        if ($(selects[k]).data('chosen')) {
+          $(selects[k]).prop('disabled', true).trigger('chosen:updated');
+        }
       }
     }
   

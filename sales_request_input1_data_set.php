@@ -68,6 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     foreach ($sq_datas as $item) {
       echo '<tr>';
+      echo '<td>' . htmlspecialchars($item['sq_no']) . '</td>';
       echo '<td>' . htmlspecialchars($item['cust_name']) . '</td>';
       echo '<td>' . htmlspecialchars($item['pf_name']) . '</td>';
       echo '<td>' . htmlspecialchars($item['item_name']) . '</td>';
