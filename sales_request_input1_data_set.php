@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       echo '<td>' . htmlspecialchars($item['item_name']) . '</td>';
       echo '<td></td>';
       echo '<td>' . htmlspecialchars($item['employee_name']) . '</td>';
-      echo '<td style="text-align:center"><button type="submit" class="updateBtn" data-sq_no="' . htmlspecialchars($item['sq_no']) . '" name="process" value="update">更新</button></td>';
+      echo '<td style="text-align:center"><button type="submit" class="updateBtn" data-sq_no="' . htmlspecialchars($item['sq_no']) . '" name="process" value="update">詳細</button></td>';
       echo '<input type="hidden" class="sq_no" name="sq_no" value="' . htmlspecialchars($item['sq_no']) . '">';
       echo '</tr>';
     }
