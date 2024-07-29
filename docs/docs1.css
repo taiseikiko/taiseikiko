@@ -260,6 +260,13 @@ footer.foot {
   margin-right: 10px;
 }
 
+.common_cal_label {
+  font-size: small;
+  width: 100px;
+  text-align: end;
+  margin-right: 10px;
+}
+
 .large_label {
   width: 120px;
   text-align: end;

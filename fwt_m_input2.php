@@ -4,15 +4,15 @@
   header('Content-type: text/html; charset=utf-8');
   require_once('function.php');
   $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
-  $title = $_GET['title'] ?? '';
+  // $title = $_GET['title'] ?? '';
   $dept_code = $_SESSION['department_code'];
-  $user_code = $_SESSION["login"];
-  $user_name = $_SESSION['user_name'];      //登録者
-  $office_name = $_SESSION['office_name'];  //部署
-  $office_position_name = $_SESSION['office_position_name'];  //役職
+  $user_code = $_SESSION["login"]?? '';
+  $user_name = $_SESSION['user_name']?? '';      //登録者
+  $office_name = $_SESSION['office_name']?? '';  //部署
+  $office_position_name = $_SESSION['office_position_name']?? '';  //役職
   include("fwt_m_input2_data_set.php");
   // ヘッダーセット
-  include("header1.php");
+  header_set1();
 ?>
 
 <main>
@@ -39,9 +39,10 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
-    
+  $(document).ready(function() {
+  });
 </script>
 <?php
 // フッターセット
-footer_set();
+// footer_set();
 ?>

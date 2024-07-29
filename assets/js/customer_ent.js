@@ -6,7 +6,7 @@ function customer_open(event) {
   window.open(
     "inq_customer.php",
     "_blank",
-    "width=500,height=600,left=100,top=50"
+    "width=500,height=540,left=100,top=50"
   );
 }
 

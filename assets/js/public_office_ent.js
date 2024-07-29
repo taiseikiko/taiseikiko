@@ -6,7 +6,7 @@ function public_office_open(event) {
   window.open(
     "inq_public_office.php",
     "_blank",
-    "width=500,height=600,left=100,top=50"
+    "width=500,height=540,left=100,top=50"
   );
 }
 
