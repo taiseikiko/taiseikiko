@@ -54,11 +54,12 @@
 
     $data = [
       'sq_no' => $sq_no,
-      'client' => $user_code,
+      // 'client' => $user_code,
       'upd_date' => $today
     ];
 
-    $sql = 'UPDATE sq_header_tr SET client=:client, upd_date=:upd_date WHERE sq_no=:sq_no';
+    // $sql = 'UPDATE sq_header_tr SET client=:client, upd_date=:upd_date WHERE sq_no=:sq_no';
+    $sql = 'UPDATE sq_header_tr SET upd_date=:upd_date WHERE sq_no=:sq_no';
     $stmt = $pdo->prepare($sql);
     $stmt->execute($data);
   }
