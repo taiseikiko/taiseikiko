@@ -5,11 +5,11 @@ header('Content-type: text/html; charset=utf-8');
 require_once('function.php');
 $_SESSION['token'] = get_csrf_token(); // CSRFのトークンを取得する
 $dept_code = $_SESSION['department_code'];
+$title = $_GET['title']?? '';
 include("fwt_m_input1_data_set.php");
 include("header1.php");
-include("dialog.php");
 
-$fwt_datas = get_fwt_datas("", "");
+$fwt_datas = get_fwt_datas("", "", $title);
 
 // Mapping for class
 $class_map = [
@@ -44,7 +44,7 @@ $result = $_GET['result'] ?? '';
   <!-- PHP to display result if available -->
 
   <div class="container">
-    <form id="searchForm" class="row g-3" action="fwt_m_input2.php" method="POST" id="fwt_m_input1_form">
+    <form id="searchForm" class="row g-3" action="fwt_m_input2.php?title=<?= $title ?>" method="POST" id="fwt_m_input1_form">
       <table style="width:auto;">
         <tr>
           <td>
@@ -102,9 +102,9 @@ $result = $_GET['result'] ?? '';
               <td><?= htmlspecialchars($item['candidate3_start']) ?><?= htmlspecialchars($item['candidate3_end']) ?></td>
               <td><?= htmlspecialchars($item['status']) ?></td>
               <td style="text-align:center">
-                <button type="submit" class="updateBtn" name="process" value="update">詳細</button>
+                <button type="submit" class="updateBtn" name="process" value="update" data-fwt_m_no=<?= $item['fwt_m_no'] ?>>詳細</button>
               </td>
-              <input type="hidden" class="fwt_m_no" name="fwt_m_no" value="<?= htmlspecialchars($item['fwt_m_no']) ?>">
+              <input type="hidden" class="fwt_m_no" name="fwt_m_no">
             </tr>
           <?php endforeach; ?>
         </tbody>
