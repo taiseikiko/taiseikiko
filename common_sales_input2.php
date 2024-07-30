@@ -223,8 +223,8 @@
           <th>管内流体</th>
           <th>バルブ仕様</th>
           <th>区分</th>
-          <?php if ($title == 'input') { echo '<th>確認者</th>'; } ?>
-          <?php if ($title == 'check') { echo '<th>承認者</th>'; } ?>
+          <?php if ($title == 'check') { echo '<th>確認者</th>'; } ?>
+          <?php if ($title == 'approve') { echo '<th>承認者</th>'; } ?>
           <?php if ($process == 'detail') { echo '<th>担当者</th>'; } ?>
           <th <?php if ($process !== 'detail' && $title !== 'check' && $title !== 'approve') { echo 'width="160px"'; } ?>>処理</th>
         </tr>
@@ -256,8 +256,8 @@
           <td><?= $item['valve'] ?></td>
           <td><?= $item['record_div_nm'] ?></td>
           <?php if ($process == 'detail') { echo '<td>'.$employee_name.'</td>'; } ?>
-          <?php if ($title == 'input') { echo '<td>'.$item['confirmer'].'</td>'; } ?>
-          <?php if ($title == 'check') { echo '<td>'.$item['approver'].'</td>'; } ?>
+          <?php if ($title == 'check') { echo '<td>'.$item['confirmer'].'</td>'; } ?>
+          <?php if ($title == 'approve') { echo '<td>'.$item['approver'].'</td>'; } ?>
           <td>
             <?php if ($process == 'update') { ?>
               <button class="updateBtn" name="process2" value="update" data-sq_line_no="<?= $item['sq_line_no'] ?>">詳細</button>
