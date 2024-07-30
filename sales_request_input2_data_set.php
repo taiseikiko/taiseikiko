@@ -362,15 +362,18 @@
     } else {
       //営業依頼書依頼入力の場合
       $sql = "SELECT d.sq_no, d.sq_line_no, z.zkm_name, d.size, d.joint, d.pipe, d.inner_coating, d.outer_coating, d.fluid, d.valve,
+            e1.employee_name AS confirmer, e2.employee_name AS approver,
             CASE d.record_div 
             WHEN '1' THEN '見積'
             WHEN '2' THEN '図面'
             ELSE ''
             END AS record_div_nm
-            FROM sq_detail_tr d
-            LEFT JOIN sq_zaikoumei z
-            ON d.zkm_code = z.zkm_code 
-            AND d.class_code = z.class_code
+            FROM sq_header_tr h
+            LEFT JOIN sq_detail_tr d ON h.sq_no = d.sq_no
+            LEFT JOIN sq_zaikoumei z ON d.zkm_code = z.zkm_code AND d.class_code = z.class_code
+            LEFT JOIN sq_default_role r ON r.entrant = h.client AND r.dept_id = '$dept_id'
+            LEFT JOIN employee e1 ON e1.employee_code = r.confirmer
+            LEFT JOIN employee e2 ON e2.employee_code = r.approver
             WHERE d.sq_no='$sq_no'";
       //営業依頼書依頼確認の場合、確認日付がNULLのデータだけを取得する
       if ($title == 'check') {
