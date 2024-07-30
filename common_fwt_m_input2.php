@@ -1,6 +1,7 @@
 <div class="container">
   <form class="row g-3" method="POST" name="inq_ent" enctype="multipart/form-data" id="input2">
     <?php include('dialog.php'); ?>
+    <input type="hidden" name="status" id="status" value="<?= $status ?>">
     <table style="width:auto;">
       <tr style="height:10px; margin-top:20px"></tr>
       <tr style="height:10px;"></tr>
@@ -10,6 +11,7 @@
             <label class="common_cal_label" for="user_name" >登録者</label>
             <input type="text" style="margin-left: 1rem;" class="readonlyText input-res" name="user_name" value="<?= $user_name ?>" readonly>
             <input type="hidden" name="fwt_m_no" id="fwt_m_no" value="<?= $fwt_m_no ?>">
+            <input type="hidden" name="title" id="title" value="<?= $title ?>">
             
             <label class="common_cal_label" for="office_name">　　部署</label>
             <input type="text" style="width:370px;" name="office_name" class="readonlyText input-res" value="<?= $office_name ?>" readonly>
@@ -19,7 +21,7 @@
           </div>
           <div class="field-row">
             <label class="common_cal_label" for="class">種類 </label>
-            <select id="class" name="class" class="input-res" style="margin-left: 1rem;">
+            <select id="class" name="class" class="dropdown-menu" style="margin-left: 1rem;">
               <option value="">選択して下さい。</option>
               <option value="1" <?php if ($class == '1') echo 'selected'; ?>>工場見学</option>
               <option value="2" <?php if ($class == '2') echo 'selected'; ?>>立会検査</option>
@@ -85,13 +87,13 @@
         <td>
           <div class="field-row">
             <label class="common_cal_label" for="fixed_date"><b>確定日程</b></label>
-            <input type="date" id="fixed_date" style="margin-left: 1rem;" min="2023-01-01" max="2028-12-31" name="fixed_date" value="" class="readonlyText input-res" readonly/>
+            <input type="date" id="fixed_date" style="margin-left: 1rem;" min="2023-01-01" max="2028-12-31" name="fixed_date" value="<?= $fixed_date ?>" class="input-res"/>
             
             <label class="common_cal_label" for="fixed_start">　　時間</label>
-            <input type="time" id="fixed_start" name="fixed_start" value="" class="readonlyText input-res" readonly>
+            <input type="time" id="fixed_start" name="fixed_start" value="<?= $fixed_start ?>" class="input-res">
 
             <label  for="fixed_end">　　～</label>
-            <input type="time" id="fixed_end" style="margin-left: 1rem;" name="fixed_end" value="" class="readonlyText input-res" readonly>
+            <input type="time" id="fixed_end" style="margin-left: 1rem;" name="fixed_end" value="<?= $fixed_end ?>" class="input-res">
           </div>
         </td>  
       </tr>
@@ -162,7 +164,9 @@
           </div>
         </td>  
       </tr>
-      <tr id="class2">
+      <!-- 技術研修（class=3）の時は非表示 -->
+      <?php if ($class !== '3') : ?>
+      <tr id="class1">
         <td>
           <div class="field-row">
             <input type="checkbox" id="p_demo" name="p_demo" value="1">
@@ -177,6 +181,7 @@
           </div>
         </td>  
       </tr>
+      <?php endif ;?>
       <tr style="height:10px;"></tr>
       <tr>
         <td>
@@ -236,7 +241,7 @@
         <td>
           <div class="field-row">            
             <label class="common_cal_label" for="other_req">その他客先要望 </label>            
-            <textarea id="other_req" style="margin-left: 1rem;" name="other_req" rows="3" cols="90" class="textarea-res"></textarea>
+            <textarea id="other_req" style="margin-left: 1rem;" name="other_req" rows="3" cols="90" class="textarea-res"><?= $other_req ?></textarea>
           </div>
         </td>  
       </tr>
@@ -246,13 +251,14 @@
           <div class="field-row">            
             <label class="common_cal_label" for="note">備　考 </label>            
             <textarea id="note" style="margin-left: 1rem;" name="note" rows="3" cols="90" class="textarea-res" 
-            placeholder="※Welcomeボードへ記載する社名等記入して下さい"></textarea>
+            placeholder="※Welcomeボードへ記載する社名等記入して下さい"><?= $note ?></textarea>
           </div>
         </td>  
       </tr>      
       <tr style="height:10px;"></tr>
     </table>
     <!-- 立会検査（class=2）の時のみ表示 -->
+    <?php if ($class == '2') : ?>
     <table id="class2" style="width:auto;">
       <tr>
         <hr>
@@ -295,7 +301,7 @@
         <td>
           <div class="field-row">
             <label class="common_cal_label" for="">検査内容 </label>
-            <input type="checkbox" id="inspection1" name="inspection" value="1">
+            <input type="checkbox" id="inspection1" name="inspection" value="1" <?php if (in_array('1', $inspection_arr)) echo 'checked' ?>>
             <label class="common_cal_label" for="inspection1">水圧検査 </label>            
           </div>
         </td>  
@@ -303,16 +309,16 @@
       <tr>
         <td>
           <div class="field-row">
-            <input type="checkbox" id="inspection2" name="inspection" value="1">
+            <input type="checkbox" id="inspection2" name="inspection" value="2" <?php if (in_array('2', $inspection_arr)) echo 'checked' ?>>
             <label class="common_cal_label" for="inspection2">水圧検査 </label>
             
-            <input type="checkbox" id="inspection3" name="inspection" value="1">
+            <input type="checkbox" id="inspection3" name="inspection" value="3" <?php if (in_array('3', $inspection_arr)) echo 'checked' ?>>
             <label class="common_cal_label" for="inspection3">寸法検査 </label>
             
-            <input type="checkbox" id="inspection4" name="inspection" value="1">
+            <input type="checkbox" id="inspection4" name="inspection" value="4" <?php if (in_array('4', $inspection_arr)) echo 'checked' ?>>
             <label class="common_cal_label" for="inspection4">塗装検査 </label>
             
-            <input type="checkbox" id="inspection5" name="inspection" value="1">
+            <input type="checkbox" id="inspection5" name="inspection" value="5" <?php if (in_array('5', $inspection_arr)) echo 'checked' ?>>
             <label class="common_cal_label" for="inspection5">材料試験 </label>
             
           </div>
@@ -321,7 +327,7 @@
       <tr>
         <td>
           <div class="field-row">
-            <input type="checkbox" id="inspection6" name="inspection" value="1">
+            <input type="checkbox" id="inspection6" name="inspection" value="6" <?php if (in_array('6', $inspection_arr)) echo 'checked' ?>>
             <label class="common_cal_label" for="inspection6">性能検査 </label>
           </div>
         </td>  
@@ -329,15 +335,7 @@
       <tr>
         <td>
           <div class="field-row">
-            <input type="checkbox" id="inspection7" name="inspection" value="1">
-            <label class="common_cal_label" for="inspection7">性能検査 </label>
-          </div>
-        </td>  
-      </tr>
-      <tr>
-        <td>
-          <div class="field-row">
-            <input type="checkbox" id="inspection8" name="inspection" value="1">
+            <input type="checkbox" id="inspection8" name="inspection" value="7" <?php if (in_array('7', $inspection_arr)) echo 'checked' ?>>
             <label class="common_cal_label" for="inspection8">その他 </label>
             <textarea id="inspection_note" style="margin-left: 1rem;" name="inspection_note" rows="1" cols="90" class="textarea-res"></textarea>
           </div>
@@ -345,8 +343,10 @@
       </tr>
       <tr style="height:10px;"></tr>
       
-    </table>        
+    </table>    
+    <?php endif; ?>    
     <!-- 技術研修（class=3）の時のみ表示 -->
+    <?php if ($class == '3') : ?>
     <table id="class3" style="width:auto;">
       <tr>
         <hr>
@@ -372,29 +372,21 @@
                 foreach ($training_plan_list as $item) {
                   $code = $item['training_plan'];
                   $text = $item['training_plan'];
-                  $lecture = $item['lecture'];
-                  $demonstration = $item['demonstration'];
-                  $experience = $item['experience'];
-                  $dvd = $item['dvd'];
+                  
                   $selected = ($code == $training_plan) ? 'selected' : '';
-                  echo "<option value='$code' 
-                  data-lecture='$lecture' 
-                  data-demonstration='$demonstration' 
-                  data-experience='$experience' 
-                  data-dvd='$dvd' 
-                  $selected>$text</option>";
+                  echo "<option value='$code' $selected>$text</option>";
                 }
               }
               ?>
             </select>   
 
-            <input type="checkbox" id="lecture" name="lecture" value="1">
+            <input type="checkbox" id="lecture" name="lecture" value="1" <?php if ($lecture == '1') echo 'checked' ?>>
             <label class="common_cal_label" for="lecture">座学 </label> 
 
-            <input type="checkbox" id="demonstration" name="demonstration" value="1">
+            <input type="checkbox" id="demonstration" name="demonstration" value="1" <?php if ($demonstration == '1') echo 'checked' ?>>
             <label class="common_cal_label" for="demonstration">実演 </label> 
             
-            <input type="checkbox" id="experience" name="experience" value="1">
+            <input type="checkbox" id="experience" name="experience" value="1" <?php if ($experience == '1') echo 'checked' ?>>
             <label class="common_cal_label" for="experience">体験 </label>             
             
             <input type="hidden" name="hid_dvd" id="hid_dvd" value="">
@@ -408,6 +400,7 @@
       
       
     </table>  
+    <?php endif; ?>
     <table style="width:auto;">
       <tr>
         <hr>
@@ -426,7 +419,7 @@
           <td>
             アップロードするファイル ⇒ 
             <input type="file" name="uploaded_file" id="uploaded_file">
-            <input type="submit" name="submit" id="upload" value="アップロード">
+            <input type="submit" name="submitFile" id="upload" value="アップロード">
           </td>
         </div>
       </tr>
@@ -436,40 +429,45 @@
           <th> 添付された資料 </th>
         </tr>
         <?php        
-        // if (!empty($sq_no) || !empty($new_sq_no)) {
-        //   if (empty($sq_no)) {
-        //     $sq_no = $new_sq_no;
-        //   }
-        //   $files = glob('document/sales_management/*.*');
-        //   foreach ($files as $key => $value) {
-        //     $cut = str_replace('document/sales_management/', '', $value);
-        //     $chk = substr($cut,0,strlen($sq_no));
-        //     if($sq_no == $chk){
-        //       echo "<tr><td><a href=".$value." target='_blank'>".$value."</a></td></tr>";
-        //     }
-        //   }
-        // }
+        if (!empty($fwt_m_no)) {
+          $files = glob('document/fwt/*.*');
+          foreach ($files as $key => $value) {
+            $cut = str_replace('document/fwt/', '', $value);
+            $chk = substr($cut,0,strlen($fwt_m_no));
+            if($fwt_m_no == $chk){
+              echo "<tr><td><a href=".$value." target='_blank'>".$value."</a></td></tr>";
+            }
+          }
+        }
       ?>
       </table>     
 
-      <!-- <tr>
+      <tr>
         <div class="flex-container">
           <div>            
             <button id="returnBtn" class="returnBtn">前の画面に戻る </button>
-          </div>
+          </div>          
           
+          <?php if ($btn_name !== '') : ?>
           <div>
-            <button class="approveBtn" name="submit" value="update">本予約登録</button>
-          </div>       
+            <button class="approveBtn" name="submit" value="update"><?= $btn_name ?></button>
+          </div>    
+          <?php endif; ?>  
           
+          <?php if (in_array($status, array('3', '4', '5'))) : ?>
+          <div>
+            <button class="skipBtn" id="reject" style="margin-left:50rem" name="submit" value="update">却下</button>
+          </div>    
+          <?php endif; ?> 
         </div>
-      </tr>           -->
+      </tr>
     </table>        
   </form><!-- Vertical Form -->
 </div>
-<script type="text/javascript">
- 
-</script>
+<?php
+  // フッターセット
+  footer_set();
+?>
 <style>
   .dropdown-menu {
     width: 180px;
@@ -486,6 +484,7 @@
     padding: 0;   /* Optional: Remove padding */
     margin: 0;    /* Optional: Remove margin */
     background: none; /* Optional: Remove background color */
+    white-space: pre-line;
   }
 
   .clearfix:after {
@@ -674,6 +673,4 @@
   }
 </style>
 
-// フッターセット
-// footer_set();
-?>
+

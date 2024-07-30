@@ -5,9 +5,8 @@ $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 $dept_cd = $_POST['dept_code'] ?? $dept_code;
 $dept_id = getDeptId($dept_cd);
 
-function get_fwt_datas($cust_name = "", $pf_name = "") {
+function get_fwt_datas($cust_name = "", $pf_name = "", $title) {
     global $pdo;
-    global $title1;
     $search_kw = [];
 
     $sql = "SELECT h.fwt_m_no, h.class, 
@@ -18,7 +17,18 @@ function get_fwt_datas($cust_name = "", $pf_name = "") {
             LEFT JOIN customer c ON h.client = c.cust_code
             LEFT JOIN public_office pf ON h.p_office_no = pf.pf_code
             LEFT JOIN employee e ON h.client = e.employee_code 
-            WHERE 1=1 ";
+            WHERE 1=1";
+    switch ($title) {
+        case 'adjust':
+            $sql .= " AND h.status = '1'";
+            break;
+        case 'booking':
+            $sql .= " AND h.status = '2'";
+            break;
+        case 'confirm':
+            $sql .= " AND h.status >= '3'";
+            break;
+    }
 
     if (!empty($cust_name)) {
         $search_kw['cust_name'] = '%' . $cust_name . '%';
@@ -40,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $cust_name = $_POST['cust_name'] ?? "";
         $pf_name = $_POST['pf_name'] ?? "";
 
-        $fwt_datas = get_fwt_datas($cust_name, $pf_name);
+        $fwt_datas = get_fwt_datas($cust_name, $pf_name, $title);
 
         // Mapping for class
         $class_map = [

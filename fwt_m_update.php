@@ -6,7 +6,7 @@ $user_code = $_SESSION["login"];
 // DB接続
 $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 $today = date('Y/m/d');
-
+$success = true;
 $request = "";
 $class = $candidate1_date = $candidate1_start = $candidate1_end = $candidate2_date = $candidate2_start = $candidate2_end =
 $candidate3_date = $candidate3_start = $candidate3_end = $pf_code = $cust_code = $post_name = $p_number = $companion = $purpose =
@@ -14,328 +14,68 @@ $qm_visit = $fb_visit = $er_visit = $p_demo = $p_demo_note = $dvd_gd = $dvd_gd_n
 $other_req = $note = $name = $size = $quantity = $card_no = $inspection_note = $training_plan = $lecture = $demonstration =
 $experience = $hid_dvd = '';
 $d_document = $ht_visit = $lunch = $inspection = [];
+$columns = '';
+$title = $_POST['title'];
 
-// Read $_GET value
-if(isset($_POST['request'])){
-	$request = $_POST['request'];
-}
+// Read $_POST value
+if(isset($_POST['submit'])){
+	$status = $_POST['status'] ?? '';
 
-// Add to fwt_m_tr
-if($request == 'add_to_fwt'){
-	// POST data
-	$start_date = $_POST['start_date'] ?? '';
-	$end_date= $_POST['end_date'] ?? '';
-	$formList = $_POST['form_values'];
-	$status = '1';
-
-	$variables = ['class', 'candidate1_date', 'candidate1_start', 'candidate1_end', 'candidate2_date', 'candidate2_start', 'candidate2_end', 
-			'candidate3_date', 'candidate3_start', 'candidate3_end', 'pf_code', 'cust_code', 'post_name', 'p_number', 'companion', 'purpose',
-			'qm_visit', 'fb_visit', 'er_visit', 'p_demo', 'p_demo_note', 'dvd_gd', 'dvd_gd_note', 'd_document', 'd_document_note', 'ht_visit',
-			'lunch', 'other_req', 'note', 'name', 'size', 'quantity', 'card_no', 'inspection', 'inspection_note', 'training_plan', 'lecture', 'demonstration',
-			'experience', 'hid_dvd'];
-
-	//フォームデータをセットする
-	foreach ($variables as $variable) {
-		${$variable} = $formList[$variable];
+	//日程調整の場合
+	if ($status == '1') {
+		$status_new = '2';
+		$datas = [
+			'fixed_date' => $_POST['fixed_date']?? '',
+			'fixed_start' => $_POST['fixed_start']?? '',
+			'fixed_end' => $_POST['fixed_end']?? '',
+			'note' => $_POST['note']?? '',
+		];
+		$columns = ", fixed_date=:fixed_date, fixed_start=:fixed_start, fixed_end=:fixed_end, note=:note";
 	}
 
-	$response = array();
-	$err_status = 0;
+	//本予約登録の場合
+	else if ($status == '2') {
+		$status_new = '3';
+		$datas = [
+			'note' => $_POST['note']?? '',
+		];
+		$columns = ", note=:note";
+	}
+
+	//日程確認の場合
+	else if ($status == '3') {
+		$status_new = '4';
+	}
+
+	//本予約確認の場合
+	else if ($status == '4') {
+		$status_new = '5';
+	}
+
+	//本予約承認の場合
+	else if ($status == '5') {
+		$status_new = '6';
+	}
+
+	$datas['status'] = $status_new;
+	$datas['upd_date'] = $today;
+	$datas['fwt_m_no'] = $_POST['fwt_m_no'];
 
 	try {
 		$pdo->beginTransaction();
-
-		/* *************************************************************fwt_m_noを設定する**************************************************************************************** */
-		$ym = substr(str_replace('/', '', $today), 0, 6);
 		
-		$sql1 = "SELECT MAX(fwt_m_no) AS fwt_m_no FROM fwt_m_tr WHERE fwt_m_no LIKE '$ym%'";
-		$stmt1 = $pdo->prepare($sql1);
-		$stmt1->execute();
-		$from_tb_fwt_m_no = $stmt1->fetchColumn();
-		
-		if (!empty($from_tb_fwt_m_no)) {
-			$no = substr($from_tb_fwt_m_no, 6, 2) + 1;      
-		} else {
-			$no = '1';
-		}
-
-		$fwt_m_no = $ym . sprintf('%02d', $no);
-
-		/* ********************************************************************************************************************************************************************** */
-		
-		$sql = "INSERT INTO fwt_m_tr (fwt_m_no, class, client, status, candidate1_date, candidate1_start, candidate1_end, candidate2_date, candidate2_start, candidate2_end, 
-	  			candidate3_date, candidate3_start, candidate3_end, p_office_no, cust_no, post_name, p_number, companion, purpose, 
-				qm_visit, fb_visit, er_visit, p_demo, p_demo_note, dvd_gd, dvd_gd_note, d_document, d_document_note, ht_visit, lunch, 
-				other_req, note, name, size, quantity, card_no, inspection, inspection_note, training_plan, lecture, demonstration, experience, 
-				dvd, add_date)
-				VALUES (:fwt_m_no, :class, :client, :status, :candidate1_date, :candidate1_start, :candidate1_end, :candidate2_date, :candidate2_start, :candidate2_end, :candidate3_date, 
-				:candidate3_start, :candidate3_end, :pf_code, :cust_code, :post_name, :p_number, :companion, :purpose, :qm_visit, :fb_visit, 
-				:er_visit, :p_demo, :p_demo_note, :dvd_gd, :dvd_gd_note, :d_document, :d_document_note, :ht_visit, :lunch, :other_req, 
-				:note, :name, :size, :quantity, :card_no, :inspection, :inspection_note, :training_plan, :lecture, :demonstration, :experience, :dvd, :add_date)";
+		$sql = "UPDATE fwt_m_tr SET status=:status, upd_date=:upd_date $columns WHERE fwt_m_no=:fwt_m_no";
 		$stmt = $pdo->prepare($sql);
-		$stmt->bindParam(':fwt_m_no', $fwt_m_no, PDO::PARAM_STR);
-		$stmt->bindParam(':class', $class, PDO::PARAM_STR);
-		$stmt->bindParam(':client', $user_code, PDO::PARAM_STR);
-		$stmt->bindParam(':status', $status, PDO::PARAM_STR);
-		$stmt->bindParam(':candidate1_date', $candidate1_date, PDO::PARAM_STR);
-		$stmt->bindParam(':candidate1_start', $candidate1_start, PDO::PARAM_STR);
-		$stmt->bindParam(':candidate1_end', $candidate1_end, PDO::PARAM_STR);
-		$stmt->bindParam(':candidate2_date', $candidate2_date, PDO::PARAM_STR);
-		$stmt->bindParam(':candidate2_start', $candidate2_start, PDO::PARAM_STR);
-		$stmt->bindParam(':candidate2_end', $candidate2_end, PDO::PARAM_STR);
-		$stmt->bindParam(':candidate3_date', $candidate3_date, PDO::PARAM_STR);
-		$stmt->bindParam(':candidate3_start', $candidate3_start, PDO::PARAM_STR);
+		$stmt->execute($datas);
 
-		$stmt->bindParam(':candidate3_end', $candidate3_end, PDO::PARAM_STR);
-		$stmt->bindParam(':pf_code', $pf_code, PDO::PARAM_STR);
-		$stmt->bindParam(':cust_code', $cust_code, PDO::PARAM_STR);
-		$stmt->bindParam(':post_name', $post_name, PDO::PARAM_STR);
-		$stmt->bindParam(':p_number', $p_number, PDO::PARAM_STR);
-		$stmt->bindParam(':companion', $companion, PDO::PARAM_STR);
-		$stmt->bindParam(':purpose', $purpose, PDO::PARAM_STR);
-		$stmt->bindParam(':qm_visit', $qm_visit, PDO::PARAM_STR);
-		$stmt->bindParam(':fb_visit', $fb_visit, PDO::PARAM_STR);
-		$stmt->bindParam(':er_visit', $er_visit, PDO::PARAM_STR);
-
-		$stmt->bindParam(':p_demo', $p_demo, PDO::PARAM_STR);
-		$stmt->bindParam(':p_demo_note', $p_demo_note, PDO::PARAM_STR);
-		$stmt->bindParam(':dvd_gd', $dvd_gd, PDO::PARAM_STR);
-		$stmt->bindParam(':dvd_gd_note', $dvd_gd_note, PDO::PARAM_STR);
-		$stmt->bindParam(':d_document', $d_document, PDO::PARAM_STR);
-		$stmt->bindParam(':d_document_note', $d_document_note, PDO::PARAM_STR);
-		$stmt->bindParam(':ht_visit', $ht_visit, PDO::PARAM_STR);
-		$stmt->bindParam(':lunch', $lunch, PDO::PARAM_STR);
-		$stmt->bindParam(':other_req', $other_req, PDO::PARAM_STR);
-		$stmt->bindParam(':note', $note, PDO::PARAM_STR);
-
-		$stmt->bindParam(':name', $name, PDO::PARAM_STR);
-		$stmt->bindParam(':size', $size, PDO::PARAM_STR);
-		$stmt->bindParam(':quantity', $quantity, PDO::PARAM_STR);
-		$stmt->bindParam(':card_no', $card_no, PDO::PARAM_STR);
-		$stmt->bindParam(':inspection', $inspection, PDO::PARAM_STR);
-		$stmt->bindParam(':inspection_note', $inspection_note, PDO::PARAM_STR);
-		$stmt->bindParam(':training_plan', $training_plan, PDO::PARAM_STR);
-		$stmt->bindParam(':lecture', $lecture, PDO::PARAM_STR);
-		$stmt->bindParam(':demonstration', $demonstration, PDO::PARAM_STR);
-		$stmt->bindParam(':experience', $experience, PDO::PARAM_STR);
-
-		$stmt->bindParam(':dvd', $hid_dvd, PDO::PARAM_STR);
-		$stmt->bindParam(':add_date', $today, PDO::PARAM_STR);
-
-		$stmt->execute();
-
-
-      $pdo->commit();
+      	$pdo->commit();
     } catch (PDOException $e) {
-      	$err_status = 1;
+      	$success = false;
 		$pdo->rollback();
 		error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
-    }	
+    }
 
-	if ($err_status == 1){
-		$response['status'] = 0;
-		$response['message'] = '失敗しました。';
-	} else {
-		$response['eventid'] = '';
-		$response['status'] = 1;
-		$response['message'] = '登録しました。';
+	if ($success) {
+		include('fwt_mail_send1.php');
 	}
-	
-	echo json_encode($response);
-	exit;
-} 
-
-// Move event
-if($request == 'moveEvent'){
-
-	// POST data
-	$eventid = 0; 
-	$start_date = ""; $end_date = "";
-
-	if(isset($_POST['eventid']) && is_numeric($_POST['eventid'])){
-		$eventid = $_POST['eventid'];
-	}
-	if(isset($_POST['start_date'])){
-		$start_date = $_POST['start_date'];
-	}
-	if(isset($_POST['end_date'])){
-		$end_date = $_POST['end_date'];
-	}
-	
-	$response = array();
-	$status = 0;
-
-	if($eventid > 0 && !empty($start_date) && !empty($end_date) ){
-
-		// Check event id
-		$sql = "SELECT id FROM events WHERE id=".$eventid;
-		$result = mysqli_query($con,$sql);
-		if(mysqli_num_rows($result)){
-			// Update record
-			$sql = "UPDATE events SET start_date='".$start_date."',end_date='".$end_date."' WHERE id=".$eventid;
-			if(mysqli_query($con,$sql)){
-				$status = 1;
-
-				$response['status'] = 1;
-				$response['message'] = 'Event date updated successfully.';
-			}
-		}
-		
-	}
-
-	if($status == 0){
-		$response['status'] = 0;
-		$response['message'] = 'Event date not updated.';
-	}	
-
-	echo json_encode($response);
-	exit;
-}
-
-// Update fwt_m_tr
-if($request == 'edit_to_fwt'){
-
-	// POST data
-	$start_date = $_POST['start_date'] ?? '';
-	$end_date= $_POST['end_date'] ?? '';
-	$formList = $_POST['form_values'];
-	$status = '1';
-
-	$variables = ['fwt_m_no', 'class', 'candidate1_date', 'candidate1_start', 'candidate1_end', 'candidate2_date', 'candidate2_start', 'candidate2_end', 
-			'candidate3_date', 'candidate3_start', 'candidate3_end', 'pf_code', 'cust_code', 'post_name', 'p_number', 'companion', 'purpose',
-			'qm_visit', 'fb_visit', 'er_visit', 'p_demo', 'p_demo_note', 'dvd_gd', 'dvd_gd_note', 'd_document', 'd_document_note', 'ht_visit',
-			'lunch', 'other_req', 'note', 'name', 'size', 'quantity', 'card_no', 'inspection', 'inspection_note', 'training_plan', 'lecture', 'demonstration',
-			'experience', 'hid_dvd'];
-
-	//フォームデータをセットする
-	foreach ($variables as $variable) {
-		${$variable} = $formList[$variable];
-	}
-
-	$response = array();
-	$err_status = 0;
-
-	try {
-		$pdo->beginTransaction();		
-		
-		$sql = "UPDATE fwt_m_tr SET class=:class, status=:status, candidate1_date=:candidate1_date, candidate1_start=:candidate1_start, candidate1_end=:candidate1_end, candidate2_date=:candidate2_date, 
-				candidate2_start=:candidate2_start, candidate2_end=:candidate2_end, 
-	  			candidate3_date=:candidate3_date, candidate3_start=:candidate3_start, candidate3_end=:candidate3_end, p_office_no=:pf_code, cust_no=:cust_code, post_name=:post_name, p_number=:p_number, 
-				companion=:companion, purpose=:purpose, 
-				qm_visit=:qm_visit, fb_visit=:fb_visit, er_visit=:er_visit, p_demo=:p_demo, p_demo_note=:p_demo_note, dvd_gd=:dvd_gd, dvd_gd_note=:dvd_gd_note, d_document=:d_document, 
-				d_document_note=:d_document_note, ht_visit=:ht_visit, lunch=:lunch, 
-				other_req=:other_req, note=:note, name=:name, size=:size, quantity=:quantity, card_no=:card_no, inspection=:inspection, inspection_note=:inspection_note, training_plan=:training_plan, 
-				lecture=:lecture, demonstration=:demonstration, experience=:experience, 
-				dvd=:dvd, upd_date=:upd_date WHERE fwt_m_no=:fwt_m_no";
-		$stmt = $pdo->prepare($sql);
-		$stmt->bindParam(':fwt_m_no', $fwt_m_no, PDO::PARAM_STR);
-		$stmt->bindParam(':class', $class, PDO::PARAM_STR);
-		// $stmt->bindParam(':client', $user_code, PDO::PARAM_STR);
-		$stmt->bindParam(':status', $status, PDO::PARAM_STR);
-		$stmt->bindParam(':candidate1_date', $candidate1_date, PDO::PARAM_STR);
-		$stmt->bindParam(':candidate1_start', $candidate1_start, PDO::PARAM_STR);
-		$stmt->bindParam(':candidate1_end', $candidate1_end, PDO::PARAM_STR);
-		$stmt->bindParam(':candidate2_date', $candidate2_date, PDO::PARAM_STR);
-		$stmt->bindParam(':candidate2_start', $candidate2_start, PDO::PARAM_STR);
-		$stmt->bindParam(':candidate2_end', $candidate2_end, PDO::PARAM_STR);
-		$stmt->bindParam(':candidate3_date', $candidate3_date, PDO::PARAM_STR);
-		$stmt->bindParam(':candidate3_start', $candidate3_start, PDO::PARAM_STR);
-
-		$stmt->bindParam(':candidate3_end', $candidate3_end, PDO::PARAM_STR);
-		$stmt->bindParam(':pf_code', $pf_code, PDO::PARAM_STR);
-		$stmt->bindParam(':cust_code', $cust_code, PDO::PARAM_STR);
-		$stmt->bindParam(':post_name', $post_name, PDO::PARAM_STR);
-		$stmt->bindParam(':p_number', $p_number, PDO::PARAM_STR);
-		$stmt->bindParam(':companion', $companion, PDO::PARAM_STR);
-		$stmt->bindParam(':purpose', $purpose, PDO::PARAM_STR);
-		$stmt->bindParam(':qm_visit', $qm_visit, PDO::PARAM_STR);
-		$stmt->bindParam(':fb_visit', $fb_visit, PDO::PARAM_STR);
-		$stmt->bindParam(':er_visit', $er_visit, PDO::PARAM_STR);
-
-		$stmt->bindParam(':p_demo', $p_demo, PDO::PARAM_STR);
-		$stmt->bindParam(':p_demo_note', $p_demo_note, PDO::PARAM_STR);
-		$stmt->bindParam(':dvd_gd', $dvd_gd, PDO::PARAM_STR);
-		$stmt->bindParam(':dvd_gd_note', $dvd_gd_note, PDO::PARAM_STR);
-		$stmt->bindParam(':d_document', $d_document, PDO::PARAM_STR);
-		$stmt->bindParam(':d_document_note', $d_document_note, PDO::PARAM_STR);
-		$stmt->bindParam(':ht_visit', $ht_visit, PDO::PARAM_STR);
-		$stmt->bindParam(':lunch', $lunch, PDO::PARAM_STR);
-		$stmt->bindParam(':other_req', $other_req, PDO::PARAM_STR);
-		$stmt->bindParam(':note', $note, PDO::PARAM_STR);
-
-		$stmt->bindParam(':name', $name, PDO::PARAM_STR);
-		$stmt->bindParam(':size', $size, PDO::PARAM_STR);
-		$stmt->bindParam(':quantity', $quantity, PDO::PARAM_STR);
-		$stmt->bindParam(':card_no', $card_no, PDO::PARAM_STR);
-		$stmt->bindParam(':inspection', $inspection, PDO::PARAM_STR);
-		$stmt->bindParam(':inspection_note', $inspection_note, PDO::PARAM_STR);
-		$stmt->bindParam(':training_plan', $training_plan, PDO::PARAM_STR);
-		$stmt->bindParam(':lecture', $lecture, PDO::PARAM_STR);
-		$stmt->bindParam(':demonstration', $demonstration, PDO::PARAM_STR);
-		$stmt->bindParam(':experience', $experience, PDO::PARAM_STR);
-
-		$stmt->bindParam(':dvd', $hid_dvd, PDO::PARAM_STR);
-		$stmt->bindParam(':upd_date', $today, PDO::PARAM_STR);
-
-		$stmt->execute();
-
-
-      $pdo->commit();
-    } catch (PDOException $e) {
-      	$err_status = 1;
-		$pdo->rollback();
-		error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
-    }	
-
-	if ($err_status == 1){
-		$response['status'] = 0;
-		$response['message'] = '失敗しました。';
-	} else {
-		$response['eventid'] = '';
-		$response['status'] = 1;
-		$response['message'] = '登録しました。';
-	}
-	
-	echo json_encode($response);
-	exit;
-}
-
-// Delete Event
-if($request == 'deleteEvent'){
-
-	// POST data
-	$eventid = 0;
-	if(isset($_POST['eventid']) && is_numeric($_POST['eventid'])){
-		$eventid = $_POST['eventid'];
-	}
-
-	$response = array();
-	$status = 0;
-
-	if($eventid > 0){
-
-		// Check event id
-		$sql = "SELECT id FROM events WHERE id=".$eventid;
-		$result = mysqli_query($con,$sql);
-		if(mysqli_num_rows($result)){
-
-			// Delete record
-			$sql = "DELETE FROM events WHERE id=".$eventid;
-			if(mysqli_query($con,$sql)){
-				$status = 1;
-
-				$response['status'] = 1;
-				$response['message'] = 'Event deleted successfully.';
-			}
-		}
-		
-	}
-	
-	if($status == 0){
-		$response['status'] = 0;
-		$response['message'] = 'Event not deleted.';
-	}
-
-	echo json_encode($response);
-	exit;
 }

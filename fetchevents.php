@@ -7,6 +7,7 @@ $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 
 $sql = "SELECT 
 		f.fwt_m_no, 
+		f.select_date,
 		CASE f.class
 			WHEN '1' THEN '工場見学'
 			WHEN '2' THEN '立会検査'
@@ -29,8 +30,8 @@ while($row = $stmt->fetch(PDO::FETCH_ASSOC)){
 		"eventid" => $row['fwt_m_no'],
 		"title" => $row['class'],
 		"description" => $row['status'],
-		"start" => '2024-07-26',
-		"end" => '2024-07-26',
+		"start" => str_replace('/', '-', $row['select_date']),
+		"end" => '',
 	);
 }
 

@@ -300,11 +300,11 @@
       <details>
         <summary><a href="#components">工場見学・立会検査・技術研修</a></summary>
         <ul>
-          <li><a href="index_calendar.php">仮予約</a></li>
-          <li><a href="">日程調整、確認</a></li>
-          <li><a href="">本予約</a></li>
-          <li><a href="">確認、承認</a></li>
-          <li><a href="">予約不可</a></li>
+          <li><a href="fwt_calendar1.php">仮予約</a></li>
+          <li><a href="fwt_m_input1.php?title=adjust">日程調整、確認</a></li>
+          <li><a href="fwt_m_input1.php?title=booking">本予約</a></li>
+          <li><a href="fwt_m_input1.php?title=confirm">確認、承認</a></li>
+          <li><a href="fwt_calendar2.php">予約不可</a></li>
         </ul>
       </details>
     </li>';
