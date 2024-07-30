@@ -9,6 +9,14 @@
   // ヘッダーセット
   include("header1.php");
   include("card_input3_data_set.php");
+  function getFiles($directory) {
+    $files = array();
+    foreach (glob($directory . '/*.*') as $file) {
+        $files[filemtime($file)] = $file;
+    }
+    ksort($files);
+    return array_values($files);
+}
 ?>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <main>
@@ -306,7 +314,7 @@
           </tr>
           <?php
             $i = 0;
-            $files = glob('document/card_engineering/card_detail_no' . $sq_card_line_no . '/*.*');
+            $files = getFiles('document/card_engineering/card_detail_no' . $sq_card_line_no);
             foreach ($files as $key => $value) {            
               $cut = str_replace('document/card_engineering/card_detail_no' . $sq_card_line_no . '/', '', $value);
               $chk = substr($cut,0,strlen($sq_card_no));//get sq_card_no from file name
@@ -380,7 +388,7 @@
           </tr>
           <?php
             $z = 0;
-            $files = glob('document/card_engineering/card_detail_no' . $sq_card_line_no . '/*.*');
+            $files = getFiles('document/card_engineering/card_detail_no' . $sq_card_line_no);
             foreach ($files as $key => $value) {
               $cut = str_replace('document/card_engineering/card_detail_no' . $sq_card_line_no . '/', '', $value);
               $chk = substr($cut,0,strlen($sq_card_no));//get sq_card_no from file name
@@ -613,7 +621,7 @@
     //アプロードボタンを押下する場合
     $('#upload1').click(function(event) {
       //重複エラーチェック
-      checkDuplicate('uploaded_file1').then(function(isExist) {
+      checkDuplicate('uploaded_file1', '_制作図面_').then(function(isExist) {
         //重複エラーがある場合
         if (isExist) {
           //何の処理かを書く
@@ -629,7 +637,7 @@
           
           //エラーがある場合
           if (errMessage !== '') {
-            //何の処理かを書く
+            //何の処理かを書く制作図面
             var process = "validate";
             //OKDialogを呼ぶ
             openOkModal(errMessage, process);
@@ -652,7 +660,7 @@
     //アプロードボタンを押下する場合
     $('#upload2').click(function () {
       //重複エラーチェック
-      checkDuplicate('uploaded_file2').then(function(isExist) {
+      checkDuplicate('uploaded_file2', '_資料_').then(function(isExist) {
         //重複エラーがある場合
         if (isExist) {
           //何の処理かを書く
@@ -764,7 +772,7 @@
     const formData = JSON.parse(localStorage.getItem('card_input3'));
     if (formData) {
       var myForm = document.getElementById('card_input3');
-      console.log(formData);
+      // console.log(formData);
       Object.keys(formData).forEach(key => {
         const exceptId = ['upload_comments1', 'upload_comments2', 'uploaded_file1', 'uploaded_file2'];
         if (!exceptId.includes(key)) {
@@ -837,11 +845,13 @@
         //選択したファイルをクリアする
         $('#uploaded_file1').val('');
         $('#upload_comments1').val('');
+        $('#ok_okBtn').attr('data-dismiss', 'modal');
       }
       else if (process == "error2") {
         //選択したファイルをクリアする
         $('#uploaded_file2').val('');
         $('#upload_comments2').val('');
+        $('#ok_okBtn').attr('data-dismiss', 'modal');
       }
       else if (process == "exceErr") {
         //card_input1へ移動
@@ -866,13 +876,13 @@
   }
 
   //重複エラーチェック
-  function checkDuplicate(uploaded_file_name) {
+  function checkDuplicate(uploaded_file_name, filename) {
     event.preventDefault();
     
     var isExist;
     var sq_card_no = $("#sq_card_no").val();
     var sq_card_line_no = $("#sq_card_line_no").val();
-    var file_name = $("#"+uploaded_file_name).val().split('\\').pop();
+    var file_name = sq_card_no + filename + $("#"+uploaded_file_name).val().split('\\').pop();
 
     return new Promise(function (resolve, reject) {
       $.ajax({
@@ -962,7 +972,7 @@
       processData: false, // Important: prevent jQuery from processing the data
       contentType: false, // Important: ensure jQuery does not add a content-type header
       success: function(response) {
-        console.log(response);
+        // console.log(response);
         //フォームデータを保存する
         saveFormData();
         //reload page
