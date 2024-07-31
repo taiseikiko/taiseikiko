@@ -251,3 +251,56 @@ if($request == 'edit_to_fwt'){
 	}	
 	
 }
+
+// Add to fwt_stop_tr
+if($request == 'add_to_fwt_stop'){
+	// POST data
+	$start_date = $_POST['start_date'] ?? '';
+	$end_date= $_POST['end_date'] ?? '';
+	$formList = $_POST['form_values'];
+
+	$variables = ['stop_note', 'stop_date', 'stop_time', 'stop_name'];
+
+	//フォームデータをセットする
+	foreach ($variables as $variable) {
+		${$variable} = $formList[$variable];
+	}
+
+	$response = array();
+	$err_status = 0;
+
+	try {
+		$pdo->beginTransaction();
+		
+		$sql = "INSERT INTO fwt_stop_tr (stop_note, stop_date, stop_time, stop_name, add_date)
+				VALUES (:stop_note, :stop_date, :stop_time, :stop_name, :add_date)";
+
+		$stmt = $pdo->prepare($sql);
+		$stmt->bindParam(':stop_note', $stop_note, PDO::PARAM_STR);
+		$stmt->bindParam(':stop_date', $stop_date, PDO::PARAM_STR);
+		$stmt->bindParam(':stop_time', $stop_time, PDO::PARAM_STR);
+		$stmt->bindParam(':stop_name', $stop_name, PDO::PARAM_STR);
+		$stmt->bindParam(':add_date', $today, PDO::PARAM_STR);
+
+		$stmt->execute();
+
+      	$pdo->commit();
+    } catch (PDOException $e) {
+      	$err_status = 1;
+		$pdo->rollback();
+		error_log("PDO Exception: " . $e->getMessage(),3,'error_log.txt');
+    }	
+
+	if ($err_status == 1){
+		$response['status'] = 0;
+		$response['message'] = '失敗しました。';
+		echo json_encode($response);
+		exit;
+	} else {
+		$response['status'] = 1;
+		$response['message'] = '予定不可を登録しました。';
+		echo json_encode($response);
+		exit;
+	}
+	
+} 

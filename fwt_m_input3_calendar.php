@@ -64,17 +64,17 @@
             <div class="field-row">
               <label class="common_cal_label" for="">予約不可内容</label>
 
-              <input type="checkbox" id="qm_visit" name="qm_visit" value="1" <?php if ($qm_visit == '1') echo 'checked' ?>>
-              <label class="common_cal_label" for="qm_visit">工場見学 </label>
+              <input type="checkbox" id="stop_note1" name="stop_note" value="1" <?php if (in_array('1', $stop_note_arr)) echo 'checked' ?>>
+              <label class="common_cal_label" for="stop_note1">工場見学 </label>
               
-              <input type="checkbox" id="fb_visit" name="fb_visit" value="1" <?php if ($fb_visit == '1') echo 'checked' ?>>
-              <label class="common_cal_label" for="fb_visit">立会検査 </label>
+              <input type="checkbox" id="stop_note2" name="stop_note" value="2" <?php if (in_array('2', $stop_note_arr)) echo 'checked' ?>>
+              <label class="common_cal_label" for="stop_note2">立会検査 </label>
               
-              <input type="checkbox" id="er_visit" name="er_visit" value="1" <?php if ($er_visit == '1') echo 'checked' ?>>
-              <label class="common_cal_label" for="er_visit" style="width: auto;">技術研修 </label>
+              <input type="checkbox" id="stop_note3" name="stop_note" value="3" <?php if (in_array('3', $stop_note_arr)) echo 'checked' ?>>
+              <label class="common_cal_label" for="stop_note3" style="width: auto;">技術研修 </label>
 
-              <input type="checkbox" id="er_visit" name="er_visit" value="1" <?php if ($er_visit == '1') echo 'checked' ?>>
-              <label class="common_cal_label" for="er_visit" style="width: auto;">開発案件 </label>
+              <input type="checkbox" id="stop_note4" name="stop_note" value="4" <?php if (in_array('4', $stop_note_arr)) echo 'checked' ?>>
+              <label class="common_cal_label" for="stop_note4" style="width: auto;">開発案件 </label>
             </div>
           </td>  
         </tr>  
@@ -84,7 +84,7 @@
           <td>
             <div class="field-row">
               <label class="common_cal_label" for="">予約不可日</label>
-              <input type="date" style="margin-left: 1rem;" min="2023-01-01" max="2028-12-31" name="add_date" value="<?= $add_date?>" class="input-res"/>
+              <input type="date" style="margin-left: 1rem;" min="2023-01-01" max="2028-12-31" id="stop_date" name="stop_date" value="<?= $stop_date?>" class="input-res"/>
             </div>
           </td>  
         </tr> 
@@ -95,14 +95,14 @@
             <div class="field-row">
               <label class="common_cal_label" for="">予約不可時間</label>
 
-              <input type="checkbox" id="qm_visit" name="qm_visit" value="1" <?php if ($qm_visit == '1') echo 'checked' ?>>
-              <label class="common_cal_label" for="qm_visit">午前 </label>
-              
-              <input type="checkbox" id="fb_visit" name="fb_visit" value="1" <?php if ($fb_visit == '1') echo 'checked' ?>>
-              <label class="common_cal_label" for="fb_visit">午後 </label>
-              
-              <input type="checkbox" id="er_visit" name="er_visit" value="1" <?php if ($er_visit == '1') echo 'checked' ?>>
-              <label class="common_cal_label" for="er_visit" style="width: auto;">終日 </label>
+              <input type="radio" id="stop_time1" name="stop_time" value="1" <?php if ($stop_time == '1') echo 'checked' ?>>
+              <label class="common_label" for="stop_time1" style="margin-left:35px;">午前</label>
+
+              <input type="radio" id="stop_time2" name="stop_time" value="2" <?php if ($stop_time == '2') echo 'checked' ?>>
+              <label class="common_label" for="stop_time2">午後</label>
+
+              <input type="radio" id="stop_time3" name="stop_time" value="3" <?php if ($stop_time == '3') echo 'checked' ?>>
+              <label class="common_label" for="stop_time3">終日</label>
             </div>
           </td>  
         </tr>    
@@ -111,8 +111,8 @@
         <tr>
           <td>
             <div class="field-row">
-              <label class="common_cal_label" for="office_name">予約不可名</label>
-              <input type="text" style="width:370px;" name="office_name" class="input-res" value="<?= $office_name ?>">
+              <label class="common_cal_label" for="stop_name">予約不可名</label>
+              <input type="text" style="width:370px;margin-left:1rem;" name="stop_name" class="input-res" value="<?= $stop_name ?>">
             </div>
           </td>
         </tr>
