@@ -9,7 +9,7 @@ $title = $_GET['title']?? '';
 include("fwt_m_input1_data_set.php");
 include("header1.php");
 
-$fwt_datas = get_fwt_datas("", "", $title);
+$fwt_datas = get_fwt_datas($title, "", "");
 
 // Mapping for class
 $class_map = [
