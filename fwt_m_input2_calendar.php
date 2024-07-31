@@ -40,14 +40,15 @@
           <td>
             <div class="field-row">
               <label class="common_cal_label" for="user_name" >登録者</label>
-              <input type="text" style="margin-left: 1rem;" class="readonlyText input-res" name="user_name" value="<?= $user_name ?>" readonly>
+              <input type="text" style="margin-left: 1rem;" class="readonlyText input-res" id="user_name" name="user_name" value="<?= $user_name ?>" readonly>
               <input type="hidden" name="fwt_m_no" id="fwt_m_no" value="<?= $fwt_m_no ?>">
+              <input type="hidden" name="add_date" id="add_date" value="<?= $add_date ?>">
               
               <label class="common_cal_label" for="office_name">　　部署</label>
-              <input type="text" style="width:370px;" name="office_name" class="readonlyText input-res" value="<?= $office_name ?>" readonly>
+              <input type="text" style="width:370px;" id="office_name" name="office_name" class="readonlyText input-res" value="<?= $office_name ?>" readonly>
 
               <label class="common_cal_label" for="office_position_name" >　　役職</label>
-              <input type="text" style="width:100px;" class="readonlyText input-res" name="office_position_name" value="<?= $office_position_name ?>" readonly>
+              <input type="text" style="width:100px;" class="readonlyText input-res" id="office_position_name" name="office_position_name" value="<?= $office_position_name ?>" readonly>
             </div>
             <div class="field-row">
               <label class="common_cal_label" for="class">種類 </label>
@@ -225,7 +226,7 @@
               <label class="common_label" for="d_document3">工場手配</label>
               
               <label class="common_cal_label" for="">内　容 </label>
-              <textarea id="d_document_note" style="margin-left: 1rem;" name="d_document_note" rows="3" cols="60" class="textarea-res"></textarea>
+              <textarea id="d_document_note" style="margin-left: 1rem;" name="d_document_note" rows="3" cols="60" class="textarea-res"><?= $d_document_note ?></textarea>
             </div>
           </td>  
         </tr>

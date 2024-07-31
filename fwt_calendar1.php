@@ -137,7 +137,6 @@
 										},
 										error: function(xhr, status, error) {
 											// Handle errors
-											console.log(xhr);
 											console.error('Error fetching HTML content:', error);
 											Swal.fire({
 												title: 'Error',
@@ -172,26 +171,7 @@
 
 						//種類がCHANGEされた場合
 						$(document).on('change', '#class', function(event) {
-							const element1 = document.getElementById('class1');
-							const element2 = document.getElementById('class2');
-							const element3 = document.getElementById('class3');
-							
-							//立会検査の場合
-							if (this.value == '2') {
-								element3.classList.add('hide');
-								element2.classList.remove('hide');
-								element1.classList.remove('hide');
-							}
-							//技術研修の場合
-							else if (this.value == '3') {
-								element1.classList.add('hide');
-								element2.classList.add('hide');
-								element3.classList.remove('hide');
-							} else {
-								element1.classList.remove('hide');
-								element2.classList.add('hide');
-								element3.classList.add('hide');
-							}
+							handleHideShow(this.value);
 						})
 
 						/*----------------------------------------------------------------------------------------------- */
@@ -251,31 +231,37 @@
 						});
 
 						/*----------------------------------------------------------------------------------------------- */
-						$(document).ready(function() {
-							console.log('loading');
-  						});
-
-						const formData = JSON.parse(localStorage.getItem('input2'));
-
-						if (formData) {
-							var myForm = document.getElementById('input2');
-
-							Object.keys(formData).forEach(key => {
-								const exceptId = ['uploaded_file'];
-								if (!exceptId.includes(key)) {
-								myForm.elements[key].value = formData[key];
-								}
-							})
-
-							//フォームにセット後、クリアする
-							localStorage.removeItem('input2');
-						}
 
 						function handleCheckbox(val, id) {
 							if (val == '1') {
 								$('#' + id).attr('checked', true);
 							} else {
 								$('#' + id).attr('checked', false);
+							}
+						}
+
+						/*----------------------------------------------------------------------------------------------- */
+
+						function handleHideShow(class_val) {
+							const element1 = document.getElementById('class1');
+							const element2 = document.getElementById('class2');
+							const element3 = document.getElementById('class3');
+							
+							//立会検査の場合
+							if (class_val == '2') {
+								element3.classList.add('hide');
+								element2.classList.remove('hide');
+								element1.classList.remove('hide');
+							}
+							//技術研修の場合
+							else if (class_val == '3') {
+								element1.classList.add('hide');
+								element2.classList.add('hide');
+								element3.classList.remove('hide');
+							} else {
+								element1.classList.remove('hide');
+								element2.classList.add('hide');
+								element3.classList.add('hide');
 							}
 						}
 
@@ -342,13 +328,24 @@
 								contentType: false, // Important: ensure jQuery does not add a content-type header
 								success: function(response) {
 									//フォームデータを保存する
-        							saveFormData();
+									var myForm = document.getElementById('input2');
+									const formData = new FormData(myForm);
+									const jsonData = JSON.stringify(Object.fromEntries(formData));
 
 									$.ajax({
 										url: 'fwt_m_input2_calendar.php',
-										type: 'POST',									
+										type: 'POST',
+										data: {
+											request: 'upload',
+											form_values: jsonData
+										},
+										// dataType: 'json',										
 										success: function(response) {
 											openSwalWithContent(response);
+
+											// 種類の扱い
+											var class_val = $('#class').val();						
+											handleHideShow(class_val);
 										}
 									});
 								},
@@ -356,13 +353,6 @@
 								}
 							})
 
-						}
-
-						function saveFormData() {
-							var myForm = document.getElementById('input2');
-							const formData = new FormData(myForm);
-							const jsonData = JSON.stringify(Object.fromEntries(formData));
-							localStorage.setItem('input2', jsonData);
 						}
 					},
 					error: function(xhr, status, error) {
@@ -386,91 +376,96 @@
 					data: {fwt_m_no: fwt_m_no},
 					success: function(response) {
 						// Alert box to add event
-						Swal.fire({
-							title: '見学、立会、研修仮予約、本予約入力',
-							showCancelButton: true,
-							cancelButtonText: '前の画面に戻る',
-							confirmButtonText: '更新',
-							html: response,
-							customClass: 'swal-style',
-							focusConfirm: false,
-							preConfirm: () => {
-								const values = [];
-								const ids = ['fwt_m_no', 'class', 'candidate1_date', 'candidate1_start', 'candidate1_end', 'candidate2_date', 'candidate2_start', 'candidate2_end', 
-											'candidate3_date', 'candidate3_start', 'candidate3_end', 'pf_code', 'cust_code', 'post_name', 'p_number', 'companion', 'purpose',
-											'qm_visit', 'fb_visit', 'er_visit', 'p_demo', 'p_demo_note', 'dvd_gd', 'dvd_gd_note', 'd_document', 'd_document_note', 'ht_visit',
-											'lunch', 'other_req', 'note', 'name', 'size', 'quantity', 'card_no', 'inspection', 'inspection_note', 'training_plan', 'lecture', 'demonstration',
-											'experience', 'hid_dvd'];
+						function openSwalWithContent(response) {
+							Swal.fire({
+								title: '見学、立会、研修仮予約、本予約入力',
+								showCancelButton: true,
+								cancelButtonText: '前の画面に戻る',
+								confirmButtonText: '更新',
+								html: response,
+								customClass: 'swal-style',
+								focusConfirm: false,
+								preConfirm: () => {
+									const values = [];
+									const ids = ['fwt_m_no', 'class', 'candidate1_date', 'candidate1_start', 'candidate1_end', 'candidate2_date', 'candidate2_start', 'candidate2_end', 
+												'candidate3_date', 'candidate3_start', 'candidate3_end', 'pf_code', 'cust_code', 'post_name', 'p_number', 'companion', 'purpose',
+												'qm_visit', 'fb_visit', 'er_visit', 'p_demo', 'p_demo_note', 'dvd_gd', 'dvd_gd_note', 'd_document', 'd_document_note', 'ht_visit',
+												'lunch', 'other_req', 'note', 'name', 'size', 'quantity', 'card_no', 'inspection', 'inspection_note', 'training_plan', 'lecture', 'demonstration',
+												'experience', 'hid_dvd'];
 
-								ids.forEach(element => {
-									var value = getValuesByName(element);
-									values.push(value);
-								});
+									ids.forEach(element => {
+										var value = getValuesByName(element);
+										values.push(value);
+									});
 
-								let errMsg = '';
-								errMsg = checkValidation();
+									let errMsg = '';
+									errMsg = checkValidation();
 
-								if (errMsg !== '') {
-									Swal.showValidationMessage(errMsg);
-								}
-
-								return values;
-							}
-						}).then((result) => {
-						
-							if (result.isConfirmed) {
-								const form_values = {};
-								const keys = ['fwt_m_no', 'class', 'candidate1_date', 'candidate1_start', 'candidate1_end', 'candidate2_date', 'candidate2_start', 'candidate2_end', 
-											'candidate3_date', 'candidate3_start', 'candidate3_end', 'pf_code', 'cust_code', 'post_name', 'p_number', 'companion', 'purpose',
-											'qm_visit', 'fb_visit', 'er_visit', 'p_demo', 'p_demo_note', 'dvd_gd', 'dvd_gd_note', 'd_document', 'd_document_note', 'ht_visit',
-											'lunch', 'other_req', 'note', 'name', 'size', 'quantity', 'card_no', 'inspection', 'inspection_note', 'training_plan', 'lecture', 'demonstration',
-											'experience', 'hid_dvd'];
-
-								keys.forEach((key, index) => {
-									form_values[key] = result.value[index];
-								});							
-
-								var start_date = arg.startStr;
-								var end_date = arg.endStr;
-
-								// AJAX - Add to fwt_m_tr
-								$.ajax({
-									url: 'fwt_m_update_calendar.php',
-									type: 'post',
-									data: {
-										request: 'edit_to_fwt',
-										form_values: form_values,
-										start_date: start_date,
-										end_date: end_date},
-									dataType: 'json',
-									success: function(response){
-										if(response.status == 1){
-											// Refetch all events
-											calendar.refetchEvents();
-
-											// Alert message
-											Swal.fire(response.message,'','success');
-
-										}else{
-											// Alert message
-											Swal.fire(response.message,'','error');
-										}
-							
-									},
-									error: function(xhr, status, error) {
-										// Handle errors
-										console.log(error);
-										// console.error('Error fetching HTML content:', error);
-										Swal.fire({
-											title: 'Error',
-											text: 'Failed to load content.',
-											icon: 'error'
-										});
+									if (errMsg !== '') {
+										Swal.showValidationMessage(errMsg);
 									}
-								});
+
+									return values;
+								}
+							}).then((result) => {
+							
+								if (result.isConfirmed) {
+									const form_values = {};
+									const keys = ['fwt_m_no', 'class', 'candidate1_date', 'candidate1_start', 'candidate1_end', 'candidate2_date', 'candidate2_start', 'candidate2_end', 
+												'candidate3_date', 'candidate3_start', 'candidate3_end', 'pf_code', 'cust_code', 'post_name', 'p_number', 'companion', 'purpose',
+												'qm_visit', 'fb_visit', 'er_visit', 'p_demo', 'p_demo_note', 'dvd_gd', 'dvd_gd_note', 'd_document', 'd_document_note', 'ht_visit',
+												'lunch', 'other_req', 'note', 'name', 'size', 'quantity', 'card_no', 'inspection', 'inspection_note', 'training_plan', 'lecture', 'demonstration',
+												'experience', 'hid_dvd'];
+
+									keys.forEach((key, index) => {
+										form_values[key] = result.value[index];
+									});							
+
+									var start_date = arg.startStr;
+									var end_date = arg.endStr;
+
+									// AJAX - Add to fwt_m_tr
+									$.ajax({
+										url: 'fwt_m_update_calendar.php',
+										type: 'post',
+										data: {
+											request: 'edit_to_fwt',
+											form_values: form_values,
+											start_date: start_date,
+											end_date: end_date},
+										dataType: 'json',
+										success: function(response){
+											if(response.status == 1){
+												// Refetch all events
+												calendar.refetchEvents();
+
+												// Alert message
+												Swal.fire(response.message,'','success');
+
+											}else{
+												// Alert message
+												Swal.fire(response.message,'','error');
+											}
 								
-							}
-						})
+										},
+										error: function(xhr, status, error) {
+											// Handle errors
+											console.log(error);
+											// console.error('Error fetching HTML content:', error);
+											Swal.fire({
+												title: 'Error',
+												text: 'Failed to load content.',
+												icon: 'error'
+											});
+										}
+									});
+									
+								}
+							})
+						}
+
+						// Initial open of SweetAlert with fetched content
+            			openSwalWithContent(response);
 
 						/*----------------------------------------------------------------------------------------------- */
 
@@ -487,7 +482,7 @@
 						})
 
 						/*----------------------------------------------------------------------------------------------- */
-						var class_val = $('#class').val();
+						var class_val = $('#class').val();						
 						handleHideShow(class_val);
 
 						//種類がCHANGEされた場合
@@ -633,7 +628,7 @@
 
 						/*----------------------------------------------------------------------------------------------- */
 
-						function uploadFile(url, filename) {
+						function uploadFile(url, response) {
 							event.preventDefault();
 							var fwt_m_no = document.getElementById('fwt_m_no').value;
 							var uploaded_file = document.getElementById('uploaded_file').files[0];
@@ -650,9 +645,26 @@
 								contentType: false, // Important: ensure jQuery does not add a content-type header
 								success: function(response) {
 									//フォームデータを保存する
-									// saveFormData();
-									//reload page
-									// location.reload();
+									var myForm = document.getElementById('input2');
+									const formData = new FormData(myForm);
+									const jsonData = JSON.stringify(Object.fromEntries(formData));
+
+									$.ajax({
+										url: 'fwt_m_input2_calendar.php',
+										type: 'POST',
+										data: {
+											request: 'upload',
+											form_values: jsonData
+										},
+										// dataType: 'json',										
+										success: function(response) {
+											openSwalWithContent(response);
+
+											// 種類の扱い
+											var class_val = $('#class').val();						
+											handleHideShow(class_val);
+										}
+									});
 								},
 									error: function(xhr, status, error) {
 								}
