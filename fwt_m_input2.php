@@ -34,7 +34,7 @@
 </html>
 <script src="assets/js/customer_ent.js"></script>
 <script src="assets/js/public_office_ent.js"></script>
-<script src="assets/js/sales_request_check.js"></script>
+<script src="assets/js/fwt_check.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <script type="text/javascript">
@@ -61,7 +61,7 @@
     $(".approveBtn").click(function(event){
       event.preventDefault();
       var errMessage = '';
-      // var errMessage = checkValidationInput2();
+      var errMessage = checkValidation2();
 
       //エラーがある場合
       if (errMessage !== '') {
@@ -82,6 +82,30 @@
 
     /**-------------------------------------------------------------------------------------------------------------- */
 
+    //アプロードボタンを押下する場合
+    $('#upload').click(function(event) {      
+      event.preventDefault();
+      var uploaded_file = document.getElementById("uploaded_file"); //ファイル
+      var errMessage = checkValidationFile(uploaded_file);
+      
+      //エラーがある場合
+      if (errMessage !== '') {
+        //何の処理かを書く制作図面
+        var process = "validate";
+        //OKDialogを呼ぶ
+        openOkModal(errMessage, process);
+      } else {
+        //何の処理かを書く
+        var process = "upload";
+        //エラーメッセージを書く
+        var msg = "アプロードします。よろしいですか？";
+        //確認Dialogを呼ぶ
+        openConfirmModal(msg, process);
+      }
+    });
+
+    /**-------------------------------------------------------------------------------------------------------------- */
+
     //確認BOXにはいボタンを押下する場合
     $("#confirm_okBtn").click(function(event) {
       var process = $("#btnProcess").val();
@@ -96,13 +120,13 @@
         //sales_request_update.phpへ移動する
         $("#input2").attr("action", "fwt_m_update.php");
       }
-      // //アプロード１処理の場合
-      // else if (process == "upload") {
-      //   //submitしたいボタン名をセットする
-      //   $("#confirm_okBtn").attr("name", "upload");
-      //   //sales_request_update.phpへ移動する
-      //   uploadFile("sq_attach_upload1.php?from=sr");
-      // }
+      //アプロード１処理の場合
+      else if (process == "upload") {
+        //submitしたいボタン名をセットする
+        $("#confirm_okBtn").attr("name", "upload");
+        //sales_request_update.phpへ移動する
+        uploadFile("fwt_m_attach_upload1.php");
+      }
     });
 
      /*----------------------------------------------------------------------------------------------- */
@@ -144,6 +168,24 @@
     }
 
     /*----------------------------------------------------------------------------------------------- */
+
+    //localStorageからフォームデータをセットする
+    const formData = JSON.parse(localStorage.getItem('input2'));
+    if (formData) {
+      var myForm = document.getElementById('input2');
+      // console.log(formData);
+      Object.keys(formData).forEach(key => {
+        const exceptId = ['uploaded_file'];
+        if (!exceptId.includes(key)) {
+          myForm.elements[key].value = formData[key];
+        }
+      })
+
+      //フォームにセット後、クリアする
+      localStorage.removeItem('input2');
+    }
+
+    /*----------------------------------------------------------------------------------------------- */
   });  
   /**---------------------------------------------Javascript----------------------------------------------------------------- */
   function openConfirmModal(msg, process) {
@@ -167,15 +209,53 @@
     $("#ok").modal({backdrop: false});
   }
 
+    /*----------------------------------------------------------------------------------------------- */
+
+  function uploadFile(url) {
+    event.preventDefault();
+    var fwt_m_no = document.getElementById('fwt_m_no').value;
+    var uploaded_file = document.getElementById('uploaded_file').files[0];
+
+    var formData = new FormData();
+    formData.append('fwt_m_no', fwt_m_no);
+    formData.append('uploaded_file', uploaded_file);
+
+    $.ajax({
+      type: "POST",
+      url: url,
+      data: formData,
+      processData: false, // Important: prevent jQuery from processing the data
+      contentType: false, // Important: ensure jQuery does not add a content-type header
+      success: function(response) {
+        //フォームデータを保存する
+        saveFormData();
+        //reload page
+        location.reload();
+      },
+      error: function(xhr, status, error) {
+      }
+    })
+
+  }
+
+  /*----------------------------------------------------------------------------------------------- */
+
+  function saveFormData() {
+    var myForm = document.getElementById('input2');
+    const formData = new FormData(myForm);
+    const jsonData = JSON.stringify(Object.fromEntries(formData));
+    localStorage.setItem('input2', jsonData);
+  }
+
   /**-------------------------------------------------------------------------------------------------------------- */
 
   function disableInput(status) {
     //Disabled Input 
     let excludeInput;
     if (status !== '1') {
-      excludeInput = [];
+      excludeInput = ['upload', 'uploaded_file'];
     } else {
-      excludeInput = ['fixed_date', 'fixed_start', 'fixed_end'];
+      excludeInput = ['fixed_date', 'fixed_start', 'fixed_end', 'upload', 'uploaded_file'];
     }
     var inputs = document.getElementsByTagName('input');
     for (var i = 0; i < inputs.length; i++) {

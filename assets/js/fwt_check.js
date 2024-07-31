@@ -39,7 +39,7 @@ function checkValidation() {
   var dvd_gd_note = document.getElementById("dvd_gd_note"); // DVD案内メモ
   var d_document_note = document.getElementById("d_document_note"); // 内容
   var other_req = document.getElementById("other_req"); // その他客先要望
-  var note = document.getElementById("note"); // 備　考 
+  var note = document.getElementById("note"); // 備　考
   var name = document.getElementById("name"); // 品名
   var size = document.getElementById("size"); // サイズ
   var quantity = document.getElementById("quantity"); // 数量
@@ -80,62 +80,62 @@ function checkValidation() {
     errMessage = errMsgForEmpty("目的");
     isErr = true;
   }
-  
-if (!isErr && purpose.value.length > 80) {
-    errMessage = errMsgForLength("目的" ,"80");
+
+  if (!isErr && purpose.value.length > 80) {
+    errMessage = errMsgForLength("目的", "80");
     isErr = true;
   }
 
   if (!isErr && post_name.value.length > 50) {
     errMessage = errMsgForLength("役職・氏名　等", "50");
     isErr = true;
-  } 
+  }
 
-  if(!isErr && p_number.value.length > 10){
+  if (!isErr && p_number.value.length > 10) {
     errMessage = errMsgForLength("人数", "10");
     isErr = true;
   }
-  
-  if(!isErr && companion.value.length > 10){
+
+  if (!isErr && companion.value.length > 10) {
     errMessage = errMsgForLength("当社同行者", "10");
     isErr = true;
   }
-  
-  if(!isErr && p_demo_note.value.length > 80){
+
+  if (!isErr && p_demo_note.value.length > 80) {
     errMessage = errMsgForLength("製品デモメモ", "80");
     isErr = true;
   }
-  
-  if(!isErr && dvd_gd_note.value.length > 80){
+
+  if (!isErr && dvd_gd_note.value.length > 80) {
     errMessage = errMsgForLength("DVD案内メモ", "80");
     isErr = true;
   }
-  
-  if(!isErr && d_document_note.value.length > 80){
+
+  if (!isErr && d_document_note.value.length > 80) {
     errMessage = errMsgForLength("内容", "80");
     isErr = true;
   }
-  
-  if(!isErr && other_req.value.length > 80){
+
+  if (!isErr && other_req.value.length > 80) {
     errMessage = errMsgForLength("その他客先要望", "80");
     isErr = true;
   }
-  
+
   if (!isErr && note.value.length > 80) {
     errMessage = errMsgForLength("備考", "80");
     isErr = true;
   }
-  
+
   if (!isErr && name.value.length > 80) {
     errMessage = errMsgForLength("品名", "80");
     isErr = true;
   }
-  
+
   if (!isErr && size.value.length > 10) {
     errMessage = errMsgForLength("サイズ", "10");
     isErr = true;
   }
-  
+
   if (!isErr && quantity.value.length > 10) {
     errMessage = errMsgForLength("数量", "10");
     isErr = true;
@@ -149,6 +149,37 @@ if (!isErr && purpose.value.length > 80) {
   if (!isErr && inspection_note.value.length > 80) {
     errMessage = errMsgForLength("その他", "80");
     isErr = true;
+  }
+
+  return errMessage;
+}
+
+function checkValidation2() {
+  var isErr = false;
+  var errMessage = "";
+  var fixed_date = document.getElementById("fixed_date"); //確定日程
+  var fixed_start = document.getElementById("fixed_start"); //時間
+  var fixed_end = document.getElementById("fixed_end"); //時間
+  var note = document.getElementById("note"); //備　考
+
+  
+  if (!isErr && note.value.length > 80) {
+    errMessage = errMsgForLength("備考", "80");
+    isErr = true;
+  }
+
+  return errMessage;
+}
+
+function checkValidationFile(file) {
+  var isErr = false;
+  var errMessage = "";
+
+  if (file) {
+    if (!isErr && file.value == "") {
+      errMessage = errMsgForEmptySelect("ファイル");
+      isErr = true;
+    }
   }
 
   return errMessage;
