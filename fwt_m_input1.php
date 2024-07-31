@@ -69,55 +69,70 @@ $result = $_GET['result'] ?? '';
         </tr>
       </table>
 
-      <table class="tab1" style="margin-top:20px;">
-        <tr>
-          <th>申請者</th>
-          <th>種類</th>
-          <th>受注官庁</th>
-          <th>第１候補日</th>
-          <th>時間</th>
-          <th>第２候補日</th>
-          <th>時間</th>
-          <th>第３候補日</th>
-          <th>時間</th>
-          <th>状況</th>
-          <th>詳細</th>
-        </tr>
-        <!-- <tr>
-          <td colspan="11">
-            <button type="submit" name="process" value="new">新規登録</button>
-          </td>
-        </tr> -->
-        <tbody id="fwt_data_table">
-          <?php foreach ($fwt_datas as $item) : ?>
-            <tr>
-              <td><?= htmlspecialchars($item['employee_name']) ?></td>
-              <td><?= htmlspecialchars($item['class']) ?></td>
-              <td><?= htmlspecialchars($item['pf_name']) ?></td>
-              <td><?= htmlspecialchars($item['candidate1_date']) ?></td>
-              <td><?= htmlspecialchars($item['candidate1_start']) ?><?= htmlspecialchars($item['candidate1_end']) ?></td>
-              <td><?= htmlspecialchars($item['candidate2_date']) ?></td>
-              <td><?= htmlspecialchars($item['candidate2_start']) ?><?= htmlspecialchars($item['candidate2_end']) ?></td>
-              <td><?= htmlspecialchars($item['candidate3_date']) ?></td>
-              <td><?= htmlspecialchars($item['candidate3_start']) ?><?= htmlspecialchars($item['candidate3_end']) ?></td>
-              <td><?= htmlspecialchars($item['status']) ?></td>
-              <td style="text-align:center">
-                <button type="submit" class="updateBtn" name="process" value="update" data-fwt_m_no=<?= $item['fwt_m_no'] ?>>詳細</button>
-              </td>
-              <input type="hidden" class="fwt_m_no" name="fwt_m_no">
-            </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
-      <?php
-      if (count($fwt_datas) <= 0) {
-        echo "<div><h4 style='font-size: 12px;'>表示するデータがございません。</h4></div>";
-      }
-      ?>
+      <div class="scrollable-table-container">
+        <table class="tab1" style="margin-top:20px;">
+          <tr>
+            <th>申請者</th>
+            <th>種類</th>
+            <th>受注官庁</th>
+            <th>第１候補日</th>
+            <th>時間</th>
+            <th>第２候補日</th>
+            <th>時間</th>
+            <th>第３候補日</th>
+            <th>時間</th>
+            <th>状況</th>
+            <th>詳細</th>
+          </tr>
+          <!-- <tr>
+            <td colspan="11">
+              <button type="submit" name="process" value="new">新規登録</button>
+            </td>
+          </tr> -->
+          <tbody id="fwt_data_table">
+            <?php foreach ($fwt_datas as $item) : ?>
+              <tr>
+                <td><?= htmlspecialchars($item['employee_name']) ?></td>
+                <td><?= htmlspecialchars($item['class']) ?></td>
+                <td><?= htmlspecialchars($item['pf_name']) ?></td>
+                <td><?= htmlspecialchars($item['candidate1_date']) ?></td>
+                <td><?= htmlspecialchars($item['candidate1_start']) ?><?= htmlspecialchars($item['candidate1_end']) ?></td>
+                <td><?= htmlspecialchars($item['candidate2_date']) ?></td>
+                <td><?= htmlspecialchars($item['candidate2_start']) ?><?= htmlspecialchars($item['candidate2_end']) ?></td>
+                <td><?= htmlspecialchars($item['candidate3_date']) ?></td>
+                <td><?= htmlspecialchars($item['candidate3_start']) ?><?= htmlspecialchars($item['candidate3_end']) ?></td>
+                <td><?= htmlspecialchars($item['status']) ?></td>
+                <td style="text-align:center">
+                  <button type="submit" class="updateBtn" name="process" value="update" data-fwt_m_no=<?= $item['fwt_m_no'] ?>>詳細</button>
+                </td>
+                <input type="hidden" class="fwt_m_no" name="fwt_m_no">
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      
+        <?php
+        if (count($fwt_datas) <= 0) {
+          echo "<div><h4 style='font-size: 12px;'>表示するデータがございません。</h4></div>";
+        }
+        ?>
+      </div>
     </form>
   </div>
 </main>
+<style>
+  .scrollable-table-container {
+    width: fit-content;
+    height:580px;
+    overflow: auto;
+  }
 
+  thead th {
+    position: sticky;
+    top: 0; 
+    z-index: 1;
+  }
+</style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="assets/js/customer_ent.js"></script>
 <script src="assets/js/public_office_ent.js"></script>

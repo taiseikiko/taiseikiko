@@ -39,38 +39,54 @@ $sq_datas = get_sq_datas("", "");
         </tr>
       </table>
       
-      <table class="tab1" style="margin-top:20px;">
-        <tr>
-          <th>営業依頼書No</th>
-          <th>提出先</th>
-          <th>事業体</th>
-          <th>件名</th>
-          <th>処理状況</th>
-          <th>担当者</th>
-          <th>処理</th>
-        </tr>
+      <div class="scrollable-table-container">
+        <table class="tab1">
+          <thead>
+            <tr>
+              <th>営業依頼書No</th>
+              <th>提出先</th>
+              <th>事業体</th>
+              <th>件名</th>
+              <th>処理状況</th>
+              <th>担当者</th>
+              <th>処理</th>
+            </tr>
+          </thead>
 
-        <tbody id="sq_data_table">
-        <?php foreach ($sq_datas as $item): ?>
-        <tr>
-          <td><?= $item['sq_no'] ?></td>
-          <td><?= $item['cust_name'] ?></td>
-          <td><?= $item['pf_name'] ?></td>
-          <td><?= $item['item_name'] ?></td>
-          <td></td>
-          <td><?= $item['employee_name'] ?></td>
-          <td style="text-align:center">
-            <button type="submit" class="updateBtn" data-sq_no="<?= $item['sq_no'] ?>" name="process" value="update">詳細</button>
-          </td>
-          <input type="hidden" class="sq_no" name="sq_no" value="">
-        </tr>
-        <?php endforeach; ?>
-        </tbody>
-      </table>
+          <tbody id="sq_data_table">
+            <?php foreach ($sq_datas as $item): ?>
+            <tr>
+              <td><?= $item['sq_no'] ?></td>
+              <td><?= $item['cust_name'] ?></td>
+              <td><?= $item['pf_name'] ?></td>
+              <td><?= $item['item_name'] ?></td>
+              <td></td>
+              <td><?= $item['employee_name'] ?></td>
+              <td style="text-align:center">
+                <button type="submit" class="updateBtn" data-sq_no="<?= $item['sq_no'] ?>" name="process" value="update">詳細</button>
+              </td>
+              <input type="hidden" class="sq_no" name="sq_no" value="">
+            </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
     </form>
   </div>
 </main>
+<style>
+  .scrollable-table-container {
+    width: fit-content;
+    height:580px;
+    overflow: auto;
+  }
 
+  thead th {
+    position: sticky;
+    top: 0; 
+    z-index: 1;
+  }
+</style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="assets/js/customer_ent.js"></script> 
 <script src="assets/js/public_office_ent.js"></script>

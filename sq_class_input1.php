@@ -31,28 +31,31 @@
       <form class="row g-3" action="sq_class_input2.php" method="POST" name="inq_ent" enctype="multipart/form-data">
         <div class="scrollable-table-container">
           <table class="tab1">
-            <tr>
-              <th>分類コード</th>
-              <th>分類名称</th>
-              <th>処理</th>
-            </tr>
-            <tr>
-              <td colspan="3" style="text-align:right"><button class="createBtn" name="process" value="create">新規作成</button>
-            </td>
-            </tr>
-            <?php
-              foreach ($class_datas as $class_data) {
-            ?>
-            <tr>
-              <td><?php echo $class_data['class_code']; ?></td>
-              <td><?php echo $class_data['class_name']; ?></td>
-              <td style="text-align:center">
-                <button class="updateBtn" data-id="<?= $class_data['class_code'] ?>" name="process" value="update">更新</button></td>
-              <input type="hidden" class="class_code" name="class_code" value="">
-            </tr>
-            <?php 
-              }
-            ?>
+            <thead>
+              <tr>
+                <th>分類コード</th>
+                <th>分類名称</th>
+                <th>処理</th>
+              </tr>
+              <tr>
+                <td colspan="3" style="text-align:right"><button class="createBtn" name="process" value="create">新規作成</button></td>
+              </tr>
+            </thead>
+            <tbody>
+              <?php
+                foreach ($class_datas as $class_data) {
+              ?>
+              <tr>
+                <td><?php echo $class_data['class_code']; ?></td>
+                <td><?php echo $class_data['class_name']; ?></td>
+                <td style="text-align:center">
+                  <button class="updateBtn" data-id="<?= $class_data['class_code'] ?>" name="process" value="update">更新</button></td>
+                <input type="hidden" class="class_code" name="class_code" value="">
+              </tr>
+              <?php 
+                }
+              ?>
+            </tbody>
           </table>
         </div>
       </form><!-- Vertical Form -->
@@ -78,6 +81,12 @@
     width: fit-content;
     height:700px;
     overflow: auto;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0; 
+    z-index: 1;
   }
   
   .clearfix:after {

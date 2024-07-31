@@ -17,37 +17,40 @@ include("header1.php");
     <form class="row g-3" action="zk_division_input2.php" method="POST" name="zk_division_form" enctype="multipart/form-data" id="zk_division_form">
       <div class="scrollable-table-container">
         <table class="tab1">
-          <tr>
-            <th>材工仕様</th>
-            <th>区分1</th>
-            <th>区分2</th>
-            <th>材工名仕様詳細</th>
-            <th>処理</th>
-          </tr>
-          <tr id="createBtnRow">
-            <td colspan="5" style="text-align:left"><button class="createBtn" name="process" value="create">新規作成</button>
-            </td>
-          </tr>
-          <?php
-
-          foreach ($zk_datas as $zk_data) {
-          ?>
+          <thead>
             <tr>
-              <td><?= $zk_data['zk_div_name'] ?></td>
-              <td><?= $zk_data['zk_tp'] ?></td>
-              <td><?= $zk_data['zk_no'] ?></td>
-              <td><?= $zk_data['zk_div_data'] ?></td>
-              <td style="text-align:center">
-              <button class="updateBtn" name="process" value="update" id="update"
-                data-division="<?= $zk_data['zk_division'] ?>" 
-                data-div_name="<?= $zk_data['zk_div_name'] ?>" 
-                data-tp="<?= $zk_data['zk_tp'] ?>" 
-                data-no="<?= $zk_data['zk_no'] ?>" 
-                data-data="<?= $zk_data['zk_div_data'] ?>">更新</button>
-              </td>
-              <input type="hidden" class="count" value="<?= $count ?>">
+              <th>材工仕様</th>
+              <th>区分1</th>
+              <th>区分2</th>
+              <th>材工名仕様詳細</th>
+              <th>処理</th>
             </tr>
-          <?php  } ?>
+            <tr id="createBtnRow">
+              <td colspan="5" style="text-align:left"><button class="createBtn" name="process" value="create">新規作成</button>
+              </td>
+            </tr>
+          </thead> 
+          <tbody>
+            <?php          
+            foreach ($zk_datas as $zk_data) {
+            ?>
+              <tr>
+                <td><?= $zk_data['zk_div_name'] ?></td>
+                <td><?= $zk_data['zk_tp'] ?></td>
+                <td><?= $zk_data['zk_no'] ?></td>
+                <td><?= $zk_data['zk_div_data'] ?></td>
+                <td style="text-align:center">
+                <button class="updateBtn" name="process" value="update" id="update"
+                  data-division="<?= $zk_data['zk_division'] ?>" 
+                  data-div_name="<?= $zk_data['zk_div_name'] ?>" 
+                  data-tp="<?= $zk_data['zk_tp'] ?>" 
+                  data-no="<?= $zk_data['zk_no'] ?>" 
+                  data-data="<?= $zk_data['zk_div_data'] ?>">更新</button>
+                </td>
+                <input type="hidden" class="count" value="<?= $count ?>">
+              </tr>
+            <?php  } ?>
+          </tbody>         
         </table>
         <!-- Hidden inputs to send data to the next page -->
         <input type="hidden" name="zk_division" id="zk_division" value="">

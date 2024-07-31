@@ -46,7 +46,7 @@ footer_set();
 <style>
   .scrollable-table-container {
     width: fit-content;
-    height:700px;
+    height:600px;
     overflow: auto;
   }
   thead th {

@@ -53,48 +53,53 @@ include("header1.php");
         </tr>
       </table>
 
-      <table class="tab1" style="margin-top:20px;">
-        <tr>
-          <th>図面No</th>
-          <th>登録者</th>
-          <th>ステータス</th>
-          <th>分類</th>
-          <th>材工名</th>
-          <th>サイズ</th>
-          <th>接合形状</th>
-          <th>種類</th>
-          <th>最終図面更新日</th>
-          <th>処理</th>
-        </tr>
-        <?php if (!$private) { ?>
-          <tr>
-            <td colspan="10">
-              <button type="submit" name="process" id="regBtn" value="new">新規登録</button>
-            </td>
-          </tr>
-        <?php } ?>
-        <tbody id="resultsTableBody">
-          <?php foreach ($dw_datas as $item) : ?>
+      <div class="scrollable-table-container">
+        <table class="tab1">
+          <thead>
             <tr>
-              <td><?= $item['dw_no'] ?></td>
-              <td><?= $item['client_name'] ?></td>
-              <td><?= $item['status'] ?></td>
-              <td><?= $item['class_name'] ?></td>
-              <td><?= $item['zkm_name'] ?></td>
-              <td><?= $item['size'] ?></td>
-              <td><?= $item['joint'] ?></td>
-              <td><?= $item['dw_div2'] ?></td>
-              <td><?= $item['upd_date'] ?></td>
-              <td style="text-align:center">
-                <button type="submit" class="updateBtn" data-dw_no="<?= $item['dw_no'] ?>" name="process" value="update">更新</button>
-              </td>
-              <input type="hidden" class="dw_no" name="dw_no" value="">
+              <th>図面No</th>
+              <th>登録者</th>
+              <th>ステータス</th>
+              <th>分類</th>
+              <th>材工名</th>
+              <th>サイズ</th>
+              <th>接合形状</th>
+              <th>種類</th>
+              <th>最終図面更新日</th>
+              <th>処理</th>
             </tr>
-          <?php endforeach; ?>
-        </tbody>
-      </table>
+            <?php if (!$private) { ?>
+              <tr>
+                <td colspan="10">
+                  <button type="submit" name="process" id="regBtn" value="new">新規登録</button>
+                </td>
+              </tr>
+            <?php } ?>
+          </thead>
+          <tbody id="resultsTableBody">
+            <?php foreach ($dw_datas as $item) : ?>
+              <tr>
+                <td><?= $item['dw_no'] ?></td>
+                <td><?= $item['client_name'] ?></td>
+                <td><?= $item['status'] ?></td>
+                <td><?= $item['class_name'] ?></td>
+                <td><?= $item['zkm_name'] ?></td>
+                <td><?= $item['size'] ?></td>
+                <td><?= $item['joint'] ?></td>
+                <td><?= $item['dw_div2'] ?></td>
+                <td><?= $item['upd_date'] ?></td>
+                <td style="text-align:center">
+                  <button type="submit" class="updateBtn" data-dw_no="<?= $item['dw_no'] ?>" name="process" value="update">更新</button>
+                </td>
+                <input type="hidden" class="dw_no" name="dw_no" value="">
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
         <!-- 検索後データがない場合 -->
         <?= $search_result?> 
+      </div>
+        
     </form>
   </div>
 </main>
@@ -159,6 +164,18 @@ include("header1.php");
   .button-container {
     display: flex;
     justify-content: center;
+  }
+
+  .scrollable-table-container {
+    width: fit-content;
+    height:550px;
+    overflow: auto;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0; 
+    z-index: 1;
   }
 
   .search_btn,
