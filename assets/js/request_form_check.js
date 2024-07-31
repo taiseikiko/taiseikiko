@@ -13,11 +13,13 @@ function errMsgForEmptySelect(name) {
 function checkValidationFile() {
   var isErr = false;
   var errMessage = "";
-  var uploaded_file = document.getElementById("uploaded_file").value; //ルート設定
+  var file = document.getElementById("uploaded_file"); //ファイル
 
-  if (!isErr && errMsgForEmptySelect == "") {
-    errMessage = errMsgForEmpty("ファイル");
-    isErr = true;
+  if (file) {
+    if (!isErr && file.value == "") {
+      errMessage = errMsgForEmptySelect("ファイル");
+      isErr = true;
+    }
   }
 
   return errMessage;
