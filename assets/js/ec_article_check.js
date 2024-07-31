@@ -97,7 +97,7 @@ function checkValidation(event) {
     isErr = true;
   }
 
-  if (!isErr && contact.length > 10) {
+  if (!isErr && contact.length > 20) {
     errMessage = errMsgForLength("契約先", "20");
     isErr = true;
   }  
@@ -107,7 +107,7 @@ function checkValidation(event) {
     isErr = true;
   }
 
-  if (!isErr && footnote.length > 10) {
+  if (!isErr && footnote.length > 50) {
     errMessage = errMsgForLength("備考", "50");
     isErr = true;
   }

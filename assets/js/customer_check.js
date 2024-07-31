@@ -25,7 +25,7 @@ function checkValidation(event) {
   }
 
   if (!isErr && employee_code.length > 10) {
-    errMessage = errMsgForLength(employee_code_nm, "40");
+    errMessage = errMsgForLength(employee_code_nm, "10");
     isErr = true;
   }
 

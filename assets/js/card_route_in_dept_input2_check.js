@@ -13,7 +13,7 @@ function checkValidation(event) {
   var role = document.getElementById("role").value;
 
   if (!isErr && employee_code.length > 10) {
-    errMsg = errMsgForLength("担当者", "40");
+    errMsg = errMsgForLength("担当者", "10");
     isErr = true;
   }
   //isEmpty error for employee_code

@@ -13,8 +13,8 @@ function checkValidation(event) {
   var role = document.getElementById("role").value;
   var employee_code_nm = "担当者";
 
-  if (!isErr && employee_code.length > 40) {
-    errMessage = errMsgForLength(employee_code_nm, "40");
+  if (!isErr && employee_code.length > 10) {
+    errMessage = errMsgForLength(employee_code_nm, "10");
     isErr = true;
   }
 
