@@ -23,7 +23,7 @@ include("header1.php");
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="bridge" style="margin-left: 0.5rem;">出先 </label>
+                <label class="common_label" for="bridge">出先 </label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
                 <select style="margin-left: 1rem;" name="bridge" id="bridge" class="dropdown-menu">
                   <option value="">選択して下さい。</option>
                   <?php
@@ -38,7 +38,7 @@ include("header1.php");
                   ?>
                 </select>
 
-                <label class="common_label" for="company">会社名 </label>
+                <label class="common_label" for="company">会社名 </label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
                 <select style="margin-left: 1rem;" name="company" id="company" class="dropdown-menu">
                   <option value="">選択して下さい。</option>
                   <?php
@@ -53,8 +53,8 @@ include("header1.php");
                   ?>
                 </select>
 
-                <label class="common_label" for="name" style="margin-left: 1rem;">氏名 </label>
-                <input type="text" id="name" name="name" value="<?= $name ?>" class="input-res">
+                <label class="common_label" for="name">氏名 </label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
+                <input type="text" style="margin-left:1rem" id="name" name="name" value="<?= $name ?>" class="input-res">
 
               </div>
             </td>
@@ -63,8 +63,8 @@ include("header1.php");
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="birthday" style="margin-left: 1rem;">生年月日 </label>
-                <input type="date" min="1900-01-01" max="2028-12-31" name="birthday" id="birthday" value="<?= $birthday ?>" class="input-res" />
+                <label class="common_label" for="birthday">生年月日 </label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
+                <input type="date" style="margin-left:1rem" min="1900-01-01" max="2028-12-31" name="birthday" id="birthday" value="<?= $birthday ?>" class="input-res" />
 
                 <label class="common_label" for="attendance_year">受講年 </label>
                 <input type="text" id="attendance_year" name="attendance_year" value="<?= $attendance_year ?>" class="input-res">
@@ -80,14 +80,14 @@ include("header1.php");
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="con_qualification" style="margin-left: 1rem;">施工資格. </label>
-                <input type="text" id="con_qualification" name="con_qualification" value="<?= $con_qualification ?>" class="input-res">
+                <label class="common_label" for="con_qualification">施工資格. </label>
+                <input type="text" style="margin-left:1rem;" id="con_qualification" name="con_qualification" value="<?= $con_qualification ?>" class="input-res">
 
-                <label class="common_label" for="renewal_date" style="margin-left: 1rem;">更新年月日 </label>
-                <input type="date" min="2023-01-01" max="2028-12-31" name="renewal_date" id="renewal_date" value="<?= $renewal_date ?>" class="input-res" />
+                <label class="common_label" for="renewal_date">更新年月日 </label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
+                <input type="date" style="margin-left:1rem;" min="2023-01-01" max="2028-12-31" name="renewal_date" id="renewal_date" value="<?= $renewal_date ?>" class="input-res" />
 
-                <label class="common_label" for="expiration_date" style="margin-left: 1rem;">有効期限 </label>
-                <input type="date" min="2023-01-01" max="2028-12-31" name="expiration_date" id="expiration_date" value="<?= $expiration_date ?>" class="input-res" />
+                <label class="common_label" for="expiration_date">有効期限 </label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
+                <input type="date" style="margin-left:1rem;" min="2023-01-01" max="2028-12-31" name="expiration_date" id="expiration_date" value="<?= $expiration_date ?>" class="input-res" />
               </div>
             </td>
           </tr>

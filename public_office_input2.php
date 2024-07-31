@@ -23,10 +23,10 @@
           <td>
             <div class="field-row">
               <label class="large_label" for="office_code" >事業所コード</label>
-              <input type="text" id="office_code" name="office_code" value="<?= $office_code ?>" class="readonlyText" readonly>
+              <input type="text" style="margin-left:1rem" id="office_code" name="office_code" value="<?= $office_code ?>" class="readonlyText" readonly>
               
               <label class="common_label" for="office_name" >事業所名称</label>
-              <input type="text" id="office_name" name="office_name" value="<?= $office_name ?>" class="readonlyText" readonly>
+              <input type="text" style="margin-left:1rem" id="office_name" name="office_name" value="<?= $office_name ?>" class="readonlyText" readonly>
             </div>
           </td>                
         </tr>
@@ -34,21 +34,21 @@
           <td>
             <div class="field-row">
               <label class="common_label" for="pf_code" >官庁コード</label>
-              <input type="text" id="pf_code" name="pf_code" value="<?= $pf_code ?>" class="readonlyText" readonly>
+              <input type="text" style="margin-left:1rem" id="pf_code" name="pf_code" value="<?= $pf_code ?>" class="readonlyText" readonly>
               
-              <label class="common_label" for="pf_name" >官庁名称</label>
-              <input type="text" id="pf_name" name="pf_name" value="<?= $pf_name ?>">
+              <label class="common_label" for="pf_name" >官庁名称</label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
+              <input type="text" style="margin-left:1rem" id="pf_name" name="pf_name" value="<?= $pf_name ?>">
             </div>
           </td>                
         </tr>
         <tr>
           <td>
             <div class="field-row">
-              <label class="common_label" for="employee_cd" >担当者</label>
-              <input type="text" id="contact_person" name="employee_code" value="<?=$employee_code ?>" onblur="onBlurEmpCode()" class="readonlyText" readonly>
+              <label class="common_label" for="employee_cd" >担当者</label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
+              <input type="text" style="margin-left:1rem" id="contact_person" name="employee_code" value="<?=$employee_code ?>" onblur="onBlurEmpCode()" class="readonlyText" readonly>
               
               <button style="margin-left: 11px;" class="search_btn" onclick="emp_inq_open(event)">社員検索 </button>
-              <input style="margin-left:30px" type="text" id="cp_name" name="employee_name" value="<?=$employee_name ?>" class="readonlyText" readonly>
+              <input style="margin-left:45px" type="text" id="cp_name" name="employee_name" value="<?=$employee_name ?>" class="readonlyText" readonly>
             </div>
           </td>               
         </tr>
@@ -57,7 +57,7 @@
             <div class="field-row spacer">
               <label class="common_label" for="dept_name" >部署</label>
               <input type="hidden" name="dept_code" id="dept_code">
-              <input type="text" id="dept_name" name="department_name" value="<?=$department_name ?>" class="readonlyText" readonly>
+              <input style="margin-left:1rem" type="text" id="dept_name" name="department_name" value="<?=$department_name ?>" class="readonlyText" readonly>
             </div>
             </div>
           </td>               
@@ -67,7 +67,7 @@
             <div class="field-row spacer">
               <label class="common_label" for="op_name" >役職</label>
               <input type="hidden" name="office_position_code" id="office_position_code">
-              <input type="text" id="op_name" name="office_position_name" value="<?=$office_position_name ?>" class="readonlyText" readonly>
+              <input style="margin-left:1rem" type="text" id="op_name" name="office_position_name" value="<?=$office_position_name ?>" class="readonlyText" readonly>
             </div>
           </td>               
         </tr>

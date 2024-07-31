@@ -13,7 +13,6 @@
   // ヘッダーセット
   include("header1.php");
 ?>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <main>
   <div class="pagetitle">
     <h3>図面管理　<?= $header ?></h3>

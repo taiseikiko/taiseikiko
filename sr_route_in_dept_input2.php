@@ -19,7 +19,7 @@
             <td>
               <div class="field-row">
                 <label class="common_label" for="dept_code" >部署</label>
-                <select name="dept" id="dept" readonly>
+                <select name="dept" id="dept" readonly style="margin-left: 1rem;">
                   <option value="">※選択して下さい。</option>
                   <?php
                     if (!empty($deptList)) {
@@ -46,8 +46,8 @@
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="employee_code" >担当者</label>
-                <input type="text" id="contact_person" name="employee_code" value="<?= $employee_code ?>" class="readonlyText" readonly>
+                <label class="common_label" for="employee_code" >担当者</label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
+                <input type="text" style="margin-left:1rem;" id="contact_person" name="employee_code" value="<?= $employee_code ?>" class="readonlyText" readonly>
                 <input type="hidden" name="hid_employee_cd" value="<?= $employee_code ?>">
                 
                 <button class="search_btn" style="margin-left: 11px;" onclick="emp_inq_open(event)">社員検索 </button>
@@ -58,8 +58,8 @@
           <tr>
             <td>
               <div class="field-row spacer">
-                <label class="common_label" for="role" >役割</label>
-                <select name="role" id="role" style="margin-right: 40px">
+                <label class="common_label" for="role" >役割</label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
+                <select name="role" id="role" style="margin-right: 45px; margin-left:1rem;">
                   <option value="" <?= ("" == $role) ? 'selected' : '' ?>>※選択して下さい。</option>
                   <option value="0" <?= (0 == $role) ? 'selected' : '' ?>>受付</option>
                   <option value="1" <?= (1 == $role) ? 'selected' : '' ?>>入力</option>

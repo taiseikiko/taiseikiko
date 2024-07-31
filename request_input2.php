@@ -13,7 +13,6 @@ include("request_input2_data_set.php");
 // ヘッダーセット
 include("header1.php");
 ?>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <main>
   <div class="pagetitle">
     <h3>依頼書　<?= $header ?></h3>

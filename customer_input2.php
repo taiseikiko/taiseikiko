@@ -22,10 +22,10 @@
           <td>
             <div class="field-row">
               <label class="common_label" for="office_code">事業所コード</label>
-              <input class="readonlyText" type="text" value="<?= $office_code ?>" id="office_code" name="office_code" readonly>
+              <input class="readonlyText" style="margin-left:1rem;" type="text" value="<?= $office_code ?>" id="office_code" name="office_code" readonly>
               
               <label class="common_label" for="office_name">事業所名称</label>
-              <input class="readonlyText" type="text" value="<?= $office_name ?>" id="office_name" name="office_name" readonly>
+              <input class="readonlyText" style="margin-left:1rem;" type="text" value="<?= $office_name ?>" id="office_name" name="office_name" readonly>
             </div>
           </td>                
         </tr>
@@ -33,10 +33,10 @@
           <td>
             <div class="field-row">
               <label class="common_label" for="cust_code" >得意先コード</label>
-              <input type="text" id="cust_code" name="cust_code" value="<?= $cust_code ?>">
+              <input type="text" style="margin-left:1rem;" id="cust_code" name="cust_code" value="<?= $cust_code ?>">
               
-              <label class="common_label" for="cust_name" >得意先名称</label>
-              <input type="text" id="cust_name" name="cust_name" value="<?= $cust_name ?>">
+              <label class="common_label" for="cust_name" >得意先名称</label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
+              <input type="text" style="margin-left:1rem;" id="cust_name" name="cust_name" value="<?= $cust_name ?>">
 
               <label class="common_label" for="custmer_div" >区分</label>
               <select name="custmer_div">
@@ -55,11 +55,11 @@
         <tr>
           <td>
             <div class="field-row">
-              <label class="common_label" for="employee_code" >担当者</label>
-              <input type="text" id="contact_person" name="employee_code" value="<?= $employee_code ?>" onblur="onBlurEmpCode()" class="readonlyText" readonly>
+              <label class="common_label" for="employee_code" >担当者</label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
+              <input type="text" style="margin-left:1rem;" id="contact_person" name="employee_code" value="<?= $employee_code ?>" onblur="onBlurEmpCode()" class="readonlyText" readonly>
               
               <button class="search_btn" style="margin-left: 11px;" onclick="emp_inq_open(event)">社員検索 </button>
-              <input style="margin-left:30px" type="text" id="cp_name" name="employee_name" value="<?= $employee_name?>" class="readonlyText" readonly>
+              <input style="margin-left:47px" type="text" id="cp_name" name="employee_name" value="<?= $employee_name?>" class="readonlyText" readonly>
             </div>
           </td>               
         </tr>

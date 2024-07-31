@@ -3,7 +3,7 @@ function errMsgForLength(name, max) {
 }
 
 function errMsgForEmpty(name) {
-  return "「" + name + "」を選択してください。";
+  return "「" + name + "」は必須項目です。";
 }
 
 function checkValidation() {

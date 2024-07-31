@@ -552,7 +552,7 @@
       <tr>
         <td>
           <div class="field-row">
-            <label class="common_label" for="route_pattern">ルート設定 </label>
+            <label class="common_label" for="route_pattern">ルート設定 </label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
             <select class="dropdown-menu" id="route_no" name="route_pattern" <?php if (!empty($route_pattern)) { echo 'disabled'; } ?> <?php if ($processing_status == '0') {echo 'disabled';}?>>
               <option value="">選択して下さい。</option>
               <?php 

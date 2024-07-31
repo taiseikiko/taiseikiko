@@ -34,23 +34,23 @@
         <tr>
           <td>
             <div class="field-row">
-              <label class="common_label" for="zk_div_name" >材工仕様</label>
-              <select type="text" id="zk_div_name" name="zk_div_name" value="" style="width: 140px;">
+              <label class="common_label" for="zk_div_name" >材工仕様</label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
+              <select type="text" id="zk_div_name" name="zk_div_name" value="" style="width: 140px;margin-left:1rem;">
                 <option value="">※選択して下さい。</option>
                 <?php foreach ($zk_div_names as $name) { ?>
                   <option value="<?= $name['zk_div_name'] ?>" <?= ($zk_div_name == $name['zk_div_name']) ? 'selected' : '' ?>><?= $name['zk_div_name'] ?></option>
                 <?php } ?>
               </select>
-              <label class="common_label" for="zk_tp" >区分１</label>
-              <select type="text" id="zk_tp" name="zk_tp" value="" style="width: 140px;">
+              <label class="common_label" for="zk_tp" >区分１</label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
+              <select type="text" id="zk_tp" name="zk_tp" value="" style="width: 140px;margin-left:1rem;">
                 <option value="">※選択して下さい。</option>
                 <?php foreach ($zk_tp_values as $tp_value) { ?>
                   <option value="<?= $tp_value['zk_tp'] ?>" <?= ($zk_tp == $tp_value['zk_tp']) ? 'selected' : '' ?>><?= $tp_value['zk_tp'] ?></option>
                 <?php } ?>
               </select>
               
-              <label class="common_label" for="zk_no" >区分２</label>
-              <select type="text" id="zk_no" name="zk_no" value="" style="width: 140px;">
+              <label class="common_label" for="zk_no" >区分２</label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
+              <select type="text" id="zk_no" name="zk_no" value="" style="width: 140px;margin-left:1rem;">
                 <option value="">※選択して下さい。</option>
                 <?php foreach ($zk_no_values as $no_value) { ?>
                   <option value="<?= $no_value['zk_no'] ?>" <?= ($zk_no == $no_value['zk_no']) ? 'selected' : '' ?>><?= $no_value['zk_no'] ?></option>
@@ -62,8 +62,8 @@
         <tr>
           <td>
             <div class="field-row">
-              <label class="common_label" for="zk_div_data" >材工名仕様詳細</label>
-              <input type="text" id="zk_div_data" name="zk_div_data" style="width: 700px;" value="<?= $zk_div_data?>" maxlength="50">
+              <label class="common_label" for="zk_div_data" >材工名仕様詳細</label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
+              <input type="text" id="zk_div_data" name="zk_div_data" style="width: 700px;margin-left:1rem;" value="<?= $zk_div_data?>" maxlength="50">
             </div>
           </td>
         </tr>

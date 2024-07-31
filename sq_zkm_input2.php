@@ -23,10 +23,10 @@
           <td>
             <div class="field-row">
               <label class="common_label" for="class_code" >分類コード</label>
-              <input style="width: 100px;" type="text" value="<?= $class_code ?>" id="class_code" name="class_code" class="readonlyText" readonly>
+              <input style="width: 100px;margin-left:1rem;" type="text" value="<?= $class_code ?>" id="class_code" name="class_code" class="readonlyText" readonly>
               
               <label style="padding-left: 20px; padding: right 0;" class="common_label" for="class_name" >分類名称</label>
-              <input style="width: 60%;" type="text" value="<?= $class_name ?>" id="class_name" name="class_name" class="readonlyText" readonly>
+              <input style="width: 60%;margin-left:1rem;" type="text" value="<?= $class_name ?>" id="class_name" name="class_name" class="readonlyText" readonly>
             </div>
           </td>                
         </tr>
@@ -34,10 +34,10 @@
           <td>
             <div class="field-row">
               <label  class="common_label" for="zkm_code" >材工名コード</label>
-              <input style="width: 100px;" type="text" id="zkm_code" name="zkm_code" value="<?= $zkm_code ?>" class="readonlyText" readonly>
+              <input style="width: 100px;margin-left:1rem;" type="text" id="zkm_code" name="zkm_code" value="<?= $zkm_code ?>" class="readonlyText" readonly>
               
-              <label style="padding-left: 20px; padding: right 0;" class="common_label" for="zkm_name" >材工名名称</label>
-              <input style="width: 60%;" type="text" id="zkm_name" name="zkm_name" value="<?= $zkm_name ?>" maxlength="40">
+              <label style="padding-left: 20px; padding: right 0;" class="common_label" for="zkm_name" >材工名名称</label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
+              <input style="width: 60%;margin-left:1rem;" type="text" id="zkm_name" name="zkm_name" value="<?= $zkm_name ?>" maxlength="40">
             </div>
           </td>
         </tr>

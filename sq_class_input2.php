@@ -28,15 +28,15 @@
             <td>
               <div class="field-row">
                 <label class="common_label" for="class_code" >分類コード</label>
-                <input type="text" id="class_code" name="class_code" value="<?= $class_code ?>" class="readonlyText" readonly>
+                <input type="text" style="margin-left:1rem;" id="class_code" name="class_code" value="<?= $class_code ?>" class="readonlyText" readonly>
               </div>
             </td>                
           </tr>
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="class_name" >分類名称</label>
-                <input type="text" id="class_name" name="class_name" value="<?= $class_name ?>" maxlength="20">
+                <label class="common_label" for="class_name" >分類名称</label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
+                <input type="text" style="margin-left:1rem;" id="class_name" name="class_name" value="<?= $class_name ?>" maxlength="20">
               </div>
             </td>
           </tr>

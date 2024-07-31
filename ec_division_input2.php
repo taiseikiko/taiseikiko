@@ -20,7 +20,7 @@ include("header1.php");
             <td>
               <div class="field-row">
                 <label class="common_label" for="spec_name">既存工事仕様</label>
-                <input type="text" id="spec_name" name="spec_name" value="<?= $spec_name ?>" class="readonlyText" readonly>
+                <input type="text" style="margin-left:1rem" id="spec_name" name="spec_name" value="<?= $spec_name ?>" class="readonlyText" readonly>
                 <input type="hidden" id="code_key" name="code_key" value="<?= $code_key ?>" class="readonlyText" readonly>
                 <input type="hidden" id="code_no" name="code_no" value="<?= $code_no ?>" class="readonlyText" readonly>
               </div>
@@ -29,8 +29,8 @@ include("header1.php");
           <tr>
             <td>
               <div class="field-row">
-                <label class="common_label" for="code_name">コード名</label>
-                <input type="text" id="code_name" name="code_name" value="<?= $code_name ?>" maxlength="50">
+                <label class="common_label" for="code_name">コード名</label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
+                <input type="text" style="margin-left:1rem" id="code_name" name="code_name" value="<?= $code_name ?>" maxlength="50">
               </div>
             </td>
           </tr>

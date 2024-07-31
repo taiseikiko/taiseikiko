@@ -3,7 +3,7 @@ function errMsgForLength(name, max) {
   }
   
   function errMsgForEmpty(name) {
-    return "「" + name + "」を入力してください。";
+    return "「" + name + "」は必須項目です。";
   }
   
   function checkValidation(event) {
@@ -12,7 +12,7 @@ function errMsgForLength(name, max) {
     var employee_code = document.getElementById("contact_person").value;
     var role = document.getElementById("role").value;
   
-    if (!isErr && employee_code.length > 10) {
+    if (!isErr && employee_code.length > 40) {
       errMsg = errMsgForLength("担当者", "40");
       isErr = true;
     }

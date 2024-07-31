@@ -11,6 +11,7 @@
 <!DOCTYPE html>
 <html>
 <body>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <div class="window active">
     <div class="title-bar">
       <div class="title-bar-text">担当者設定</div>
@@ -27,8 +28,8 @@
         <input type="hidden" name="dept_id" id="dept_id" value="<?=$dept_id?>">
         <input type="hidden" name="title" id="title" value="<?=$title?>">
         <div class="field-row">
-          <label class="common_label" for="other">グループ </label>          
-          <select class="dropdown-menu" id="group" name="group" <?php if ($title == 'sm_receipt' || $title == 'pc_receipt') { echo 'disabled'; } ?>>
+          <label class="common_label" for="other">グループ </label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>       
+          <select style="margin-left:1rem;" class="dropdown-menu" id="group" name="group" <?php if ($title == 'sm_receipt' || $title == 'pc_receipt') { echo 'disabled'; } ?>>
             <option value="" class="">選択して下さい。</option>
             <?php 
               if (isset($group_datas) && !empty($group_datas)) {
@@ -46,8 +47,8 @@
           echo '<font style="color: red"><label class="common_label" style="margin-left:50px;" for="other">※グループの選択は不要です。 </label></font>'; }
         ?>
         <div class="field-row">
-          <label class="common_label" for="other">担当者 </label>
-          <select class="dropdown-menu" id="entrant" name="entrant">
+          <label class="common_label" for="other">担当者 </label><i class="fa fa-asterisk" style="font-size:10px;color:red;margin-left:-8px;"></i>
+          <select style="margin-left:1rem;" class="dropdown-menu" id="entrant" name="entrant">
             <option value="" class="">選択して下さい。</option>
             <?php 
               if (isset($employee_datas) && !empty($employee_datas)) {
