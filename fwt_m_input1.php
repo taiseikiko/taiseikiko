@@ -83,11 +83,11 @@ $result = $_GET['result'] ?? '';
           <th>状況</th>
           <th>詳細</th>
         </tr>
-        <tr>
+        <!-- <tr>
           <td colspan="11">
             <button type="submit" name="process" value="new">新規登録</button>
           </td>
-        </tr>
+        </tr> -->
         <tbody id="fwt_data_table">
           <?php foreach ($fwt_datas as $item) : ?>
             <tr>
