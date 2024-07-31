@@ -112,7 +112,7 @@ $(document).ready(function() {
     if (process == 'create') {
       $('#cust_code').prop('readonly', true);
       $('#cust_code').css({
-        'background-color' : '#ffffe0'
+        'background-color' : '#e6e6e6'
       });
     }
     // Handle return button click

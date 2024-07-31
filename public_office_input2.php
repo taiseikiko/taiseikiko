@@ -235,9 +235,9 @@ footer_set();
     text-align: start;
   }
 
-  input.readonlyText {
+  /* input.readonlyText {
     background-color: #ffffe0;
-  }
+  } */
 
   .clearfix:after {
     clear: both;
