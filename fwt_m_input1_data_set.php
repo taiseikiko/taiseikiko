@@ -1,9 +1,6 @@
 <?php
 require_once('function.php');
 $pdo = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
-//ログインユーザーの部署ID
-$dept_cd = $_POST['dept_code'] ?? $dept_code;
-$dept_id = getDeptId($dept_cd);
 
 function get_fwt_datas($title, $cust_name = "", $pf_name = "") {
     global $pdo;
@@ -49,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['isReturn'])) {
         $cust_name = $_POST['cust_name'] ?? "";
         $pf_name = $_POST['pf_name'] ?? "";
+        $title = $_POST['title'] ?? "";
 
         $fwt_datas = get_fwt_datas($title, $cust_name, $pf_name);
 
