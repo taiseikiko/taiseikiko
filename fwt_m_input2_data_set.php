@@ -28,12 +28,19 @@
                 'candidate3_date', 'candidate3_start', 'candidate3_end', 'post_name', 'p_number', 'companion', 'purpose',
                 'qm_visit', 'fb_visit', 'er_visit', 'p_demo', 'p_demo_note', 'dvd_gd', 'dvd_gd_note', 'd_document', 'd_document_note', 'ht_visit',
                 'lunch', 'other_req', 'note', 'name', 'size', 'quantity', 'card_no', 'inspection', 'inspection_note', 'training_plan', 'lecture', 'demonstration',
-                'experience', 'fixed_date', 'fixed_start', 'fixed_end', 'add_date'];
+                'experience', 'fixed_date', 'fixed_start', 'fixed_end', 'add_date', 'pf_code', 'cust_code', 'hid_dvd'];
 
       $exceptVariables = ['pf_code', 'cust_code', 'hid_dvd'];
 
       foreach ($variables as $variable) {
-        ${$variable} = $fwtList[$variable]?? '';
+        if (in_array($variable, $exceptVariables)) {
+          if ($variable == 'pf_code') { $p_office_no = $fwtList[$variable]; }
+          if ($variable == 'cust_code') { $cust_no = $fwtList[$variable]; }
+          if ($variable == 'hid_dvd') { $dvd = $fwtList[$variable]; }
+        } else {
+          ${$variable} = $fwtList[$variable]?? '';
+        }
+
       }
     } else {
       $fwt_m_no = $_POST['fwt_m_no']?? $_GET['fwt_m_no'];
